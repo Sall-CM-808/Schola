@@ -269,22 +269,22 @@ const Navbar = () => {
                 <UserAvatar user={user} showDropdown={true} onLogout={logout} />
               ) : (
                 <div className="flex items-center space-x-3">
-                  <button
-                    onClick={() => setIsLoginOpen(true)}
-                    className="group relative px-5 py-2.5 rounded-xl border-2 border-white/30 text-white text-sm font-medium hover:border-white hover:bg-white/10 transition-all duration-300 backdrop-blur-sm"
+                  <Link
+                    href="/login"
+                    className="group relative px-5 py-2.5 rounded-xl border-2 border-white/30 text-white text-sm font-medium hover:border-white hover:bg-white/10 transition-all duration-300 backdrop-blur-sm inline-block text-center"
                   >
                     <span className="relative z-10">Connexion</span>
                     <div className="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 rounded-xl transition-opacity duration-300"></div>
-                  </button>
-                  <button
-                    onClick={() => setIsRegisterOpen(true)}
-                    className="group relative px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#b8d070] to-[#a2c65e] text-[#1d8b93] text-sm font-bold hover:from-[#a2c65e] hover:to-[#b8d070] transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105"
+                  </Link>
+                  <Link
+                    href="/signup"
+                    className="group relative px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#b8d070] to-[#a2c65e] text-[#1d8b93] text-sm font-bold hover:from-[#a2c65e] hover:to-[#b8d070] transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 inline-block"
                   >
                     <span className="relative z-10 flex items-center gap-2">
                       <Sparkles className="w-4 h-4" />
                       Inscription
                     </span>
-                  </button>
+                  </Link>
                 </div>
               )}
             </div>
@@ -372,25 +372,21 @@ const Navbar = () => {
                 </div>
               ) : (
                 <div className="space-y-3">
-                  <button
-                    onClick={() => {
-                      setIsLoginOpen(true);
-                      setIsMenuOpen(false);
-                    }}
+                  <Link
+                    href="/login"
+                    onClick={() => setIsMenuOpen(false)}
                     className="block w-full px-4 py-3 text-center border-2 border-white/30 text-white text-sm font-medium rounded-xl hover:border-white hover:bg-white/10 transition-all duration-300"
                   >
                     Connexion
-                  </button>
-                  <button
-                    onClick={() => {
-                      setIsRegisterOpen(true);
-                      setIsMenuOpen(false);
-                    }}
+                  </Link>
+                  <Link
+                    href="/signup"
+                    onClick={() => setIsMenuOpen(false)}
                     className="flex items-center justify-center gap-2 w-full px-4 py-3 text-center bg-gradient-to-r from-[#b8d070] to-[#a2c65e] text-[#1d8b93] text-sm font-bold rounded-xl hover:from-[#a2c65e] hover:to-[#b8d070] transition-all duration-300 shadow-lg"
                   >
                     <Sparkles className="w-4 h-4" />
                     Inscription
-                  </button>
+                  </Link>
                 </div>
               )}
             </div>
