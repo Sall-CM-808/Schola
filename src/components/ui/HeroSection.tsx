@@ -122,13 +122,13 @@ const HeroSection: React.FC = () => {
             >
               <Link
                 href="/start"
-                className="px-4 py-2 md:px-5 md:py-2.5 rounded-lg md:rounded-xl bg-gradient-to-r from-[#b8d070] to-[#a2c65e] text-[#1d8b93] font-bold text-center transition-all duration-300 hover:shadow-xl hover:shadow-[#ffffff]/50 hover:-translate-y-0.5 text-sm md:text-base"
+                className="px-4 py-2 md:px-5 md:py-2.5 rounded-lg md:rounded-xl bg-gradient-to-r from-[#b8d070] to-[#a2c65e] text-[#1d8b93] font-bold text-center transition-all duration-300 hover:-translate-y-0.5 text-sm md:text-base"
               >
                 Gérer votre école
               </Link>
               <Link
                 href="/fonctionnalites"
-                className="px-4 py-2 md:px-5 md:py-2.5 rounded-lg md:rounded-xl bg-white/10 backdrop-blur-sm border-2 border-white/30 text-white font-bold text-center transition-all duration-300 hover:shadow-xl hover:shadow-[#ffffff]/50 hover:-translate-y-0.5 text-sm md:text-base"
+                className="px-4 py-2 md:px-5 md:py-2.5 rounded-lg md:rounded-xl bg-white/10 backdrop-blur-sm border-2 border-white/30 text-white font-bold text-center transition-all duration-300 hover:-translate-y-0.5 text-sm md:text-base"
               >
                 Explorer
               </Link>
