@@ -70,3 +70,12 @@ body {
 .animate-border-pulse {
   animation: borderPulse 2.4s ease-in-out infinite;
 }
+
+/* Classes utilitaires pour le dashboard */
+.card-min {
+  min-height: 120px;
+}
+
+.chart-min {
+  min-height: 380px;
+}

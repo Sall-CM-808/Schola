@@ -201,7 +201,7 @@ const TeacherDashboardPage: React.FC = () => {
           Tableau de bord Enseignant
         </h1>
         <p className="text-white/70">
-          Vue d'ensemble de vos activités d'enseignement -{" "}
+          Vue d&apos;ensemble de vos activités d&apos;enseignement -{" "}
           {new Date().toLocaleDateString("fr-FR", {
             weekday: "long",
             year: "numeric",

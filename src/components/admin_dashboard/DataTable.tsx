@@ -319,5 +319,5 @@ export const DataTableSkeleton: React.FC<{
     </div>
   );
 };
-
 export default DataTable;
+
