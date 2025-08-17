@@ -1,14 +1,14 @@
 "use client";
 
 import React, { useState } from "react";
-import TeacherSidebar from "@/components/teacher_dashboard/TeacherSidebar";
-import TeacherHeader from "@/components/teacher_dashboard/TeacherHeader";
+import StudentSidebar from "@/components/student_dashboard/StudentSidebar";
+import StudentHeader from "@/components/student_dashboard/StudentHeader";
 
-interface TeacherLayoutProps {
+interface StudentLayoutProps {
   children: React.ReactNode;
 }
 
-const TeacherLayout: React.FC<TeacherLayoutProps> = ({ children }) => {
+const StudentLayout: React.FC<StudentLayoutProps> = ({ children }) => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   return (
@@ -17,13 +17,13 @@ const TeacherLayout: React.FC<TeacherLayoutProps> = ({ children }) => {
       style={{ "--header-h": "80px" } as React.CSSProperties}
     >
       {/* Sidebar fixe */}
-      <TeacherSidebar
+      <StudentSidebar
         isCollapsed={sidebarCollapsed}
         onToggle={() => setSidebarCollapsed(!sidebarCollapsed)}
       />
 
       {/* Header fixe */}
-      <TeacherHeader
+      <StudentHeader
         onToggleSidebar={() => setSidebarCollapsed(!sidebarCollapsed)}
         sidebarCollapsed={sidebarCollapsed}
       />
@@ -45,4 +45,5 @@ const TeacherLayout: React.FC<TeacherLayoutProps> = ({ children }) => {
   );
 };
 
-export default TeacherLayout;
+export default StudentLayout;
+

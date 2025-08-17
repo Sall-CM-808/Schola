@@ -1,15 +1,33 @@
 @import "tailwindcss";
 
+@theme {
+  /* Couleurs Schola */
+  --color-primary-50: #f0f9fa;
+  --color-primary-100: #d9f0f2;
+  --color-primary-200: #b8e2e6;
+  --color-primary-300: #87ccd3;
+  --color-primary-400: #4fa8b2;
+  --color-primary-500: #1d8b93;
+  --color-primary-600: #1a7a81;
+  --color-primary-700: #186569;
+  --color-primary-800: #175356;
+  --color-primary-900: #174548;
+  
+  --color-brand-50: #f7fdf4;
+  --color-brand-100: #ecfae6;
+  --color-brand-200: #d8f4ce;
+  --color-brand-300: #b8d070;
+  --color-brand-400: #a1c95a;
+  --color-brand-500: #8ab445;
+  --color-brand-600: #729433;
+  --color-brand-700: #5d7829;
+  --color-brand-800: #4c6022;
+  --color-brand-900: #405020;
+}
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
 }
 
 @media (prefers-color-scheme: dark) {

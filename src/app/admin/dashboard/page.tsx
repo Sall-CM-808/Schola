@@ -7,6 +7,8 @@ import DataTable, {
   DataTableSkeleton,
 } from "@/components/admin_dashboard/DataTable";
 import UserTypeChart from "@/components/admin_dashboard/UserTypeChart";
+import DashboardGrid from "@/components/layout/DashboardGrid";
+import { SectionCard, SectionHeader } from "@/components/ui/SectionCard";
 import {
   kpi,
   recentUsers,
@@ -22,10 +24,10 @@ import {
   UserX,
   Building2,
   Shield,
-  Key,
   FileText,
   Eye,
   Calendar,
+  Activity,
 } from "lucide-react";
 
 const AdminDashboardPage: React.FC = () => {
@@ -164,17 +166,19 @@ const AdminDashboardPage: React.FC = () => {
         </div>
 
         {/* Chart and Tables */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <div className="bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 shadow-lg p-6 animate-pulse">
-            <div className="h-6 bg-white/20 rounded w-48 mb-6"></div>
-            <div className="w-48 h-48 bg-white/20 rounded-full mx-auto"></div>
+        <DashboardGrid>
+          <div className="col-span-12 lg:col-span-4">
+            <div className="bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 shadow-lg p-6 animate-pulse">
+              <div className="h-6 bg-white/20 rounded w-48 mb-6"></div>
+              <div className="w-48 h-48 bg-white/20 rounded-full mx-auto"></div>
+            </div>
           </div>
 
-          <div className="lg:col-span-2 space-y-8">
+          <div className="col-span-12 lg:col-span-8 space-y-8">
             <DataTableSkeleton rows={5} columns={4} />
             <DataTableSkeleton rows={5} columns={5} />
           </div>
-        </div>
+        </DashboardGrid>
       </div>
     );
   }
@@ -194,7 +198,7 @@ const AdminDashboardPage: React.FC = () => {
           Tableau de bord Admin
         </h1>
         <p className="text-white/70">
-          Vue d'ensemble de la plateforme Schola -{" "}
+          Vue d&apos;ensemble de la plateforme Schola -{" "}
           {new Date().toLocaleDateString("fr-FR", {
             weekday: "long",
             year: "numeric",
@@ -207,72 +211,186 @@ const AdminDashboardPage: React.FC = () => {
       {/* KPI Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
         <KpiCard
-          label="Total Utilisateurs"
+          title="Total Utilisateurs"
           value={data.kpi.usersTotal}
-          caption="Tous les comptes créés"
-          icon={<Users className="w-6 h-6" />}
+          subtitle="Tous les comptes créés"
+          icon={Users}
           color="blue"
-          trend={{ value: 12, isPositive: true }}
+          trend="up"
+          delta={12}
         />
         <KpiCard
-          label="Utilisateurs Actifs"
+          title="Utilisateurs Actifs"
           value={data.kpi.usersActive}
-          caption="Connectés récemment"
-          icon={<UserCheck className="w-6 h-6" />}
+          subtitle="Connectés récemment"
+          icon={UserCheck}
           color="green"
-          trend={{ value: 8, isPositive: true }}
+          trend="up"
+          delta={8}
         />
         <KpiCard
-          label="Utilisateurs Inactifs"
+          title="Utilisateurs Inactifs"
           value={data.kpi.usersInactive}
-          caption="Non connectés 30j+"
-          icon={<UserX className="w-6 h-6" />}
+          subtitle="Non connectés 30j+"
+          icon={UserX}
           color="red"
-          trend={{ value: 3, isPositive: false }}
+          trend="down"
+          delta={-3}
         />
         <KpiCard
-          label="Unités"
+          title="Unités"
           value={data.kpi.unitsTotal}
-          caption="Départements et services"
-          icon={<Building2 className="w-6 h-6" />}
+          subtitle="Départements et services"
+          icon={Building2}
           color="purple"
         />
         <KpiCard
-          label="Éléments"
+          title="Éléments"
           value={data.kpi.elementsTotal}
-          caption="Cours, devoirs, ressources"
-          icon={<FileText className="w-6 h-6" />}
+          subtitle="Cours, devoirs, ressources"
+          icon={FileText}
           color="orange"
-          trend={{ value: 24, isPositive: true }}
+          trend="up"
+          delta={24}
         />
       </div>
 
-      {/* Chart and Tables */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      {/* Main Dashboard Grid */}
+      <DashboardGrid>
         {/* User Type Distribution Chart */}
-        <UserTypeChart data={data.distribution} />
-
-        {/* Tables */}
-        <div className="lg:col-span-2 space-y-8">
-          {/* Recent Users Table */}
-          <DataTable
-            title="Derniers utilisateurs"
-            columns={userColumns}
-            rows={data.users}
-            emptyMessage="Aucun utilisateur récent"
-            searchable
-          />
-
-          {/* Recent Elements Table */}
-          <DataTable
-            title="Derniers éléments"
-            columns={elementColumns}
-            rows={data.elements}
-            emptyMessage="Aucun élément récent"
-            searchable
-          />
+        <div className="col-span-12 lg:col-span-4">
+          <SectionCard>
+            <SectionHeader title="Répartition des utilisateurs" />
+            <UserTypeChart data={data.distribution} />
+          </SectionCard>
         </div>
-      </div>
+
+        {/* Quick Stats */}
+        <div className="col-span-12 lg:col-span-8">
+          <SectionCard>
+            <SectionHeader title="Statistiques rapides" />
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="bg-white/5 rounded-lg p-4">
+                <div className="flex items-center gap-3 mb-2">
+                  <div className="p-2 rounded-lg bg-blue-500/20">
+                    <Users className="w-4 h-4 text-blue-400" />
+                  </div>
+                  <span className="text-white/70 text-sm">Étudiants</span>
+                </div>
+                <div className="text-2xl font-bold text-white">1,234</div>
+                <div className="text-xs text-green-400 flex items-center gap-1">
+                  <span>↗</span> +5.2% ce mois
+                </div>
+              </div>
+
+              <div className="bg-white/5 rounded-lg p-4">
+                <div className="flex items-center gap-3 mb-2">
+                  <div className="p-2 rounded-lg bg-green-500/20">
+                    <Shield className="w-4 h-4 text-green-400" />
+                  </div>
+                  <span className="text-white/70 text-sm">Enseignants</span>
+                </div>
+                <div className="text-2xl font-bold text-white">89</div>
+                <div className="text-xs text-green-400 flex items-center gap-1">
+                  <span>↗</span> +2 cette semaine
+                </div>
+              </div>
+
+              <div className="bg-white/5 rounded-lg p-4">
+                <div className="flex items-center gap-3 mb-2">
+                  <div className="p-2 rounded-lg bg-purple-500/20">
+                    <Building2 className="w-4 h-4 text-purple-400" />
+                  </div>
+                  <span className="text-white/70 text-sm">Admins</span>
+                </div>
+                <div className="text-2xl font-bold text-white">12</div>
+                <div className="text-xs text-yellow-400 flex items-center gap-1">
+                  <span>→</span> Stable
+                </div>
+              </div>
+            </div>
+          </SectionCard>
+        </div>
+
+        {/* Recent Users Table */}
+        <div className="col-span-12 lg:col-span-6">
+          <SectionCard>
+            <SectionHeader title="Derniers utilisateurs" />
+            <DataTable
+              columns={userColumns}
+              rows={data.users}
+              emptyMessage="Aucun utilisateur récent"
+              searchable
+            />
+          </SectionCard>
+        </div>
+
+        {/* Recent Elements Table */}
+        <div className="col-span-12 lg:col-span-6">
+          <SectionCard>
+            <SectionHeader title="Derniers éléments" />
+            <DataTable
+              columns={elementColumns}
+              rows={data.elements}
+              emptyMessage="Aucun élément récent"
+              searchable
+            />
+          </SectionCard>
+        </div>
+
+        {/* Activity Feed */}
+        <div className="col-span-12">
+          <SectionCard>
+            <SectionHeader title="Activité récente" />
+            <div className="space-y-4">
+              {[
+                {
+                  action: "Nouvel utilisateur inscrit",
+                  user: "Marie Diallo",
+                  time: "Il y a 2 minutes",
+                  type: "user",
+                },
+                {
+                  action: "Cours créé",
+                  user: "Prof. Camara",
+                  time: "Il y a 15 minutes",
+                  type: "course",
+                },
+                {
+                  action: "Devoir soumis",
+                  user: "Ahmed Bah",
+                  time: "Il y a 1 heure",
+                  type: "assignment",
+                },
+                {
+                  action: "Nouvelle unité ajoutée",
+                  user: "Admin System",
+                  time: "Il y a 2 heures",
+                  type: "unit",
+                },
+              ].map((activity, index) => (
+                <div
+                  key={index}
+                  className="flex items-center gap-4 p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors"
+                >
+                  <div className="p-2 rounded-lg bg-[#1d8b93]/20">
+                    <Activity className="w-4 h-4 text-[#b8d070]" />
+                  </div>
+                  <div className="flex-1">
+                    <div className="text-white font-medium">
+                      {activity.action}
+                    </div>
+                    <div className="text-white/60 text-sm">
+                      par {activity.user}
+                    </div>
+                  </div>
+                  <div className="text-white/40 text-xs">{activity.time}</div>
+                </div>
+              ))}
+            </div>
+          </SectionCard>
+        </div>
+      </DashboardGrid>
 
       {/* Quick Actions */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

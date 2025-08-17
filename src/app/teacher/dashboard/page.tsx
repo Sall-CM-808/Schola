@@ -214,39 +214,40 @@ const TeacherDashboardPage: React.FC = () => {
       {/* KPI Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
         <KpiCard
-          label="Éléments Publiés"
+          title="Éléments Publiés"
           value={data.kpi.published}
-          caption="Cours, devoirs, ressources"
-          icon={<BookOpen className="w-6 h-6" />}
+          subtitle="Cours, devoirs, ressources"
+          icon={BookOpen}
           color="green"
-          trend={{ value: 12, isPositive: true }}
+          trend="up"
+          delta={12}
         />
         <KpiCard
-          label="En Brouillon"
+          title="En Brouillon"
           value={data.kpi.drafts}
-          caption="En cours de préparation"
-          icon={<FileEdit className="w-6 h-6" />}
+          subtitle="En cours de préparation"
+          icon={FileEdit}
           color="orange"
         />
         <KpiCard
-          label="Archivés"
+          title="Archivés"
           value={data.kpi.archived}
-          caption="Éléments passés"
-          icon={<Archive className="w-6 h-6" />}
+          subtitle="Éléments passés"
+          icon={Archive}
           color="red"
         />
         <KpiCard
-          label="Classes/Groupes"
+          title="Classes/Groupes"
           value={data.kpi.groups}
-          caption="Groupes gérés"
-          icon={<Users className="w-6 h-6" />}
+          subtitle="Groupes gérés"
+          icon={Users}
           color="blue"
         />
         <KpiCard
-          label="Attributions Actives"
+          title="Attributions Actives"
           value={data.kpi.activeAssignments}
-          caption="Rôles en cours"
-          icon={<Shield className="w-6 h-6" />}
+          subtitle="Rôles en cours"
+          icon={Shield}
           color="purple"
         />
       </div>

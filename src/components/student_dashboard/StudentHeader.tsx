@@ -11,17 +11,21 @@ import {
   LogOut,
   ChevronRight,
   Home,
-  Shield,
+  BookOpen,
   X,
   HelpCircle,
   Menu,
   Sun,
   Moon,
   Calendar,
+  GraduationCap,
+  Clock,
+  Award,
+  FileText,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-interface AdminHeaderProps {
+interface StudentHeaderProps {
   onToggleSidebar?: () => void;
   sidebarCollapsed?: boolean;
 }
@@ -32,10 +36,10 @@ interface BreadcrumbItem {
   icon?: React.ComponentType<{ className?: string }>;
 }
 
-export default function AdminHeader({
+export default function StudentHeader({
   onToggleSidebar,
   sidebarCollapsed = false,
-}: AdminHeaderProps) {
+}: StudentHeaderProps) {
   const pathname = usePathname();
   const [searchValue, setSearchValue] = useState("");
   const [searchFocused, setSearchFocused] = useState(false);
@@ -68,33 +72,32 @@ export default function AdminHeader({
     }
   }, [showNotifications, showUserMenu, handleClickOutside]);
 
-  // Generate admin-specific breadcrumbs
+  // Generate student-specific breadcrumbs
   const generateBreadcrumbs = useCallback((): BreadcrumbItem[] => {
     const segments = pathname.split("/").filter(Boolean);
     const breadcrumbs: BreadcrumbItem[] = [
       { label: "Accueil", href: "/", icon: Home },
     ];
 
-    const adminSegmentLabels: Record<
+    const studentSegmentLabels: Record<
       string,
       { label: string; icon?: React.ComponentType<{ className?: string }> }
     > = {
-      admin: { label: "Administration", icon: Shield },
+      student: { label: "Espace Étudiant", icon: GraduationCap },
       dashboard: { label: "Tableau de bord" },
-      users: { label: "Utilisateurs", icon: User },
-      units: { label: "Unités structurelles" },
-      "roles-permissions": { label: "Rôles & Permissions" },
-      elements: { label: "Éléments" },
-      attributions: { label: "Attributions" },
-      search: { label: "Recherche avancée" },
-      reports: { label: "Rapports & Export" },
+      courses: { label: "Mes cours", icon: BookOpen },
+      schedule: { label: "Emploi du temps", icon: Calendar },
+      homework: { label: "Devoirs", icon: FileText },
+      grades: { label: "Notes", icon: Award },
+      resources: { label: "Ressources" },
       settings: { label: "Paramètres", icon: Settings },
+      help: { label: "Aide & Support", icon: HelpCircle },
     };
 
     let currentPath = "";
     segments.forEach((segment) => {
       currentPath += `/${segment}`;
-      const segmentInfo = adminSegmentLabels[segment];
+      const segmentInfo = studentSegmentLabels[segment];
       if (segmentInfo) {
         breadcrumbs.push({
           label: segmentInfo.label,
@@ -109,48 +112,50 @@ export default function AdminHeader({
 
   const breadcrumbs = generateBreadcrumbs();
   const pageTitle =
-    breadcrumbs[breadcrumbs.length - 1]?.label || "Administration";
+    breadcrumbs[breadcrumbs.length - 1]?.label || "Espace Étudiant";
 
-  // Admin user info avec nom guinéen
-  const adminInfo = {
-    name: "Amadou Diallo",
-    email: "amadou.diallo@schola.gn",
-    role: "Super Administrateur",
-    avatar: "/images/admin-avatar.jpg", // Image d'un homme guinéen
-    initials: "AD",
-    department: "Direction Générale",
-    lastLogin: "Aujourd'hui à 14:30",
+  // Student user info avec nom guinéen
+  const studentInfo = {
+    name: "Marie Camara",
+    email: "marie.camara@schola.gn",
+    role: "Étudiante",
+    class: "Terminale S",
+    promo: "Promo 2024",
+    avatar: "/images/student-avatar.jpg",
+    initials: "MC",
+    average: "15.2/20",
+    lastLogin: "Aujourd'hui à 08:15",
   };
 
-  // Admin notifications
-  const adminNotifications = [
+  // Student notifications
+  const studentNotifications = [
     {
       id: 1,
       type: "warning",
-      message: "7 nouvelles connexions suspectes détectées",
-      time: "Il y a 5 min",
+      message: "Devoir de Mathématiques à rendre demain",
+      time: "Il y a 30 min",
       priority: "high",
     },
     {
       id: 2,
       type: "info",
-      message: "Mise à jour système programmée pour demain",
-      time: "Il y a 15 min",
+      message: "Nouveau cours de Physique disponible",
+      time: "Il y a 1h",
       priority: "medium",
     },
     {
       id: 3,
       type: "success",
-      message: "Sauvegarde automatique terminée avec succès",
-      time: "Il y a 1h",
+      message: "Note de Français publiée: 16/20",
+      time: "Il y a 2h",
       priority: "low",
     },
     {
       id: 4,
-      type: "warning",
-      message: "Espace de stockage à 87% - Action requise",
-      time: "Il y a 2h",
-      priority: "high",
+      type: "info",
+      message: "Réunion parents-professeurs le 15 mars",
+      time: "Il y a 3h",
+      priority: "medium",
     },
   ];
 
@@ -224,29 +229,21 @@ export default function AdminHeader({
             <div className="flex-1 flex justify-center max-w-md mx-8">
               <div className="relative w-full hidden lg:block">
                 <motion.div
-                  initial={{ width: 320 }}
-                  animate={{ width: searchFocused ? 400 : 320 }}
+                  initial={{ width: 300 }}
+                  animate={{ width: searchFocused ? 380 : 300 }}
                   transition={{ duration: 0.3, ease: "easeInOut" }}
                   className="relative w-full"
                 >
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-white/60" />
                   <input
                     type="text"
-                    placeholder="Recherche admin, utilisateurs, paramètres..."
+                    placeholder="Rechercher cours, devoirs, ressources..."
                     value={searchValue}
                     onChange={(e) => setSearchValue(e.target.value)}
                     onFocus={() => setSearchFocused(true)}
                     onBlur={() => setSearchFocused(false)}
-                    className="w-full h-11 pl-10 pr-10 bg-white/15 backdrop-blur-sm border border-white/25 rounded-xl text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-[#b8d070]/60 focus:border-[#b8d070]/60 focus:bg-white/20 transition-all duration-300 shadow-lg"
+                    className="w-full h-11 pl-10 pr-4 bg-white/15 backdrop-blur-sm border border-white/25 rounded-xl text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-[#b8d070]/60 focus:border-[#b8d070]/60 focus:bg-white/20 transition-all duration-300 shadow-lg"
                   />
-                  {searchValue && (
-                    <button
-                      onClick={() => setSearchValue("")}
-                      className="absolute right-3 top-1/2 transform -translate-y-1/2 p-1 hover:bg-white/20 rounded-full transition-colors"
-                    >
-                      <X className="h-3 w-3 text-white/60" />
-                    </button>
-                  )}
                   {searchFocused && (
                     <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-[#b8d070]/10 to-transparent pointer-events-none"></div>
                   )}
@@ -260,7 +257,7 @@ export default function AdminHeader({
               <motion.button
                 initial={{ opacity: 0, rotate: -90 }}
                 animate={{ opacity: 1, rotate: 0 }}
-                transition={{ delay: 0.5 }}
+                transition={{ delay: 0.4 }}
                 onClick={() => setIsDarkMode(!isDarkMode)}
                 className="p-2.5 hover:bg-white/10 rounded-xl transition-all duration-200 group"
                 aria-label="Toggle theme"
@@ -276,7 +273,7 @@ export default function AdminHeader({
               <motion.div
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.6 }}
+                transition={{ delay: 0.5 }}
                 className="relative"
               >
                 <motion.button
@@ -291,11 +288,11 @@ export default function AdminHeader({
                   <motion.span
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
-                    transition={{ type: "spring", stiffness: 500, delay: 0.8 }}
+                    transition={{ type: "spring", stiffness: 500, delay: 0.7 }}
                     className="absolute -top-1 -right-1 w-5 h-5 bg-gradient-to-r from-red-500 to-red-600 rounded-full text-xs flex items-center justify-center text-white font-bold shadow-lg"
                   >
                     {
-                      adminNotifications.filter((n) => n.priority === "high")
+                      studentNotifications.filter((n) => n.priority === "high")
                         .length
                     }
                   </motion.span>
@@ -322,8 +319,8 @@ export default function AdminHeader({
                       <div className="p-4 border-b border-white/20 bg-gradient-to-r from-white/5 to-transparent relative">
                         <div className="flex items-center justify-between">
                           <h3 className="font-semibold text-white flex items-center gap-2">
-                            <Shield className="h-5 w-5 text-[#b8d070]" />
-                            Notifications Admin
+                            <GraduationCap className="h-5 w-5 text-[#b8d070]" />
+                            Mes Notifications
                           </h3>
                           <motion.button
                             whileHover={{ scale: 1.1, rotate: 90 }}
@@ -336,7 +333,7 @@ export default function AdminHeader({
                         </div>
                       </div>
                       <div className="max-h-80 overflow-y-auto">
-                        {adminNotifications.map((notification, index) => (
+                        {studentNotifications.map((notification, index) => (
                           <motion.div
                             key={notification.id}
                             initial={{ opacity: 0, x: -20 }}
@@ -366,7 +363,7 @@ export default function AdminHeader({
                                 </p>
                                 <div className="flex items-center justify-between">
                                   <p className="text-xs text-white/70 flex items-center gap-1">
-                                    <Calendar className="w-3 h-3" />
+                                    <Clock className="w-3 h-3" />
                                     {notification.time}
                                   </p>
                                   <span
@@ -406,7 +403,7 @@ export default function AdminHeader({
               <motion.button
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.7 }}
+                transition={{ delay: 0.6 }}
                 className="p-2.5 hover:bg-white/10 rounded-xl transition-all duration-200 group"
                 aria-label="Aide"
               >
@@ -417,7 +414,7 @@ export default function AdminHeader({
               <motion.div
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.8 }}
+                transition={{ delay: 0.7 }}
                 className="relative"
               >
                 <motion.button
@@ -432,8 +429,8 @@ export default function AdminHeader({
                   <div className="relative">
                     <div className="w-10 h-10 rounded-xl overflow-hidden ring-2 ring-white/20 group-hover:ring-[#b8d070]/50 transition-all duration-200">
                       <img
-                        src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face"
-                        alt={adminInfo.name}
+                        src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&h=100&fit=crop&crop=face"
+                        alt={studentInfo.name}
                         className="w-full h-full object-cover"
                         onError={(e) => {
                           // Fallback en cas d'erreur de chargement
@@ -446,10 +443,10 @@ export default function AdminHeader({
                         }}
                       />
                       <div
-                        className="w-full h-full bg-gradient-to-br from-amber-600 to-amber-800 hidden items-center justify-center text-white font-semibold text-sm"
+                        className="w-full h-full bg-gradient-to-br from-purple-500 to-purple-700 hidden items-center justify-center text-white font-semibold text-sm"
                         style={{ display: "none" }}
                       >
-                        {adminInfo.initials}
+                        {studentInfo.initials}
                       </div>
                     </div>
                     {/* Indicateur de statut en ligne */}
@@ -459,10 +456,10 @@ export default function AdminHeader({
                   {/* User info */}
                   <div className="hidden xl:block text-left">
                     <div className="text-white font-medium text-sm leading-tight group-hover:text-[#b8d070] transition-colors">
-                      {adminInfo.name}
+                      {studentInfo.name}
                     </div>
                     <div className="text-white/60 text-xs">
-                      {adminInfo.role}
+                      {studentInfo.class}
                     </div>
                   </div>
 
@@ -508,8 +505,8 @@ export default function AdminHeader({
                           <div className="relative">
                             <div className="w-14 h-14 rounded-xl overflow-hidden ring-2 ring-[#b8d070]/30">
                               <img
-                                src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face"
-                                alt={adminInfo.name}
+                                src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&h=100&fit=crop&crop=face"
+                                alt={studentInfo.name}
                                 className="w-full h-full object-cover"
                                 onError={(e) => {
                                   e.currentTarget.style.display = "none";
@@ -521,28 +518,28 @@ export default function AdminHeader({
                                 }}
                               />
                               <div
-                                className="w-full h-full bg-gradient-to-br from-amber-600 to-amber-800 hidden items-center justify-center text-white font-semibold"
+                                className="w-full h-full bg-gradient-to-br from-purple-500 to-purple-700 hidden items-center justify-center text-white font-semibold"
                                 style={{ display: "none" }}
                               >
-                                {adminInfo.initials}
+                                {studentInfo.initials}
                               </div>
                             </div>
                             <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-400 border-2 border-slate-900 rounded-full shadow-lg"></div>
                           </div>
                           <div className="flex-1 min-w-0">
                             <h3 className="text-white font-semibold text-base">
-                              {adminInfo.name}
+                              {studentInfo.name}
                             </h3>
                             <p className="text-[#b8d070] text-sm font-medium">
-                              {adminInfo.role}
+                              {studentInfo.class} • {studentInfo.promo}
                             </p>
                             <p className="text-white/60 text-xs mt-1">
-                              {adminInfo.email}
+                              {studentInfo.email}
                             </p>
                             <div className="flex items-center gap-4 mt-2 text-xs text-white/60">
                               <span className="flex items-center gap-1">
-                                <Shield className="w-3 h-3" />
-                                {adminInfo.department}
+                                <Award className="w-3 h-3" />
+                                Moyenne: {studentInfo.average}
                               </span>
                             </div>
                           </div>
@@ -553,7 +550,7 @@ export default function AdminHeader({
                               Dernière connexion
                             </span>
                             <span className="text-white font-medium">
-                              {adminInfo.lastLogin}
+                              {studentInfo.lastLogin}
                             </span>
                           </div>
                         </div>
@@ -580,13 +577,13 @@ export default function AdminHeader({
                           whileHover={{ x: 2 }}
                           className="w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-white/15 rounded-xl transition-all duration-200 group"
                         >
-                          <Settings className="h-5 w-5 text-white/70 group-hover:text-[#b8d070]" />
+                          <BookOpen className="h-5 w-5 text-white/70 group-hover:text-[#b8d070]" />
                           <div>
                             <div className="text-sm font-medium text-white">
-                              Paramètres système
+                              Mes cours
                             </div>
                             <div className="text-xs text-white/60">
-                              Configuration avancée
+                              Accès rapide aux matières
                             </div>
                           </div>
                         </motion.button>
@@ -595,13 +592,13 @@ export default function AdminHeader({
                           whileHover={{ x: 2 }}
                           className="w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-white/15 rounded-xl transition-all duration-200 group"
                         >
-                          <HelpCircle className="h-5 w-5 text-white/70 group-hover:text-[#b8d070]" />
+                          <Settings className="h-5 w-5 text-white/70 group-hover:text-[#b8d070]" />
                           <div>
                             <div className="text-sm font-medium text-white">
-                              Aide & Support
+                              Paramètres
                             </div>
                             <div className="text-xs text-white/60">
-                              Documentation admin
+                              Notifications et préférences
                             </div>
                           </div>
                         </motion.button>
@@ -618,7 +615,7 @@ export default function AdminHeader({
                               Se déconnecter
                             </div>
                             <div className="text-xs text-red-400/70">
-                              Fermer la session admin
+                              Fermer ma session
                             </div>
                           </div>
                         </motion.button>
@@ -627,7 +624,7 @@ export default function AdminHeader({
                       {/* Footer avec statut */}
                       <div className="p-3 border-t border-white/10 bg-gradient-to-r from-transparent to-white/5">
                         <div className="text-xs text-white/60 text-center font-medium">
-                          Session sécurisée • {adminInfo.department}
+                          Session sécurisée • {studentInfo.class}
                         </div>
                       </div>
                     </motion.div>
@@ -641,3 +638,4 @@ export default function AdminHeader({
     </motion.header>
   );
 }
+
