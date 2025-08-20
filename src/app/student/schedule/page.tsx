@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { 
+import {
   Calendar,
   Clock,
   MapPin,
@@ -15,7 +15,7 @@ import {
   BookOpen,
   FileText,
   Users,
-  Bell
+  Bell,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -56,7 +56,7 @@ const scheduleData: DaySchedule[] = [
         type: "course",
         color: "from-blue-500 to-blue-600",
         hasVideoLink: true,
-        videoLink: "https://meet.google.com/abc-def-ghi"
+        videoLink: "https://meet.google.com/abc-def-ghi",
       },
       {
         id: "2",
@@ -67,7 +67,7 @@ const scheduleData: DaySchedule[] = [
         startTime: "10:00",
         endTime: "11:30",
         type: "course",
-        color: "from-green-500 to-green-600"
+        color: "from-green-500 to-green-600",
       },
       {
         id: "3",
@@ -78,9 +78,9 @@ const scheduleData: DaySchedule[] = [
         startTime: "14:00",
         endTime: "15:30",
         type: "course",
-        color: "from-orange-500 to-orange-600"
-      }
-    ]
+        color: "from-orange-500 to-orange-600",
+      },
+    ],
   },
   {
     date: "2024-01-16",
@@ -95,7 +95,7 @@ const scheduleData: DaySchedule[] = [
         startTime: "08:00",
         endTime: "10:00",
         type: "exam",
-        color: "from-red-500 to-red-600"
+        color: "from-red-500 to-red-600",
       },
       {
         id: "5",
@@ -107,9 +107,9 @@ const scheduleData: DaySchedule[] = [
         endTime: "12:00",
         type: "course",
         color: "from-purple-500 to-purple-600",
-        hasVideoLink: true
-      }
-    ]
+        hasVideoLink: true,
+      },
+    ],
   },
   {
     date: "2024-01-17",
@@ -124,7 +124,7 @@ const scheduleData: DaySchedule[] = [
         startTime: "09:00",
         endTime: "10:30",
         type: "course",
-        color: "from-teal-500 to-teal-600"
+        color: "from-teal-500 to-teal-600",
       },
       {
         id: "7",
@@ -135,10 +135,10 @@ const scheduleData: DaySchedule[] = [
         startTime: "18:00",
         endTime: "20:00",
         type: "event",
-        color: "from-indigo-500 to-indigo-600"
-      }
-    ]
-  }
+        color: "from-indigo-500 to-indigo-600",
+      },
+    ],
+  },
 ];
 
 const getTypeIcon = (type: string) => {
@@ -169,16 +169,19 @@ const getTypeLabel = (type: string) => {
 
 export default function StudentSchedulePage() {
   const [currentWeek, setCurrentWeek] = useState(0);
-  const [selectedEvent, setSelectedEvent] = useState<ScheduleEvent | null>(null);
+  const [selectedEvent, setSelectedEvent] = useState<ScheduleEvent | null>(
+    null
+  );
   const [viewMode, setViewMode] = useState<"week" | "day">("week");
   const [searchQuery, setSearchQuery] = useState("");
   const [filterType, setFilterType] = useState<string>("all");
 
-  const filteredSchedule = scheduleData.filter(day => {
-    const hasMatchingEvent = day.events.some(event => {
-      const matchesSearch = event.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                           event.subject.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                           event.teacher.toLowerCase().includes(searchQuery.toLowerCase());
+  const filteredSchedule = scheduleData.filter((day) => {
+    const hasMatchingEvent = day.events.some((event) => {
+      const matchesSearch =
+        event.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        event.subject.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        event.teacher.toLowerCase().includes(searchQuery.toLowerCase());
       const matchesFilter = filterType === "all" || event.type === filterType;
       return matchesSearch && matchesFilter;
     });
@@ -187,71 +190,90 @@ export default function StudentSchedulePage() {
 
   return (
     <div className="space-y-6">
-      {/* En-tête */}
+      {/* Header avec titre principal */}
       <motion.div
-        initial={{ opacity: 0, y: -20 }}
+        initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="flex flex-col lg:flex-row lg:items-center justify-between gap-4"
+        className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20"
       >
-        <div>
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-[#1d8b93] to-[#b8d070] bg-clip-text text-transparent">
-            Emploi du temps
-          </h1>
-          <p className="text-white/70 mt-1">
-            Consultez votre planning de la semaine
-          </p>
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-bold text-white mb-2 flex items-center gap-3">
+              <Calendar className="w-7 h-7 text-[#b8d070]" />
+              📅 Mon Emploi du Temps
+            </h1>
+            <p className="text-white/70">
+              Consultez votre planning hebdomadaire et vos séances à venir.
+            </p>
+          </div>
+          <div className="text-right hidden sm:block">
+            <p className="text-white/60 text-sm">Cette semaine</p>
+            <p className="text-3xl font-bold text-[#b8d070]">
+              {filteredSchedule.reduce(
+                (acc, day) => acc + day.events.length,
+                0
+              )}
+            </p>
+            <p className="text-white/60 text-sm">cours programmés</p>
+          </div>
+        </div>
+      </motion.div>
+
+      {/* Filtres et contrôles */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.1 }}
+        className="flex flex-wrap items-center gap-4 bg-white/5 backdrop-blur-xl border border-white/10 rounded-xl p-4"
+      >
+        {/* Recherche */}
+        <div className="relative flex-1 min-w-[250px]">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/40 w-4 h-4" />
+          <input
+            type="text"
+            placeholder="Rechercher un cours..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full pl-10 pr-4 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-[#1d8b93]/50"
+          />
         </div>
 
-        <div className="flex flex-wrap items-center gap-3">
-          {/* Recherche */}
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/40 w-4 h-4" />
-            <input
-              type="text"
-              placeholder="Rechercher..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 pr-4 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-[#1d8b93]/50 focus:border-[#1d8b93]/50 w-64"
-            />
-          </div>
+        {/* Filtre par type */}
+        <select
+          value={filterType}
+          onChange={(e) => setFilterType(e.target.value)}
+          className="px-4 py-2 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-[#1d8b93]/50"
+        >
+          <option value="all">Tous les types</option>
+          <option value="course">Cours</option>
+          <option value="exam">Examens</option>
+          <option value="event">Événements</option>
+        </select>
 
-          {/* Filtre par type */}
-          <select
-            value={filterType}
-            onChange={(e) => setFilterType(e.target.value)}
-            className="px-4 py-2 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-[#1d8b93]/50"
+        {/* Mode d'affichage */}
+        <div className="flex bg-white/10 rounded-lg p-1">
+          <button
+            onClick={() => setViewMode("week")}
+            className={cn(
+              "px-4 py-2 rounded-md text-sm font-medium transition-all",
+              viewMode === "week"
+                ? "bg-[#1d8b93] text-white"
+                : "text-white/70 hover:text-white"
+            )}
           >
-            <option value="all">Tous les types</option>
-            <option value="course">Cours</option>
-            <option value="exam">Examens</option>
-            <option value="event">Événements</option>
-          </select>
-
-          {/* Mode d'affichage */}
-          <div className="flex bg-white/10 rounded-lg p-1">
-            <button
-              onClick={() => setViewMode("week")}
-              className={cn(
-                "px-4 py-2 rounded-md text-sm font-medium transition-all",
-                viewMode === "week"
-                  ? "bg-[#1d8b93] text-white"
-                  : "text-white/70 hover:text-white"
-              )}
-            >
-              Semaine
-            </button>
-            <button
-              onClick={() => setViewMode("day")}
-              className={cn(
-                "px-4 py-2 rounded-md text-sm font-medium transition-all",
-                viewMode === "day"
-                  ? "bg-[#1d8b93] text-white"
-                  : "text-white/70 hover:text-white"
-              )}
-            >
-              Jour
-            </button>
-          </div>
+            Semaine
+          </button>
+          <button
+            onClick={() => setViewMode("day")}
+            className={cn(
+              "px-4 py-2 rounded-md text-sm font-medium transition-all",
+              viewMode === "day"
+                ? "bg-[#1d8b93] text-white"
+                : "text-white/70 hover:text-white"
+            )}
+          >
+            Jour
+          </button>
         </div>
       </motion.div>
 
@@ -263,7 +285,7 @@ export default function StudentSchedulePage() {
         className="flex items-center justify-between bg-white/5 backdrop-blur-xl border border-white/10 rounded-xl p-4"
       >
         <button
-          onClick={() => setCurrentWeek(prev => prev - 1)}
+          onClick={() => setCurrentWeek((prev) => prev - 1)}
           className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 rounded-lg text-white transition-colors"
         >
           <ChevronLeft className="w-4 h-4" />
@@ -278,7 +300,7 @@ export default function StudentSchedulePage() {
         </div>
 
         <button
-          onClick={() => setCurrentWeek(prev => prev + 1)}
+          onClick={() => setCurrentWeek((prev) => prev + 1)}
           className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 rounded-lg text-white transition-colors"
         >
           Semaine suivante
@@ -300,10 +322,10 @@ export default function StudentSchedulePage() {
             <div className="bg-gradient-to-r from-[#1d8b93]/20 to-[#b8d070]/20 p-4 border-b border-white/10">
               <h3 className="text-xl font-bold text-white">{day.dayName}</h3>
               <p className="text-white/70 text-sm">
-                {new Date(day.date).toLocaleDateString('fr-FR', {
-                  day: 'numeric',
-                  month: 'long',
-                  year: 'numeric'
+                {new Date(day.date).toLocaleDateString("fr-FR", {
+                  day: "numeric",
+                  month: "long",
+                  year: "numeric",
                 })}
               </p>
             </div>
@@ -341,14 +363,18 @@ export default function StudentSchedulePage() {
                         {/* Contenu */}
                         <div className="flex-1">
                           <div className="flex items-center gap-2 mb-1">
-                            <div className={`p-1.5 rounded-lg bg-gradient-to-r ${event.color}`}>
+                            <div
+                              className={`p-1.5 rounded-lg bg-gradient-to-r ${event.color}`}
+                            >
                               <TypeIcon className="w-4 h-4 text-white" />
                             </div>
                             <span className="text-xs bg-white/10 text-white/70 px-2 py-1 rounded-full">
                               {getTypeLabel(event.type)}
                             </span>
                           </div>
-                          <h4 className="font-bold text-white mb-1">{event.title}</h4>
+                          <h4 className="font-bold text-white mb-1">
+                            {event.title}
+                          </h4>
                           <div className="flex flex-wrap items-center gap-4 text-sm text-white/70">
                             <div className="flex items-center gap-1">
                               <User className="w-4 h-4" />
@@ -399,7 +425,9 @@ export default function StudentSchedulePage() {
               className="bg-[#0a0f1c]/95 backdrop-blur-xl border border-white/20 rounded-xl p-6 max-w-md w-full"
             >
               <div className="flex items-center justify-between mb-4">
-                <h3 className="text-xl font-bold text-white">Détails du cours</h3>
+                <h3 className="text-xl font-bold text-white">
+                  Détails du cours
+                </h3>
                 <button
                   onClick={() => setSelectedEvent(null)}
                   className="text-white/70 hover:text-white transition-colors"
@@ -410,7 +438,9 @@ export default function StudentSchedulePage() {
 
               <div className="space-y-4">
                 <div>
-                  <h4 className="font-bold text-white text-lg">{selectedEvent.title}</h4>
+                  <h4 className="font-bold text-white text-lg">
+                    {selectedEvent.title}
+                  </h4>
                   <p className="text-white/70">{selectedEvent.subject}</p>
                 </div>
 
@@ -425,11 +455,15 @@ export default function StudentSchedulePage() {
                   </div>
                   <div>
                     <div className="text-white/50 mb-1">Horaire</div>
-                    <div className="text-white">{selectedEvent.startTime} - {selectedEvent.endTime}</div>
+                    <div className="text-white">
+                      {selectedEvent.startTime} - {selectedEvent.endTime}
+                    </div>
                   </div>
                   <div>
                     <div className="text-white/50 mb-1">Type</div>
-                    <div className="text-white">{getTypeLabel(selectedEvent.type)}</div>
+                    <div className="text-white">
+                      {getTypeLabel(selectedEvent.type)}
+                    </div>
                   </div>
                 </div>
 
@@ -449,4 +483,3 @@ export default function StudentSchedulePage() {
     </div>
   );
 }
-
