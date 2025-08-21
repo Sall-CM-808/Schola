@@ -18,18 +18,14 @@ import {
 } from "@/lib/mocks/adminAttributions";
 import {
   UserPlus,
-  Users,
   Clock,
   CheckCircle,
   XCircle,
   Plus,
   Download,
   Upload,
-  Calendar,
-  User,
-  Building2,
-  Globe,
   Shield,
+  FileText,
   AlertCircle,
   Check,
   X,
@@ -74,7 +70,7 @@ const AdminAttributionsPage: React.FC = () => {
         // Simuler une notification d'erreur
         console.error("❌", result.message);
       }
-    } catch (error) {
+    } catch {
       console.error("❌", "Erreur lors de l'exécution de l'action");
     } finally {
       setProcessingActions((prev) => {
@@ -314,24 +310,41 @@ const AdminAttributionsPage: React.FC = () => {
   }
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-      className="space-y-8"
-    >
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-white mb-2">
-            Gestion des Attributions
-          </h1>
-          <p className="text-white/70">
-            Gérez les attributions de rôles et leurs validations
-          </p>
+    <div className="space-y-6">
+      {/* Header avec titre principal */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20"
+      >
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-bold text-white mb-2 flex items-center gap-3">
+              <UserPlus className="w-7 h-7 text-[#b8d070]" />
+              Gestion des Attributions
+            </h1>
+            <p className="text-white/70">
+              Gérez les attributions de rôles et leurs validations
+            </p>
+          </div>
+          <div className="text-right hidden sm:block">
+            <p className="text-white/60 text-sm">Total attributions</p>
+            <p className="text-3xl font-bold text-[#b8d070]">
+              {attributionsStats.total}
+            </p>
+            <p className="text-white/60 text-sm">en attente</p>
+          </div>
         </div>
+      </motion.div>
 
-        <div className="flex items-center gap-3">
+      {/* Actions rapides */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.1 }}
+        className="flex justify-center"
+      >
+        <div className="flex items-center gap-3 bg-white/5 backdrop-blur-sm rounded-xl p-3 border border-white/20">
           <button className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 border border-white/20 rounded-lg text-white text-sm transition-colors duration-200">
             <Upload className="w-4 h-4" />
             Importer
@@ -345,7 +358,7 @@ const AdminAttributionsPage: React.FC = () => {
             Nouvelle attribution
           </button>
         </div>
-      </div>
+      </motion.div>
 
       {/* Statistics Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -437,7 +450,7 @@ const AdminAttributionsPage: React.FC = () => {
               </div>
             </div>
             <div className="p-3 rounded-lg bg-purple-500/20">
-              <span className="text-2xl">📄</span>
+              <FileText className="w-6 h-6 text-purple-400" />
             </div>
           </div>
           <div className="text-sm text-purple-300">
@@ -477,7 +490,7 @@ const AdminAttributionsPage: React.FC = () => {
                   <span className="font-medium text-white">Valider</span>
                 </div>
                 <p>
-                  Approuver une attribution en attente pour l'activer
+                  Approuver une attribution en attente pour l&apos;activer
                   immédiatement.
                 </p>
               </div>
@@ -493,20 +506,22 @@ const AdminAttributionsPage: React.FC = () => {
                   <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
                   <span className="font-medium text-white">Prolonger</span>
                 </div>
-                <p>Étendre la période d'une attribution expirée ou active.</p>
+                <p>
+                  Étendre la période d&apos;une attribution expirée ou active.
+                </p>
               </div>
               <div>
                 <div className="flex items-center gap-2 mb-2">
                   <div className="w-3 h-3 bg-purple-500 rounded-full"></div>
                   <span className="font-medium text-white">Modifier</span>
                 </div>
-                <p>Modifier les détails d'une attribution active.</p>
+                <p>Modifier les détails d&apos;une attribution active.</p>
               </div>
             </div>
           </div>
         </div>
       </motion.div>
-    </motion.div>
+    </div>
   );
 };
 

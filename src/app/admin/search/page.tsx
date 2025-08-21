@@ -322,21 +322,25 @@ const AdminSearchPage: React.FC = () => {
   const activeFiltersCount = Object.values(filters).filter(Boolean).length;
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-      className="space-y-8"
-    >
-      {/* Header */}
-      <div>
-        <h1 className="text-3xl font-bold text-white mb-2">
-          Recherche Avancée
-        </h1>
-        <p className="text-white/70">
-          Recherchez dans tous les éléments de la plateforme
-        </p>
-      </div>
+    <div className="space-y-6">
+      {/* Header avec titre principal */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20"
+      >
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-bold text-white mb-2 flex items-center gap-3">
+              <Search className="w-7 h-7 text-[#b8d070]" />
+              Recherche Avancée
+            </h1>
+            <p className="text-white/70">
+              Recherchez dans tous les éléments de la plateforme
+            </p>
+          </div>
+        </div>
+      </motion.div>
 
       {/* Search Bar */}
       <div className="bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 p-6">
@@ -662,7 +666,7 @@ const AdminSearchPage: React.FC = () => {
           </div>
         )}
       </div>
-    </motion.div>
+    </div>
   );
 };
 

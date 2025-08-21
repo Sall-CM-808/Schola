@@ -7,12 +7,10 @@ import {
   FileText,
   Users,
   UserPlus,
-  Calendar,
   Filter,
   CheckCircle,
   Clock,
   BarChart3,
-  PieChart,
   TrendingUp,
 } from "lucide-react";
 
@@ -202,17 +200,32 @@ const AdminReportsPage: React.FC = () => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="space-y-8"
+      className="space-y-6"
     >
       {/* Header */}
-      <div>
-        <h1 className="text-3xl font-bold text-white mb-2">
-          Rapports & Export
-        </h1>
-        <p className="text-white/70">
-          Exportez vos données dans différents formats pour analyse et archivage
-        </p>
-      </div>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20"
+      >
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-bold text-white mb-2 flex items-center gap-3">
+              <BarChart3 className="w-7 h-7 text-[#b8d070]" />
+              Rapports & Export
+            </h1>
+            <p className="text-white/70">
+              Exportez vos données dans différents formats pour analyse et
+              archivage
+            </p>
+          </div>
+          <div className="text-right hidden sm:block">
+            <p className="text-white/60 text-sm">Exports ce mois</p>
+            <p className="text-3xl font-bold text-[#b8d070]">47</p>
+            <p className="text-white/60 text-sm">+12% vs mois dernier</p>
+          </div>
+        </div>
+      </motion.div>
 
       {/* Statistics */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
@@ -504,7 +517,7 @@ const AdminReportsPage: React.FC = () => {
                     {/* Format Selection */}
                     <div>
                       <h4 className="text-lg font-semibold text-white mb-3">
-                        Format d'export
+                        Format d&apos;export
                       </h4>
                       <div className="grid grid-cols-3 gap-2">
                         {card.formats.map((format) => (

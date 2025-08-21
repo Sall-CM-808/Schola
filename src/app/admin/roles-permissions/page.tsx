@@ -13,7 +13,6 @@ import {
   simulateLoading,
   type Role,
   type RoleDetail,
-  type PermissionCategory,
 } from "@/lib/mocks/adminRoles";
 import {
   Shield,
@@ -23,17 +22,12 @@ import {
   Download,
   Upload,
   Crown,
-  UserCheck,
-  FileText,
-  Calendar,
   ChevronRight,
-  ChevronDown,
   Check,
   X,
   Eye,
   Edit3,
   Trash2,
-  UserPlus,
 } from "lucide-react";
 
 const AdminRolesPage: React.FC = () => {
@@ -260,24 +254,41 @@ const AdminRolesPage: React.FC = () => {
   }
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-      className="space-y-8"
-    >
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-white mb-2">
-            Rôles & Permissions
-          </h1>
-          <p className="text-white/70">
-            Gestion des rôles utilisateurs et de leurs permissions
-          </p>
+    <div className="space-y-6">
+      {/* Header avec titre principal */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20"
+      >
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-bold text-white mb-2 flex items-center gap-3">
+              <Shield className="w-7 h-7 text-[#b8d070]" />
+              Rôles & Permissions
+            </h1>
+            <p className="text-white/70">
+              Gestion des rôles utilisateurs et de leurs permissions
+            </p>
+          </div>
+          <div className="text-right hidden sm:block">
+            <p className="text-white/60 text-sm">Total rôles</p>
+            <p className="text-3xl font-bold text-[#b8d070]">
+              {rolesStats.total}
+            </p>
+            <p className="text-white/60 text-sm">permissions actives</p>
+          </div>
         </div>
+      </motion.div>
 
-        <div className="flex items-center gap-3">
+      {/* Actions rapides */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.1 }}
+        className="flex justify-center"
+      >
+        <div className="flex items-center gap-3 bg-white/5 backdrop-blur-sm rounded-xl p-3 border border-white/20">
           <button className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 border border-white/20 rounded-lg text-white text-sm transition-colors duration-200">
             <Upload className="w-4 h-4" />
             Importer
@@ -291,7 +302,7 @@ const AdminRolesPage: React.FC = () => {
             Nouveau rôle
           </button>
         </div>
-      </div>
+      </motion.div>
 
       {/* Statistics Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -629,7 +640,7 @@ const AdminRolesPage: React.FC = () => {
           )}
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 };
 

@@ -17,7 +17,6 @@ import {
 } from "@/lib/mocks/adminElements";
 import {
   FileText,
-  Users,
   Archive,
   Plus,
   Download,
@@ -35,6 +34,7 @@ import {
   Shield,
   UserPlus,
   Tag,
+  BookOpen,
 } from "lucide-react";
 
 const AdminElementsPage: React.FC = () => {
@@ -83,7 +83,12 @@ const AdminElementsPage: React.FC = () => {
       header: "Titre",
       render: (element: Element) => (
         <div className="flex items-center gap-3">
-          <div className="text-2xl">{elementTypes[element.type].icon}</div>
+          <div className="text-2xl">
+            {(() => {
+              const Icon = elementTypes[element.type].icon;
+              return <Icon className="w-5 h-5" />;
+            })()}
+          </div>
           <div>
             <div className="font-medium text-white">{element.title}</div>
             <div className="text-sm text-white/60">
@@ -253,148 +258,161 @@ const AdminElementsPage: React.FC = () => {
 
   return (
     <>
+      {/* Header avec titre principal */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="space-y-8"
+        className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20"
       >
-        {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-white mb-2">
+            <h1 className="text-2xl font-bold text-white mb-2 flex items-center gap-3">
+              <FileText className="w-7 h-7 text-[#b8d070]" />
               Gestion des Éléments
             </h1>
             <p className="text-white/70">
               Gérez tous les éléments pédagogiques de la plateforme
             </p>
           </div>
-
-          <div className="flex items-center gap-3">
-            <button className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 border border-white/20 rounded-lg text-white text-sm transition-colors duration-200">
-              <Upload className="w-4 h-4" />
-              Importer
-            </button>
-            <button className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 border border-white/20 rounded-lg text-white text-sm transition-colors duration-200">
-              <Download className="w-4 h-4" />
-              Exporter
-            </button>
-            <button className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[#b8d070] to-[#a2c65e] text-[#1d8b93] font-bold rounded-lg hover:from-[#a2c65e] hover:to-[#b8d070] transition-all duration-300 shadow-lg hover:shadow-xl">
-              <Plus className="w-4 h-4" />
-              Nouvel élément
-            </button>
+          <div className="text-right hidden sm:block">
+            <p className="text-white/60 text-sm">Total éléments</p>
+            <p className="text-3xl font-bold text-[#b8d070]">
+              {elementsStats.total}
+            </p>
+            <p className="text-white/60 text-sm">éléments actifs</p>
           </div>
         </div>
-
-        {/* Statistics Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            className="bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 p-6 shadow-lg"
-          >
-            <div className="flex items-center justify-between mb-4">
-              <div>
-                <h3 className="text-sm font-medium text-white/70 mb-1">
-                  Total Éléments
-                </h3>
-                <div className="text-3xl font-bold text-white">
-                  {elementsStats.total}
-                </div>
-              </div>
-              <div className="p-3 rounded-lg bg-blue-500/20">
-                <FileText className="w-6 h-6 text-blue-400" />
-              </div>
-            </div>
-            <div className="text-sm text-blue-300">
-              +{Math.floor(elementsStats.total * 0.08)} ce mois
-            </div>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 p-6 shadow-lg"
-          >
-            <div className="flex items-center justify-between mb-4">
-              <div>
-                <h3 className="text-sm font-medium text-white/70 mb-1">
-                  Éléments Actifs
-                </h3>
-                <div className="text-3xl font-bold text-white">
-                  {elementsStats.active}
-                </div>
-              </div>
-              <div className="p-3 rounded-lg bg-green-500/20">
-                <CheckCircle className="w-6 h-6 text-green-400" />
-              </div>
-            </div>
-            <div className="text-sm text-green-300">
-              {((elementsStats.active / elementsStats.total) * 100).toFixed(1)}%
-              du total
-            </div>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
-            className="bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 p-6 shadow-lg"
-          >
-            <div className="flex items-center justify-between mb-4">
-              <div>
-                <h3 className="text-sm font-medium text-white/70 mb-1">
-                  Brouillons
-                </h3>
-                <div className="text-3xl font-bold text-white">
-                  {elementsStats.draft}
-                </div>
-              </div>
-              <div className="p-3 rounded-lg bg-yellow-500/20">
-                <Clock className="w-6 h-6 text-yellow-400" />
-              </div>
-            </div>
-            <div className="text-sm text-yellow-300">En cours de rédaction</div>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.4 }}
-            className="bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 p-6 shadow-lg"
-          >
-            <div className="flex items-center justify-between mb-4">
-              <div>
-                <h3 className="text-sm font-medium text-white/70 mb-1">
-                  Cours
-                </h3>
-                <div className="text-3xl font-bold text-white">
-                  {elementsStats.byType.course}
-                </div>
-              </div>
-              <div className="p-3 rounded-lg bg-purple-500/20">
-                <span className="text-2xl">📚</span>
-              </div>
-            </div>
-            <div className="text-sm text-purple-300">
-              {elementsStats.byType.assignment} devoirs
-            </div>
-          </motion.div>
-        </div>
-
-        {/* Elements Table */}
-        <AdvancedDataTable
-          title="Liste des Éléments"
-          columns={columns}
-          rows={elementsData}
-          filters={filters}
-          pageSize={15}
-          emptyMessage="Aucun élément trouvé"
-          onRowClick={handleElementClick}
-        />
       </motion.div>
+
+      {/* Actions rapides */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.1 }}
+        className="flex justify-center"
+      >
+        <div className="flex items-center gap-3 bg-white/5 backdrop-blur-sm rounded-xl p-3 border border-white/20">
+          <button className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 border border-white/20 rounded-lg text-white text-sm transition-colors duration-200">
+            <Upload className="w-4 h-4" />
+            Importer
+          </button>
+          <button className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 border border-white/20 rounded-lg text-white text-sm transition-colors duration-200">
+            <Download className="w-4 h-4" />
+            Exporter
+          </button>
+          <button className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[#b8d070] to-[#a2c65e] text-[#1d8b93] font-bold rounded-lg hover:from-[#a2c65e] hover:to-[#b8d070] transition-all duration-300 shadow-lg hover:shadow-xl">
+            <Plus className="w-4 h-4" />
+            Nouvel élément
+          </button>
+        </div>
+      </motion.div>
+
+      {/* Statistics Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.1 }}
+          className="bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 p-6 shadow-lg"
+        >
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h3 className="text-sm font-medium text-white/70 mb-1">
+                Total Éléments
+              </h3>
+              <div className="text-3xl font-bold text-white">
+                {elementsStats.total}
+              </div>
+            </div>
+            <div className="p-3 rounded-lg bg-blue-500/20">
+              <FileText className="w-6 h-6 text-blue-400" />
+            </div>
+          </div>
+          <div className="text-sm text-blue-300">
+            +{Math.floor(elementsStats.total * 0.08)} ce mois
+          </div>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+          className="bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 p-6 shadow-lg"
+        >
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h3 className="text-sm font-medium text-white/70 mb-1">
+                Éléments Actifs
+              </h3>
+              <div className="text-3xl font-bold text-white">
+                {elementsStats.active}
+              </div>
+            </div>
+            <div className="p-3 rounded-lg bg-green-500/20">
+              <CheckCircle className="w-6 h-6 text-green-400" />
+            </div>
+          </div>
+          <div className="text-sm text-green-300">
+            {((elementsStats.active / elementsStats.total) * 100).toFixed(1)}%
+            du total
+          </div>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.3 }}
+          className="bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 p-6 shadow-lg"
+        >
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h3 className="text-sm font-medium text-white/70 mb-1">
+                Brouillons
+              </h3>
+              <div className="text-3xl font-bold text-white">
+                {elementsStats.draft}
+              </div>
+            </div>
+            <div className="p-3 rounded-lg bg-yellow-500/20">
+              <Clock className="w-6 h-6 text-yellow-400" />
+            </div>
+          </div>
+          <div className="text-sm text-yellow-300">En cours de rédaction</div>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.4 }}
+          className="bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 p-6 shadow-lg"
+        >
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h3 className="text-sm font-medium text-white/70 mb-1">Cours</h3>
+              <div className="text-3xl font-bold text-white">
+                {elementsStats.byType.course}
+              </div>
+            </div>
+            <div className="p-3 rounded-lg bg-purple-500/20">
+              <BookOpen className="w-6 h-6 text-purple-400" />
+            </div>
+          </div>
+          <div className="text-sm text-purple-300">
+            {elementsStats.byType.assignment} devoirs
+          </div>
+        </motion.div>
+      </div>
+
+      {/* Elements Table */}
+      <AdvancedDataTable
+        title="Liste des Éléments"
+        columns={columns}
+        rows={elementsData}
+        filters={filters}
+        pageSize={15}
+        emptyMessage="Aucun élément trouvé"
+        onRowClick={handleElementClick}
+      />
 
       {/* Element Detail Drawer */}
       <AnimatePresence>
@@ -421,7 +439,7 @@ const AdminElementsPage: React.FC = () => {
               <div className="sticky top-0 bg-gradient-to-r from-[#1d8b93]/95 to-[#0d5a61]/95 backdrop-blur-xl border-b border-white/10 p-6 z-10">
                 <div className="flex items-center justify-between">
                   <h2 className="text-2xl font-bold text-white">
-                    Détails de l'Élément
+                    Détails de l&apos;Élément
                   </h2>
                   <button
                     onClick={handleCloseDrawer}
@@ -446,7 +464,11 @@ const AdminElementsPage: React.FC = () => {
                     >
                       <div className="flex items-start gap-4 mb-6">
                         <div className="text-4xl">
-                          {elementTypes[selectedElement.type].icon}
+                          {(() => {
+                            const Icon =
+                              elementTypes[selectedElement.type].icon;
+                            return <Icon className="w-6 h-6" />;
+                          })()}
                         </div>
                         <div className="flex-1">
                           <h3 className="text-2xl font-bold text-white mb-2">
@@ -535,7 +557,7 @@ const AdminElementsPage: React.FC = () => {
                         Historique
                       </h4>
                       <div className="space-y-4">
-                        {elementDetail.history.map((event, index) => (
+                        {elementDetail.history.map((event) => (
                           <div
                             key={event.id}
                             className="flex items-start gap-4"

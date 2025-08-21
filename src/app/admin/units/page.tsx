@@ -221,64 +221,80 @@ const AdminUnitsPage: React.FC = () => {
   }
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-      className="space-y-8"
-    >
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-white mb-2">
-            Unités Structurelles
-          </h1>
-          <p className="text-white/70">
-            Gestion de la structure organisationnelle de l'université
-          </p>
+    <div className="space-y-6">
+      {/* Header avec titre principal */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20"
+      >
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-bold text-white mb-2 flex items-center gap-3">
+              <Building2 className="w-7 h-7 text-[#b8d070]" />
+               Unités Structurelles
+            </h1>
+            <p className="text-white/70">
+              Gestion de la structure organisationnelle de l&apos;université.
+            </p>
+          </div>
+          <div className="text-right hidden sm:block">
+            <p className="text-white/60 text-sm">Total unités</p>
+            <p className="text-3xl font-bold text-[#b8d070]">
+              {unitsData.length}
+            </p>
+            <p className="text-white/60 text-sm">structures actives</p>
+          </div>
+        </div>
+      </motion.div>
+
+      {/* Contrôles et actions */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.1 }}
+        className="flex flex-wrap items-center justify-between gap-4 bg-white/5 backdrop-blur-sm rounded-xl p-4 border border-white/20"
+      >
+        {/* View Mode Toggle */}
+        <div className="flex items-center bg-white/10 rounded-lg p-1">
+          <button
+            onClick={() => setViewMode("tree")}
+            className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm transition-colors duration-200 ${
+              viewMode === "tree"
+                ? "bg-[#b8d070] text-[#1d8b93] font-medium"
+                : "text-white/70 hover:text-white"
+            }`}
+          >
+            <TreePine className="w-4 h-4" />
+             Arbre
+          </button>
+          <button
+            onClick={() => setViewMode("table")}
+            className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm transition-colors duration-200 ${
+              viewMode === "table"
+                ? "bg-[#b8d070] text-[#1d8b93] font-medium"
+                : "text-white/70 hover:text-white"
+            }`}
+          >
+            <Table className="w-4 h-4" />
+             Table
+          </button>
         </div>
 
         <div className="flex items-center gap-3">
-          {/* View Mode Toggle */}
-          <div className="flex items-center bg-white/10 rounded-lg p-1">
-            <button
-              onClick={() => setViewMode("tree")}
-              className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm transition-colors duration-200 ${
-                viewMode === "tree"
-                  ? "bg-[#b8d070] text-[#1d8b93] font-medium"
-                  : "text-white/70 hover:text-white"
-              }`}
-            >
-              <TreePine className="w-4 h-4" />
-              Arbre
-            </button>
-            <button
-              onClick={() => setViewMode("table")}
-              className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm transition-colors duration-200 ${
-                viewMode === "table"
-                  ? "bg-[#b8d070] text-[#1d8b93] font-medium"
-                  : "text-white/70 hover:text-white"
-              }`}
-            >
-              <Table className="w-4 h-4" />
-              Table
-            </button>
-          </div>
-
           <button className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 border border-white/20 rounded-lg text-white text-sm transition-colors duration-200">
             <Upload className="w-4 h-4" />
-            Importer
+             Importer
           </button>
           <button className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 border border-white/20 rounded-lg text-white text-sm transition-colors duration-200">
             <Download className="w-4 h-4" />
-            Exporter
+             Exporter
           </button>
           <button className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[#b8d070] to-[#a2c65e] text-[#1d8b93] font-bold rounded-lg hover:from-[#a2c65e] hover:to-[#b8d070] transition-all duration-300 shadow-lg hover:shadow-xl">
-            <Plus className="w-4 h-4" />
-            Nouvelle unité
+            <Plus className="w-4 h-4" /> Nouvelle unité
           </button>
         </div>
-      </div>
+      </motion.div>
 
       {/* Statistics Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -410,7 +426,7 @@ const AdminUnitsPage: React.FC = () => {
             <div className="p-6 border-b border-white/10">
               <h3 className="text-lg font-semibold text-white flex items-center gap-2">
                 <Building2 className="w-5 h-5" />
-                Détails de l'Unité
+                Détails de l&apos;Unité
               </h3>
             </div>
 
@@ -579,7 +595,7 @@ const AdminUnitsPage: React.FC = () => {
           </motion.div>
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 };
 

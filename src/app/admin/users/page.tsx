@@ -24,6 +24,9 @@ import {
   Download,
   Upload,
 } from "lucide-react";
+import CreateUserModal, {
+  CreateUserData,
+} from "@/components/admin_dashboard/CreateUserModal";
 
 const AdminUsersPage: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -32,6 +35,7 @@ const AdminUsersPage: React.FC = () => {
   const [userDetail, setUserDetail] = useState<UserDetail | null>(null);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isLoadingDetail, setIsLoadingDetail] = useState(false);
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
   useEffect(() => {
     const loadData = async () => {
@@ -51,15 +55,124 @@ const AdminUsersPage: React.FC = () => {
 
     // Simuler le chargement des détails
     await simulateLoading(300);
-    const detail = generateUserDetail(user.id);
-    setUserDetail(detail);
+
+    try {
+      const detail = generateUserDetail(user.id);
+      setUserDetail(detail);
+    } catch {
+      // Si l'utilisateur n'est pas trouvé dans les mocks (nouveau utilisateur),
+      // générer des détails basiques
+      console.log(
+        "Utilisateur non trouvé dans les mocks, génération de détails basiques"
+      );
+      const basicDetail: UserDetail = {
+        profile: user,
+        roles: getDefaultRolesByType(user.type),
+        lastLogins: [],
+        stats: {
+          totalSessions: 0,
+          averageSessionDuration: "0 min",
+          lastActiveDate: "Jamais connecté",
+          accountAge: calculateAccountAge(user.createdAt),
+        },
+      };
+      setUserDetail(basicDetail);
+    }
+
     setIsLoadingDetail(false);
+  };
+
+  // Fonction helper pour obtenir les rôles par défaut selon le type
+  const getDefaultRolesByType = (type: User["type"]) => {
+    const defaultRoles = {
+      admin: [
+        {
+          id: "role-admin-default",
+          name: "Administrateur",
+          description: "Accès administrateur",
+          permissions: ["users.manage", "system.admin"],
+          assignedAt: new Date().toISOString(),
+        },
+      ],
+      teacher: [
+        {
+          id: "role-teacher-default",
+          name: "Enseignant",
+          description: "Accès enseignant",
+          permissions: ["courses.manage", "students.view"],
+          assignedAt: new Date().toISOString(),
+        },
+      ],
+      student: [
+        {
+          id: "role-student-default",
+          name: "Étudiant",
+          description: "Accès étudiant",
+          permissions: ["courses.view", "grades.view"],
+          assignedAt: new Date().toISOString(),
+        },
+      ],
+      staff: [
+        {
+          id: "role-staff-default",
+          name: "Personnel",
+          description: "Accès personnel",
+          permissions: ["basic.access"],
+          assignedAt: new Date().toISOString(),
+        },
+      ],
+    };
+    return defaultRoles[type] || [];
+  };
+
+  // Fonction helper pour calculer l'âge du compte
+  const calculateAccountAge = (createdAt: string) => {
+    const now = new Date();
+    const created = new Date(createdAt);
+    const diffInMs = now.getTime() - created.getTime();
+    const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
+
+    if (diffInDays < 1) {
+      return "Aujourd'hui";
+    } else if (diffInDays === 1) {
+      return "1 jour";
+    } else if (diffInDays < 30) {
+      return `${diffInDays} jours`;
+    } else if (diffInDays < 365) {
+      const months = Math.floor(diffInDays / 30);
+      return `${months} mois`;
+    } else {
+      const years = Math.floor(diffInDays / 365);
+      return `${years} an${years > 1 ? "s" : ""}`;
+    }
   };
 
   const handleCloseDrawer = () => {
     setIsDrawerOpen(false);
     setSelectedUser(null);
     setUserDetail(null);
+  };
+
+  const handleCreateUser = async (userData: CreateUserData) => {
+    // Simuler la création d'un utilisateur
+    await simulateLoading(1000);
+
+    // Générer un nouvel utilisateur avec un ID unique
+    const newUser: User = {
+      id: `user-${Date.now()}`,
+      name: userData.name,
+      username: userData.username,
+      email: userData.email,
+      type: userData.type,
+      status: userData.status,
+      createdAt: new Date().toISOString(),
+      avatar: userData.avatar || undefined,
+    };
+
+    // Ajouter à la liste locale (en attendant l'intégration backend)
+    setUsersData((prev) => [newUser, ...prev]);
+
+    console.log("Nouvel utilisateur créé:", newUser);
   };
 
   // Configuration des colonnes
@@ -255,24 +368,41 @@ const AdminUsersPage: React.FC = () => {
   }
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-      className="space-y-8"
-    >
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-white mb-2">
-            Gestion des Utilisateurs
-          </h1>
-          <p className="text-white/70">
-            Gérez les comptes utilisateurs de votre plateforme Schola
-          </p>
+    <div className="space-y-6">
+      {/* Header avec titre principal */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20"
+      >
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-bold text-white mb-2 flex items-center gap-3">
+              <Users className="w-7 h-7 text-[#b8d070]" />
+              Gestion des Utilisateurs
+            </h1>
+            <p className="text-white/70">
+              Gérez les comptes utilisateurs de votre plateforme Schola.
+            </p>
+          </div>
+          <div className="text-right hidden sm:block">
+            <p className="text-white/60 text-sm">Total utilisateurs</p>
+            <p className="text-3xl font-bold text-[#b8d070]">
+              {usersData.length}
+            </p>
+            <p className="text-white/60 text-sm">comptes actifs</p>
+          </div>
         </div>
+      </motion.div>
 
-        <div className="flex items-center gap-3">
+      {/* Actions rapides */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.1 }}
+        className="flex justify-center"
+      >
+        <div className="flex items-center gap-3 bg-white/5 backdrop-blur-sm rounded-xl p-3 border border-white/20">
           <button className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 border border-white/20 rounded-lg text-white text-sm transition-colors duration-200">
             <Upload className="w-4 h-4" />
             Importer
@@ -281,12 +411,14 @@ const AdminUsersPage: React.FC = () => {
             <Download className="w-4 h-4" />
             Exporter
           </button>
-          <button className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[#b8d070] to-[#a2c65e] text-[#1d8b93] font-bold rounded-lg hover:from-[#a2c65e] hover:to-[#b8d070] transition-all duration-300 shadow-lg hover:shadow-xl">
-            <Plus className="w-4 h-4" />
-            Nouvel utilisateur
+          <button
+            onClick={() => setIsCreateModalOpen(true)}
+            className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[#b8d070] to-[#a2c65e] text-[#1d8b93] font-bold rounded-lg hover:from-[#a2c65e] hover:to-[#b8d070] transition-all duration-300 shadow-lg hover:shadow-xl"
+          >
+            <Plus className="w-4 h-4" /> Nouvel utilisateur
           </button>
         </div>
-      </div>
+      </motion.div>
 
       {/* Statistics Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -403,7 +535,14 @@ const AdminUsersPage: React.FC = () => {
         userDetail={userDetail}
         isLoading={isLoadingDetail}
       />
-    </motion.div>
+
+      {/* Create User Modal */}
+      <CreateUserModal
+        isOpen={isCreateModalOpen}
+        onClose={() => setIsCreateModalOpen(false)}
+        onSubmit={handleCreateUser}
+      />
+    </div>
   );
 };
 

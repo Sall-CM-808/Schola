@@ -186,163 +186,210 @@ const AdminDashboardPage: React.FC = () => {
   if (!data) return null;
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-      className="space-y-8"
-    >
-      {/* Header */}
-      <div>
-        <h1 className="text-3xl font-bold text-white mb-2">
-          Tableau de bord Admin
-        </h1>
-        <p className="text-white/70">
-          Vue d&apos;ensemble de la plateforme Schola -{" "}
-          {new Date().toLocaleDateString("fr-FR", {
-            weekday: "long",
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-          })}
-        </p>
-      </div>
+    <div className="space-y-6">
+      {/* Header avec titre principal */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20"
+      >
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-bold text-white mb-2 flex items-center gap-3">
+              <Shield className="w-7 h-7 text-[#b8d070]" />
+              Tableau de bord Admin
+            </h1>
+            <p className="text-white/70">
+              Vue d&apos;ensemble de la plateforme Schola -{" "}
+              {new Date().toLocaleDateString("fr-FR", {
+                weekday: "long",
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              })}
+            </p>
+          </div>
+          <div className="text-right hidden sm:block">
+            <p className="text-white/60 text-sm">Utilisateurs</p>
+            <p className="text-3xl font-bold text-[#b8d070]">
+              {data?.kpi.usersTotal || 0}
+            </p>
+            <p className="text-white/60 text-sm">dans l&apos;établissement</p>
+          </div>
+        </div>
+      </motion.div>
 
-      {/* KPI Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
-        <KpiCard
-          title="Total Utilisateurs"
-          value={data.kpi.usersTotal}
-          subtitle="Tous les comptes créés"
-          icon={Users}
-          color="blue"
-          trend="up"
-          delta={12}
-        />
-        <KpiCard
-          title="Utilisateurs Actifs"
-          value={data.kpi.usersActive}
-          subtitle="Connectés récemment"
-          icon={UserCheck}
-          color="green"
-          trend="up"
-          delta={8}
-        />
-        <KpiCard
-          title="Utilisateurs Inactifs"
-          value={data.kpi.usersInactive}
-          subtitle="Non connectés 30j+"
-          icon={UserX}
-          color="red"
-          trend="down"
-          delta={-3}
-        />
-        <KpiCard
-          title="Unités"
-          value={data.kpi.unitsTotal}
-          subtitle="Départements et services"
-          icon={Building2}
-          color="purple"
-        />
-        <KpiCard
-          title="Éléments"
-          value={data.kpi.elementsTotal}
-          subtitle="Cours, devoirs, ressources"
-          icon={FileText}
-          color="orange"
-          trend="up"
-          delta={24}
-        />
-      </div>
-
-      {/* Main Dashboard Grid */}
+      {/* Grille principale unique */}
       <DashboardGrid>
-        {/* User Type Distribution Chart */}
-        <div className="col-span-12 lg:col-span-4">
+        {/* Section KPI - Première rangée */}
+        <div className="col-span-12">
           <SectionCard>
-            <SectionHeader title="Répartition des utilisateurs" />
-            <UserTypeChart data={data.distribution} />
+            <SectionHeader title="Indicateurs clés" />
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+              <KpiCard
+                title="Total Utilisateurs"
+                value={data.kpi.usersTotal}
+                subtitle="Tous les comptes créés"
+                icon={Users}
+                color="blue"
+                trend="up"
+                delta={12}
+              />
+              <KpiCard
+                title="Utilisateurs Actifs"
+                value={data.kpi.usersActive}
+                subtitle="Connectés récemment"
+                icon={UserCheck}
+                color="green"
+                trend="up"
+                delta={8}
+              />
+              <KpiCard
+                title="Utilisateurs Inactifs"
+                value={data.kpi.usersInactive}
+                subtitle="Non connectés 30j+"
+                icon={UserX}
+                color="red"
+                trend="down"
+                delta={-3}
+              />
+              <KpiCard
+                title="Unités"
+                value={data.kpi.unitsTotal}
+                subtitle="Départements et services"
+                icon={Building2}
+                color="purple"
+              />
+              <KpiCard
+                title="Éléments"
+                value={data.kpi.elementsTotal}
+                subtitle="Cours, devoirs, ressources"
+                icon={FileText}
+                color="orange"
+                trend="up"
+                delta={24}
+              />
+            </div>
           </SectionCard>
         </div>
 
-        {/* Quick Stats */}
-        <div className="col-span-12 lg:col-span-8">
+        {/* Section Graphique - Deuxième rangée */}
+        <div className="col-span-12 lg:col-span-6">
+          <UserTypeChart data={data.distribution} />
+        </div>
+
+        {/* Section Statistiques détaillées - Deuxième rangée */}
+        <div className="col-span-12 lg:col-span-6">
           <SectionCard>
-            <SectionHeader title="Statistiques rapides" />
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="bg-white/5 rounded-lg p-4">
-                <div className="flex items-center gap-3 mb-2">
-                  <div className="p-2 rounded-lg bg-blue-500/20">
-                    <Users className="w-4 h-4 text-blue-400" />
+            <SectionHeader title="Statistiques détaillées" />
+            <div className="space-y-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="bg-white/5 rounded-lg p-4">
+                  <div className="flex items-center gap-3 mb-2">
+                    <div className="p-2 rounded-lg bg-blue-500/20">
+                      <Users className="w-4 h-4 text-blue-400" />
+                    </div>
+                    <span className="text-white/70 text-sm">Étudiants</span>
                   </div>
-                  <span className="text-white/70 text-sm">Étudiants</span>
+                  <div className="text-2xl font-bold text-white">1,234</div>
+                  <div className="text-xs text-green-400 flex items-center gap-1">
+                    <span>↗</span> +5.2% ce mois
+                  </div>
                 </div>
-                <div className="text-2xl font-bold text-white">1,234</div>
-                <div className="text-xs text-green-400 flex items-center gap-1">
-                  <span>↗</span> +5.2% ce mois
-                </div>
-              </div>
 
-              <div className="bg-white/5 rounded-lg p-4">
-                <div className="flex items-center gap-3 mb-2">
-                  <div className="p-2 rounded-lg bg-green-500/20">
-                    <Shield className="w-4 h-4 text-green-400" />
+                <div className="bg-white/5 rounded-lg p-4">
+                  <div className="flex items-center gap-3 mb-2">
+                    <div className="p-2 rounded-lg bg-green-500/20">
+                      <Shield className="w-4 h-4 text-green-400" />
+                    </div>
+                    <span className="text-white/70 text-sm">Enseignants</span>
                   </div>
-                  <span className="text-white/70 text-sm">Enseignants</span>
+                  <div className="text-2xl font-bold text-white">89</div>
+                  <div className="text-xs text-green-400 flex items-center gap-1">
+                    <span>↗</span> +2 cette semaine
+                  </div>
                 </div>
-                <div className="text-2xl font-bold text-white">89</div>
-                <div className="text-xs text-green-400 flex items-center gap-1">
-                  <span>↗</span> +2 cette semaine
-                </div>
-              </div>
 
-              <div className="bg-white/5 rounded-lg p-4">
-                <div className="flex items-center gap-3 mb-2">
-                  <div className="p-2 rounded-lg bg-purple-500/20">
-                    <Building2 className="w-4 h-4 text-purple-400" />
+                <div className="bg-white/5 rounded-lg p-4">
+                  <div className="flex items-center gap-3 mb-2">
+                    <div className="p-2 rounded-lg bg-purple-500/20">
+                      <Building2 className="w-4 h-4 text-purple-400" />
+                    </div>
+                    <span className="text-white/70 text-sm">Admins</span>
                   </div>
-                  <span className="text-white/70 text-sm">Admins</span>
+                  <div className="text-2xl font-bold text-white">12</div>
+                  <div className="text-xs text-yellow-400 flex items-center gap-1">
+                    <span>→</span> Stable
+                  </div>
                 </div>
-                <div className="text-2xl font-bold text-white">12</div>
-                <div className="text-xs text-yellow-400 flex items-center gap-1">
-                  <span>→</span> Stable
+
+                <div className="bg-white/5 rounded-lg p-4">
+                  <div className="flex items-center gap-3 mb-2">
+                    <div className="p-2 rounded-lg bg-orange-500/20">
+                      <FileText className="w-4 h-4 text-orange-400" />
+                    </div>
+                    <span className="text-white/70 text-sm">Personnel</span>
+                  </div>
+                  <div className="text-2xl font-bold text-white">45</div>
+                  <div className="text-xs text-blue-400 flex items-center gap-1">
+                    <span>↗</span> +1 cette semaine
+                  </div>
                 </div>
               </div>
             </div>
           </SectionCard>
         </div>
 
-        {/* Recent Users Table */}
-        <div className="col-span-12 lg:col-span-6">
-          <SectionCard>
-            <SectionHeader title="Derniers utilisateurs" />
-            <DataTable
-              columns={userColumns}
-              rows={data.users}
-              emptyMessage="Aucun utilisateur récent"
-              searchable
-            />
-          </SectionCard>
-        </div>
-
-        {/* Recent Elements Table */}
-        <div className="col-span-12 lg:col-span-6">
-          <SectionCard>
-            <SectionHeader title="Derniers éléments" />
-            <DataTable
-              columns={elementColumns}
-              rows={data.elements}
-              emptyMessage="Aucun élément récent"
-              searchable
-            />
-          </SectionCard>
-        </div>
-
-        {/* Activity Feed */}
+        {/* Section Utilisateurs récents - Troisième rangée */}
         <div className="col-span-12">
           <SectionCard>
-            <SectionHeader title="Activité récente" />
-            <div className="space-y-4">
+            <SectionHeader
+              title="Derniers utilisateurs"
+              actions={
+                <button className="text-[#b8d070] hover:text-[#a2c65e] text-sm font-medium">
+                  Voir tous
+                </button>
+              }
+            />
+            <DataTable
+              columns={userColumns}
+              rows={data.users.slice(0, 8)}
+              emptyMessage="Aucun utilisateur récent"
+            />
+          </SectionCard>
+        </div>
+
+        {/* Section Éléments récents - Quatrième rangée */}
+        <div className="col-span-12">
+          <SectionCard>
+            <SectionHeader
+              title="Derniers éléments"
+              actions={
+                <button className="text-[#b8d070] hover:text-[#a2c65e] text-sm font-medium">
+                  Voir tous
+                </button>
+              }
+            />
+            <DataTable
+              columns={elementColumns}
+              rows={data.elements.slice(0, 8)}
+              emptyMessage="Aucun élément récent"
+            />
+          </SectionCard>
+        </div>
+
+        {/* Section Activité récente - Cinquième rangée */}
+        <div className="col-span-12">
+          <SectionCard>
+            <SectionHeader
+              title="Activité récente"
+              actions={
+                <button className="text-[#b8d070] hover:text-[#a2c65e] text-sm font-medium">
+                  Voir historique
+                </button>
+              }
+            />
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
               {[
                 {
                   action: "Nouvel utilisateur inscrit",
@@ -368,84 +415,109 @@ const AdminDashboardPage: React.FC = () => {
                   time: "Il y a 2 heures",
                   type: "unit",
                 },
+                {
+                  action: "Utilisateur désactivé",
+                  user: "Sys Admin",
+                  time: "Il y a 3 heures",
+                  type: "user",
+                },
+                {
+                  action: "Rapport généré",
+                  user: "Admin System",
+                  time: "Il y a 4 heures",
+                  type: "report",
+                },
               ].map((activity, index) => (
                 <div
                   key={index}
-                  className="flex items-center gap-4 p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors"
+                  className="flex items-center gap-3 p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors"
                 >
-                  <div className="p-2 rounded-lg bg-[#1d8b93]/20">
+                  <div className="p-2 rounded-lg bg-[#1d8b93]/20 flex-shrink-0">
                     <Activity className="w-4 h-4 text-[#b8d070]" />
                   </div>
-                  <div className="flex-1">
-                    <div className="text-white font-medium">
+                  <div className="flex-1 min-w-0">
+                    <div className="text-white font-medium truncate">
                       {activity.action}
                     </div>
-                    <div className="text-white/60 text-sm">
+                    <div className="text-white/60 text-sm truncate">
                       par {activity.user}
                     </div>
                   </div>
-                  <div className="text-white/40 text-xs">{activity.time}</div>
+                  <div className="text-white/40 text-xs flex-shrink-0">
+                    {activity.time}
+                  </div>
                 </div>
               ))}
             </div>
           </SectionCard>
         </div>
+
+        {/* Section Actions rapides - Sixième rangée */}
+        <div className="col-span-12">
+          <SectionCard>
+            <SectionHeader title="Actions rapides" />
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <motion.div
+                whileHover={{ scale: 1.02 }}
+                className="bg-white/5 rounded-lg p-4 cursor-pointer hover:bg-white/10 transition-all duration-300"
+              >
+                <div className="flex items-center gap-4">
+                  <div className="p-3 rounded-lg bg-blue-500/20 flex-shrink-0">
+                    <Eye className="w-5 h-5 text-blue-400" />
+                  </div>
+                  <div className="min-w-0">
+                    <h3 className="font-semibold text-white truncate">
+                      Gérer les utilisateurs
+                    </h3>
+                    <p className="text-sm text-white/60 truncate">
+                      Comptes et permissions
+                    </p>
+                  </div>
+                </div>
+              </motion.div>
+
+              <motion.div
+                whileHover={{ scale: 1.02 }}
+                className="bg-white/5 rounded-lg p-4 cursor-pointer hover:bg-white/10 transition-all duration-300"
+              >
+                <div className="flex items-center gap-4">
+                  <div className="p-3 rounded-lg bg-green-500/20 flex-shrink-0">
+                    <Shield className="w-5 h-5 text-green-400" />
+                  </div>
+                  <div className="min-w-0">
+                    <h3 className="font-semibold text-white truncate">
+                      Gérer les rôles
+                    </h3>
+                    <p className="text-sm text-white/60 truncate">
+                      Permissions et attributions
+                    </p>
+                  </div>
+                </div>
+              </motion.div>
+
+              <motion.div
+                whileHover={{ scale: 1.02 }}
+                className="bg-white/5 rounded-lg p-4 cursor-pointer hover:bg-white/10 transition-all duration-300"
+              >
+                <div className="flex items-center gap-4">
+                  <div className="p-3 rounded-lg bg-purple-500/20 flex-shrink-0">
+                    <Calendar className="w-5 h-5 text-purple-400" />
+                  </div>
+                  <div className="min-w-0">
+                    <h3 className="font-semibold text-white truncate">
+                      Générer rapports
+                    </h3>
+                    <p className="text-sm text-white/60 truncate">
+                      Statistiques et exports
+                    </p>
+                  </div>
+                </div>
+              </motion.div>
+            </div>
+          </SectionCard>
+        </div>
       </DashboardGrid>
-
-      {/* Quick Actions */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <motion.div
-          whileHover={{ scale: 1.02 }}
-          className="bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 shadow-lg p-6 cursor-pointer hover:bg-white/10 transition-all duration-300"
-        >
-          <div className="flex items-center gap-4">
-            <div className="p-3 rounded-xl bg-blue-500/20">
-              <Eye className="w-6 h-6 text-blue-400" />
-            </div>
-            <div>
-              <h3 className="font-semibold text-white">
-                Voir tous les utilisateurs
-              </h3>
-              <p className="text-sm text-white/60">
-                Gérer les comptes utilisateurs
-              </p>
-            </div>
-          </div>
-        </motion.div>
-
-        <motion.div
-          whileHover={{ scale: 1.02 }}
-          className="bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 shadow-lg p-6 cursor-pointer hover:bg-white/10 transition-all duration-300"
-        >
-          <div className="flex items-center gap-4">
-            <div className="p-3 rounded-xl bg-green-500/20">
-              <Shield className="w-6 h-6 text-green-400" />
-            </div>
-            <div>
-              <h3 className="font-semibold text-white">Gérer les rôles</h3>
-              <p className="text-sm text-white/60">
-                Permissions et attributions
-              </p>
-            </div>
-          </div>
-        </motion.div>
-
-        <motion.div
-          whileHover={{ scale: 1.02 }}
-          className="bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 shadow-lg p-6 cursor-pointer hover:bg-white/10 transition-all duration-300"
-        >
-          <div className="flex items-center gap-4">
-            <div className="p-3 rounded-xl bg-purple-500/20">
-              <Calendar className="w-6 h-6 text-purple-400" />
-            </div>
-            <div>
-              <h3 className="font-semibold text-white">Rapports</h3>
-              <p className="text-sm text-white/60">Générer et exporter</p>
-            </div>
-          </div>
-        </motion.div>
-      </div>
-    </motion.div>
+    </div>
   );
 };
 

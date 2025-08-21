@@ -187,8 +187,8 @@ export default function StudentCoursesPage() {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-bold text-white mb-2 flex items-center gap-3">
-              <BookOpen className="w-7 h-7 text-[#1d8b93]" />
-              📘 Mes Cours
+              <BookOpen className="w-7 h-7 text-[#b8d070]" />
+               Mes Cours
             </h1>
             <p className="text-white/70">
               Suivez votre progression et accédez à tous vos cours.
@@ -196,7 +196,7 @@ export default function StudentCoursesPage() {
           </div>
           <div className="text-right hidden sm:block">
             <p className="text-white/60 text-sm">Cours actifs</p>
-            <p className="text-3xl font-bold text-[#1d8b93]">
+            <p className="text-3xl font-bold text-[#b8d070]">
               {filteredCourses.length}
             </p>
             <p className="text-white/60 text-sm">

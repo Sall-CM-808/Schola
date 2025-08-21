@@ -1,4 +1,13 @@
 // Types pour les éléments
+import {
+  BookOpen,
+  FilePen,
+  FileText,
+  Megaphone,
+  ClipboardList,
+  Rocket,
+} from "lucide-react";
+
 export interface Element {
   id: string;
   title: string;
@@ -68,32 +77,32 @@ export const elementTypes = {
   course: {
     label: "Cours",
     color: "bg-blue-500/20 text-blue-300 border-blue-500/30",
-    icon: "📚",
+    icon: BookOpen,
   },
   assignment: {
     label: "Devoir",
     color: "bg-orange-500/20 text-orange-300 border-orange-500/30",
-    icon: "📝",
+    icon: FilePen,
   },
   resource: {
     label: "Ressource",
     color: "bg-green-500/20 text-green-300 border-green-500/30",
-    icon: "📄",
+    icon: FileText,
   },
   announcement: {
     label: "Annonce",
     color: "bg-purple-500/20 text-purple-300 border-purple-500/30",
-    icon: "📢",
+    icon: Megaphone,
   },
   exam: {
     label: "Examen",
     color: "bg-red-500/20 text-red-300 border-red-500/30",
-    icon: "📋",
+    icon: ClipboardList,
   },
   project: {
     label: "Projet",
     color: "bg-cyan-500/20 text-cyan-300 border-cyan-500/30",
-    icon: "🚀",
+    icon: Rocket,
   },
 };
 

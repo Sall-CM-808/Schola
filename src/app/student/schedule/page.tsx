@@ -200,7 +200,7 @@ export default function StudentSchedulePage() {
           <div>
             <h1 className="text-2xl font-bold text-white mb-2 flex items-center gap-3">
               <Calendar className="w-7 h-7 text-[#b8d070]" />
-              📅 Mon Emploi du Temps
+              Mon Emploi du Temps
             </h1>
             <p className="text-white/70">
               Consultez votre planning hebdomadaire et vos séances à venir.

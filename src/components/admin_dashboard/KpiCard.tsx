@@ -175,9 +175,11 @@ const KpiCard: React.FC<KpiCardProps> = ({
 
         {icon && (
           <div
-            className={`p-3 rounded-lg border ${colorClass.iconBg} ${colorClass.icon}`}
+            className={`p-4 rounded-xl border ${colorClass.iconBg} shadow-lg`}
           >
-            {React.createElement(icon, { className: "w-6 h-6" })}
+            {React.createElement(icon, {
+              className: `w-8 h-8 ${colorClass.icon}`,
+            })}
           </div>
         )}
       </div>

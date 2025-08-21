@@ -1,10 +1,9 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { 
+import {
   Search,
-  Filter,
   Download,
   Eye,
   FileText,
@@ -21,7 +20,7 @@ import {
   X,
   CheckCircle,
   Clock,
-  AlertCircle
+  AlertCircle,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -61,7 +60,7 @@ const resourcesData: Resource[] = [
     size: "2.5 MB",
     url: "#",
     downloadCount: 45,
-    isNew: true
+    isNew: true,
   },
   {
     id: "2",
@@ -73,7 +72,7 @@ const resourcesData: Resource[] = [
     uploadDate: "2024-01-14",
     size: "125 MB",
     url: "#",
-    downloadCount: 32
+    downloadCount: 32,
   },
   {
     id: "3",
@@ -85,7 +84,7 @@ const resourcesData: Resource[] = [
     uploadDate: "2024-01-13",
     size: "15.8 MB",
     url: "#",
-    downloadCount: 28
+    downloadCount: 28,
   },
   {
     id: "4",
@@ -97,7 +96,7 @@ const resourcesData: Resource[] = [
     uploadDate: "2024-01-12",
     size: "45 MB",
     url: "#",
-    downloadCount: 67
+    downloadCount: 67,
   },
   {
     id: "5",
@@ -108,8 +107,8 @@ const resourcesData: Resource[] = [
     teacher: "Mme Touré",
     uploadDate: "2024-01-11",
     url: "https://example.com",
-    downloadCount: 89
-  }
+    downloadCount: 89,
+  },
 ];
 
 // Données simulées pour les devoirs à déposer
@@ -119,22 +118,22 @@ const assignmentsData: Assignment[] = [
     title: "Dissertation - L'existentialisme",
     subject: "Philosophie",
     dueDate: "2024-01-20",
-    status: "pending"
+    status: "pending",
   },
   {
     id: "2",
     title: "Rapport de TP - Chimie organique",
     subject: "Physique-Chimie",
     dueDate: "2024-01-18",
-    status: "submitted"
+    status: "submitted",
   },
   {
     id: "3",
     title: "Analyse de texte - Baudelaire",
     subject: "Français",
     dueDate: "2024-01-15",
-    status: "late"
-  }
+    status: "late",
+  },
 ];
 
 const getFileIcon = (type: string) => {
@@ -177,34 +176,64 @@ const getFileTypeLabel = (type: string) => {
 const getStatusInfo = (status: string) => {
   switch (status) {
     case "pending":
-      return { label: "À rendre", color: "text-yellow-400", bgColor: "bg-yellow-400/20", icon: Clock };
+      return {
+        label: "À rendre",
+        color: "text-yellow-400",
+        bgColor: "bg-yellow-400/20",
+        icon: Clock,
+      };
     case "submitted":
-      return { label: "Rendu", color: "text-green-400", bgColor: "bg-green-400/20", icon: CheckCircle };
+      return {
+        label: "Rendu",
+        color: "text-green-400",
+        bgColor: "bg-green-400/20",
+        icon: CheckCircle,
+      };
     case "late":
-      return { label: "En retard", color: "text-red-400", bgColor: "bg-red-400/20", icon: AlertCircle };
+      return {
+        label: "En retard",
+        color: "text-red-400",
+        bgColor: "bg-red-400/20",
+        icon: AlertCircle,
+      };
     default:
-      return { label: "Inconnu", color: "text-gray-400", bgColor: "bg-gray-400/20", icon: Clock };
+      return {
+        label: "Inconnu",
+        color: "text-gray-400",
+        bgColor: "bg-gray-400/20",
+        icon: Clock,
+      };
   }
 };
 
 export default function StudentResourcesPage() {
-  const [activeTab, setActiveTab] = useState<"resources" | "upload">("resources");
+  const [activeTab, setActiveTab] = useState<"resources" | "upload">(
+    "resources"
+  );
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedSubject, setSelectedSubject] = useState("all");
   const [selectedType, setSelectedType] = useState("all");
-  const [selectedResource, setSelectedResource] = useState<Resource | null>(null);
+  const [selectedResource, setSelectedResource] = useState<Resource | null>(
+    null
+  );
   const [uploadFiles, setUploadFiles] = useState<File[]>([]);
   const [dragOver, setDragOver] = useState(false);
 
-  const subjects = ["all", ...Array.from(new Set(resourcesData.map(r => r.subject)))];
+  const subjects = [
+    "all",
+    ...Array.from(new Set(resourcesData.map((r) => r.subject))),
+  ];
   const types = ["all", "pdf", "video", "image", "audio", "link"];
 
-  const filteredResources = resourcesData.filter(resource => {
-    const matchesSearch = resource.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         resource.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         resource.teacher.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesSubject = selectedSubject === "all" || resource.subject === selectedSubject;
-    const matchesType = selectedType === "all" || resource.type === selectedType;
+  const filteredResources = resourcesData.filter((resource) => {
+    const matchesSearch =
+      resource.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      resource.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      resource.teacher.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesSubject =
+      selectedSubject === "all" || resource.subject === selectedSubject;
+    const matchesType =
+      selectedType === "all" || resource.type === selectedType;
     return matchesSearch && matchesSubject && matchesType;
   });
 
@@ -212,39 +241,56 @@ export default function StudentResourcesPage() {
     e.preventDefault();
     setDragOver(false);
     const files = Array.from(e.dataTransfer.files);
-    setUploadFiles(prev => [...prev, ...files]);
+    setUploadFiles((prev) => [...prev, ...files]);
   };
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       const files = Array.from(e.target.files);
-      setUploadFiles(prev => [...prev, ...files]);
+      setUploadFiles((prev) => [...prev, ...files]);
     }
   };
 
   const removeFile = (index: number) => {
-    setUploadFiles(prev => prev.filter((_, i) => i !== index));
+    setUploadFiles((prev) => prev.filter((_, i) => i !== index));
   };
 
   return (
     <div className="space-y-6">
-      {/* En-tête */}
+      {/* Header avec titre principal */}
       <motion.div
-        initial={{ opacity: 0, y: -20 }}
+        initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="flex flex-col lg:flex-row lg:items-center justify-between gap-4"
+        className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20"
       >
-        <div>
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-[#1d8b93] to-[#b8d070] bg-clip-text text-transparent">
-            Ressources
-          </h1>
-          <p className="text-white/70 mt-1">
-            Accédez à vos documents et déposez vos devoirs
-          </p>
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-bold text-white mb-2 flex items-center gap-3">
+              <Archive className="w-7 h-7 text-[#b8d070]" />
+              Mes Ressources
+            </h1>
+            <p className="text-white/70">
+              Accédez à vos documents et déposez vos devoirs.
+            </p>
+          </div>
+          <div className="text-right hidden sm:block">
+            <p className="text-white/60 text-sm">Ressources</p>
+            <p className="text-3xl font-bold text-[#b8d070">
+              {filteredResources.length}
+            </p>
+            <p className="text-white/60 text-sm">disponibles</p>
+          </div>
         </div>
+      </motion.div>
 
-        {/* Onglets */}
-        <div className="flex bg-white/10 rounded-lg p-1">
+      {/* Onglets */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.1 }}
+        className="flex justify-center"
+      >
+        <div className="flex bg-white/10 backdrop-blur-sm rounded-lg p-1 border border-white/20">
           <button
             onClick={() => setActiveTab("resources")}
             className={cn(
@@ -254,7 +300,7 @@ export default function StudentResourcesPage() {
                 : "text-white/70 hover:text-white"
             )}
           >
-            Ressources
+            📁 Ressources
           </button>
           <button
             onClick={() => setActiveTab("upload")}
@@ -265,7 +311,7 @@ export default function StudentResourcesPage() {
                 : "text-white/70 hover:text-white"
             )}
           >
-            Dépôt de devoirs
+            📤 Dépôt de devoirs
           </button>
         </div>
       </motion.div>
@@ -297,7 +343,7 @@ export default function StudentResourcesPage() {
               onChange={(e) => setSelectedSubject(e.target.value)}
               className="px-4 py-2 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-[#1d8b93]/50"
             >
-              {subjects.map(subject => (
+              {subjects.map((subject) => (
                 <option key={subject} value={subject}>
                   {subject === "all" ? "Toutes les matières" : subject}
                 </option>
@@ -310,7 +356,7 @@ export default function StudentResourcesPage() {
               onChange={(e) => setSelectedType(e.target.value)}
               className="px-4 py-2 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-[#1d8b93]/50"
             >
-              {types.map(type => (
+              {types.map((type) => (
                 <option key={type} value={type}>
                   {type === "all" ? "Tous les types" : getFileTypeLabel(type)}
                 </option>
@@ -349,14 +395,20 @@ export default function StudentResourcesPage() {
                           {getFileTypeLabel(resource.type)}
                         </span>
                         {resource.size && (
-                          <span className="text-xs text-white/50">{resource.size}</span>
+                          <span className="text-xs text-white/50">
+                            {resource.size}
+                          </span>
                         )}
                       </div>
-                      <h3 className="font-bold text-white mb-2 line-clamp-2">{resource.title}</h3>
+                      <h3 className="font-bold text-white mb-2 line-clamp-2">
+                        {resource.title}
+                      </h3>
                     </div>
                   </div>
 
-                  <p className="text-white/70 text-sm mb-4 line-clamp-2">{resource.description}</p>
+                  <p className="text-white/70 text-sm mb-4 line-clamp-2">
+                    {resource.description}
+                  </p>
 
                   <div className="space-y-2 text-sm text-white/60">
                     <div className="flex items-center gap-2">
@@ -369,7 +421,9 @@ export default function StudentResourcesPage() {
                     </div>
                     <div className="flex items-center gap-2">
                       <Calendar className="w-4 h-4" />
-                      {new Date(resource.uploadDate).toLocaleDateString('fr-FR')}
+                      {new Date(resource.uploadDate).toLocaleDateString(
+                        "fr-FR"
+                      )}
                     </div>
                     <div className="flex items-center gap-2">
                       <Download className="w-4 h-4" />
@@ -389,7 +443,9 @@ export default function StudentResourcesPage() {
             >
               <Archive className="w-16 h-16 mx-auto mb-4 opacity-50" />
               <p className="text-lg mb-2">Aucune ressource trouvée</p>
-              <p className="text-sm">Essayez de modifier vos filtres de recherche</p>
+              <p className="text-sm">
+                Essayez de modifier vos filtres de recherche
+              </p>
             </motion.div>
           )}
         </div>
@@ -404,7 +460,9 @@ export default function StudentResourcesPage() {
             transition={{ delay: 0.1 }}
             className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-xl p-6"
           >
-            <h2 className="text-xl font-bold text-white mb-4">Devoirs à rendre</h2>
+            <h2 className="text-xl font-bold text-white mb-4">
+              Devoirs à rendre
+            </h2>
             <div className="space-y-4">
               {assignmentsData.map((assignment, index) => {
                 const statusInfo = getStatusInfo(assignment.status);
@@ -422,15 +480,24 @@ export default function StudentResourcesPage() {
                         <StatusIcon className={`w-5 h-5 ${statusInfo.color}`} />
                       </div>
                       <div>
-                        <h3 className="font-bold text-white">{assignment.title}</h3>
-                        <p className="text-white/70 text-sm">{assignment.subject}</p>
+                        <h3 className="font-bold text-white">
+                          {assignment.title}
+                        </h3>
+                        <p className="text-white/70 text-sm">
+                          {assignment.subject}
+                        </p>
                         <p className="text-white/50 text-xs">
-                          Échéance: {new Date(assignment.dueDate).toLocaleDateString('fr-FR')}
+                          Échéance:{" "}
+                          {new Date(assignment.dueDate).toLocaleDateString(
+                            "fr-FR"
+                          )}
                         </p>
                       </div>
                     </div>
                     <div className="flex items-center gap-3">
-                      <span className={`text-xs px-3 py-1 rounded-full ${statusInfo.bgColor} ${statusInfo.color}`}>
+                      <span
+                        className={`text-xs px-3 py-1 rounded-full ${statusInfo.bgColor} ${statusInfo.color}`}
+                      >
                         {statusInfo.label}
                       </span>
                       {assignment.status === "pending" && (
@@ -452,16 +519,21 @@ export default function StudentResourcesPage() {
             transition={{ delay: 0.2 }}
             className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-xl p-6"
           >
-            <h2 className="text-xl font-bold text-white mb-4">Déposer des fichiers</h2>
-            
+            <h2 className="text-xl font-bold text-white mb-4">
+              Déposer des fichiers
+            </h2>
+
             <div
               onDrop={handleFileDrop}
-              onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
+              onDragOver={(e) => {
+                e.preventDefault();
+                setDragOver(true);
+              }}
               onDragLeave={() => setDragOver(false)}
               className={cn(
                 "border-2 border-dashed rounded-xl p-8 text-center transition-colors",
-                dragOver 
-                  ? "border-[#1d8b93] bg-[#1d8b93]/10" 
+                dragOver
+                  ? "border-[#1d8b93] bg-[#1d8b93]/10"
                   : "border-white/20 hover:border-white/40"
               )}
             >
@@ -469,9 +541,7 @@ export default function StudentResourcesPage() {
               <p className="text-white text-lg mb-2">
                 Glissez-déposez vos fichiers ici
               </p>
-              <p className="text-white/70 mb-4">
-                ou cliquez pour sélectionner
-              </p>
+              <p className="text-white/70 mb-4">ou cliquez pour sélectionner</p>
               <input
                 type="file"
                 multiple
@@ -491,7 +561,9 @@ export default function StudentResourcesPage() {
             {/* Fichiers sélectionnés */}
             {uploadFiles.length > 0 && (
               <div className="mt-6">
-                <h3 className="text-white font-bold mb-3">Fichiers sélectionnés</h3>
+                <h3 className="text-white font-bold mb-3">
+                  Fichiers sélectionnés
+                </h3>
                 <div className="space-y-2">
                   {uploadFiles.map((file, index) => (
                     <div
@@ -545,7 +617,9 @@ export default function StudentResourcesPage() {
               className="bg-[#0a0f1c]/95 backdrop-blur-xl border border-white/20 rounded-xl p-6 max-w-lg w-full max-h-[80vh] overflow-y-auto"
             >
               <div className="flex items-center justify-between mb-6">
-                <h3 className="text-xl font-bold text-white">Détails de la ressource</h3>
+                <h3 className="text-xl font-bold text-white">
+                  Détails de la ressource
+                </h3>
                 <button
                   onClick={() => setSelectedResource(null)}
                   className="text-white/70 hover:text-white transition-colors"
@@ -556,8 +630,12 @@ export default function StudentResourcesPage() {
 
               <div className="space-y-4">
                 <div>
-                  <h4 className="font-bold text-white text-lg mb-2">{selectedResource.title}</h4>
-                  <p className="text-white/70">{selectedResource.description}</p>
+                  <h4 className="font-bold text-white text-lg mb-2">
+                    {selectedResource.title}
+                  </h4>
+                  <p className="text-white/70">
+                    {selectedResource.description}
+                  </p>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4 text-sm">
@@ -571,21 +649,29 @@ export default function StudentResourcesPage() {
                   </div>
                   <div>
                     <div className="text-white/50 mb-1">Type</div>
-                    <div className="text-white">{getFileTypeLabel(selectedResource.type)}</div>
+                    <div className="text-white">
+                      {getFileTypeLabel(selectedResource.type)}
+                    </div>
                   </div>
                   <div>
                     <div className="text-white/50 mb-1">Taille</div>
-                    <div className="text-white">{selectedResource.size || "N/A"}</div>
+                    <div className="text-white">
+                      {selectedResource.size || "N/A"}
+                    </div>
                   </div>
                   <div>
-                    <div className="text-white/50 mb-1">Date d'ajout</div>
+                    <div className="text-white/50 mb-1">Date d&apos;ajout</div>
                     <div className="text-white">
-                      {new Date(selectedResource.uploadDate).toLocaleDateString('fr-FR')}
+                      {new Date(selectedResource.uploadDate).toLocaleDateString(
+                        "fr-FR"
+                      )}
                     </div>
                   </div>
                   <div>
                     <div className="text-white/50 mb-1">Téléchargements</div>
-                    <div className="text-white">{selectedResource.downloadCount}</div>
+                    <div className="text-white">
+                      {selectedResource.downloadCount}
+                    </div>
                   </div>
                 </div>
 
@@ -609,4 +695,3 @@ export default function StudentResourcesPage() {
     </div>
   );
 }
-
