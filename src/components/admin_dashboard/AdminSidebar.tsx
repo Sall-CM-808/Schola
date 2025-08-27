@@ -1,9 +1,9 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   LayoutDashboard,
   Users,
@@ -16,6 +16,9 @@ import {
   Settings,
   ChevronLeft,
   ChevronRight,
+  ChevronDown,
+  ChevronUp,
+  GraduationCap,
 } from "lucide-react";
 
 interface SidebarItem {
@@ -24,6 +27,13 @@ interface SidebarItem {
   href: string;
   icon: React.ReactNode;
   badge?: string;
+  hasDropdown?: boolean;
+  subItems?: Array<{
+    id: string;
+    label: string;
+    href: string;
+    icon: React.ReactNode;
+  }>;
 }
 
 interface AdminSidebarProps {
@@ -50,6 +60,27 @@ const sidebarItems: SidebarItem[] = [
     label: "Unités structurelles",
     href: "/admin/units",
     icon: <Building2 className="w-5 h-5" />,
+    hasDropdown: true,
+    subItems: [
+      {
+        id: "primaire",
+        label: "Primaire",
+        href: "/admin/units/primaire",
+        icon: <GraduationCap className="w-4 h-4" />,
+      },
+      {
+        id: "college",
+        label: "Collège",
+        href: "/admin/units/college",
+        icon: <GraduationCap className="w-4 h-4" />,
+      },
+      {
+        id: "lycee",
+        label: "Lycée",
+        href: "/admin/units/lycee",
+        icon: <GraduationCap className="w-4 h-4" />,
+      },
+    ],
   },
   {
     id: "roles",
@@ -95,6 +126,17 @@ const AdminSidebar: React.FC<AdminSidebarProps> = ({
   onToggle,
 }) => {
   const pathname = usePathname();
+  const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set());
+
+  const toggleExpanded = (itemId: string) => {
+    const newExpanded = new Set(expandedItems);
+    if (newExpanded.has(itemId)) {
+      newExpanded.delete(itemId);
+    } else {
+      newExpanded.add(itemId);
+    }
+    setExpandedItems(newExpanded);
+  };
 
   return (
     <motion.aside
@@ -141,57 +183,153 @@ const AdminSidebar: React.FC<AdminSidebarProps> = ({
         <ul className="space-y-2">
           {sidebarItems.map((item) => {
             const isActive = pathname === item.href;
+            const isExpanded = expandedItems.has(item.id);
+            const hasActiveSubItem = item.subItems?.some((subItem) =>
+              pathname.startsWith(subItem.href)
+            );
 
             return (
               <li key={item.id}>
-                <Link
-                  href={item.href}
-                  className={`flex items-center gap-3 px-3 py-3 rounded-xl transition-all duration-200 group relative ${
-                    isActive
-                      ? "bg-[#b8d070] text-[#1d8b93] shadow-lg"
-                      : "text-white/80 hover:text-white hover:bg-white/10"
-                  }`}
-                >
-                  <span
-                    className={isActive ? "text-[#1d8b93]" : "text-current"}
-                  >
-                    {item.icon}
-                  </span>
-
-                  {!isCollapsed && (
-                    <motion.div
-                      initial={{ opacity: 0, x: -10 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 0.1 }}
-                      className="flex-1 flex items-center justify-between"
+                {/* Item principal */}
+                {item.hasDropdown ? (
+                  <div className="relative">
+                    <Link
+                      href={item.href}
+                      className={`flex items-center gap-3 px-3 py-3 rounded-xl transition-all duration-200 group relative ${
+                        isActive || hasActiveSubItem
+                          ? "bg-[#b8d070] text-[#1d8b93] shadow-lg"
+                          : "text-white/80 hover:text-white hover:bg-white/10"
+                      }`}
                     >
-                      <span className="font-medium text-sm">{item.label}</span>
-                      {item.badge && (
-                        <span
-                          className={`px-2 py-1 rounded-full text-xs font-medium ${
-                            isActive
-                              ? "bg-[#1d8b93]/20 text-[#1d8b93]"
-                              : "bg-white/20 text-white/80"
-                          }`}
+                      <span
+                        className={
+                          isActive || hasActiveSubItem
+                            ? "text-[#1d8b93]"
+                            : "text-current"
+                        }
+                      >
+                        {item.icon}
+                      </span>
+                      {!isCollapsed && (
+                        <motion.div
+                          initial={{ opacity: 0, x: -10 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: 0.1 }}
+                          className="flex-1 flex items-center justify-between"
                         >
-                          {item.badge}
-                        </span>
+                          <span className="font-medium text-sm">
+                            {item.label}
+                          </span>
+                          <button
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              toggleExpanded(item.id);
+                            }}
+                            className={`p-1 rounded transition-colors ${
+                              isActive || hasActiveSubItem
+                                ? "text-[#1d8b93] hover:bg-[#1d8b93]/10"
+                                : "text-current hover:bg-white/10"
+                            }`}
+                          >
+                            {isExpanded ? (
+                              <ChevronUp className="w-4 h-4" />
+                            ) : (
+                              <ChevronDown className="w-4 h-4" />
+                            )}
+                          </button>
+                        </motion.div>
                       )}
-                    </motion.div>
-                  )}
+                    </Link>
+                  </div>
+                ) : (
+                  <Link
+                    href={item.href}
+                    className={`flex items-center gap-3 px-3 py-3 rounded-xl transition-all duration-200 group relative ${
+                      isActive
+                        ? "bg-[#b8d070] text-[#1d8b93] shadow-lg"
+                        : "text-white/80 hover:text-white hover:bg-white/10"
+                    }`}
+                  >
+                    <span
+                      className={isActive ? "text-[#1d8b93]" : "text-current"}
+                    >
+                      {item.icon}
+                    </span>
 
-                  {/* Tooltip for collapsed state */}
-                  {isCollapsed && (
-                    <div className="absolute left-full ml-2 px-3 py-2 bg-gray-900 text-white text-sm rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 whitespace-nowrap z-50">
-                      {item.label}
-                      {item.badge && (
-                        <span className="ml-2 px-2 py-1 bg-white/20 rounded-full text-xs">
-                          {item.badge}
+                    {!isCollapsed && (
+                      <motion.div
+                        initial={{ opacity: 0, x: -10 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 0.1 }}
+                        className="flex-1 flex items-center justify-between"
+                      >
+                        <span className="font-medium text-sm">
+                          {item.label}
                         </span>
-                      )}
-                    </div>
-                  )}
-                </Link>
+                        {item.badge && (
+                          <span
+                            className={`px-2 py-1 rounded-full text-xs font-medium ${
+                              isActive
+                                ? "bg-[#1d8b93]/20 text-[#1d8b93]"
+                                : "bg-white/20 text-white/80"
+                            }`}
+                          >
+                            {item.badge}
+                          </span>
+                        )}
+                      </motion.div>
+                    )}
+                  </Link>
+                )}
+
+                {/* Dropdown des sous-items */}
+                {item.hasDropdown && item.subItems && !isCollapsed && (
+                  <AnimatePresence>
+                    {isExpanded && (
+                      <motion.ul
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: "auto" }}
+                        exit={{ opacity: 0, height: 0 }}
+                        transition={{ duration: 0.2 }}
+                        className="ml-6 mt-2 space-y-1 border-l border-white/20 pl-4"
+                      >
+                        {item.subItems.map((subItem) => {
+                          const isSubActive = pathname === subItem.href;
+                          return (
+                            <li key={subItem.id}>
+                              <Link
+                                href={subItem.href}
+                                className={`flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-200 text-sm ${
+                                  isSubActive
+                                    ? "bg-[#b8d070]/20 text-[#b8d070] font-medium"
+                                    : "text-white/70 hover:text-white hover:bg-white/10"
+                                }`}
+                              >
+                                <span className="text-current">
+                                  {subItem.icon}
+                                </span>
+                                <span>{subItem.label}</span>
+                              </Link>
+                            </li>
+                          );
+                        })}
+                      </motion.ul>
+                    )}
+                  </AnimatePresence>
+                )}
+
+                {/* Tooltip for collapsed state */}
+                {isCollapsed && (
+                  <div className="absolute left-full ml-2 px-3 py-2 bg-gray-900 text-white text-sm rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 whitespace-nowrap z-50">
+                    {item.label}
+                    {item.badge && (
+                      <span className="ml-2 px-2 py-1 bg-white/20 rounded-full text-xs">
+                        {item.badge}
+                      </span>
+                    )}
+                  </div>
+                )}
               </li>
             );
           })}

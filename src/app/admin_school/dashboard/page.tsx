@@ -3,13 +3,12 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import KpiCard, { KpiCardSkeleton } from "@/components/admin_dashboard/KpiCard";
-import SectionCard from "@/components/admin_dashboard/SectionCard";
-import SectionHeader from "@/components/admin_dashboard/SectionHeader";
-import DashboardGrid from "@/components/admin_dashboard/DashboardGrid";
 import DataTable, {
   DataTableSkeleton,
 } from "@/components/admin_dashboard/DataTable";
 import UserTypeChart from "@/components/admin_dashboard/UserTypeChart";
+import DashboardGrid from "@/components/layout/DashboardGrid";
+import { SectionCard, SectionHeader } from "@/components/ui/SectionCard";
 import {
   kpi,
   recentUsers,
@@ -20,18 +19,18 @@ import {
   type ElementRow,
 } from "@/lib/mocks/adminDashboard";
 import {
-  Shield,
   Users,
   UserCheck,
   UserX,
   Building2,
+  Shield,
   FileText,
-  Activity,
   Eye,
   Calendar,
+  Activity,
 } from "lucide-react";
 
-const AdminSchoolDashboardPage: React.FC = () => {
+const AdminDashboardPage: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState<{
     kpi: typeof kpi;
@@ -198,10 +197,10 @@ const AdminSchoolDashboardPage: React.FC = () => {
           <div>
             <h1 className="text-2xl font-bold text-white mb-2 flex items-center gap-3">
               <Shield className="w-7 h-7 text-[#b8d070]" />
-              Tableau de bord - École
+              Tableau de bord Admin
             </h1>
             <p className="text-white/70">
-              Vue d&apos;ensemble de l&apos;établissement scolaire -{" "}
+              Vue d&apos;ensemble de la plateforme Schola -{" "}
               {new Date().toLocaleDateString("fr-FR", {
                 weekday: "long",
                 year: "numeric",
@@ -257,7 +256,7 @@ const AdminSchoolDashboardPage: React.FC = () => {
               <KpiCard
                 title="Unités"
                 value={data.kpi.unitsTotal}
-                subtitle="Cycles, niveaux, classes"
+                subtitle="Départements et services"
                 icon={Building2}
                 color="purple"
               />
@@ -282,7 +281,7 @@ const AdminSchoolDashboardPage: React.FC = () => {
         {/* Section Statistiques détaillées - Deuxième rangée */}
         <div className="col-span-12 lg:col-span-6">
           <SectionCard>
-            <SectionHeader title="Statistiques de l'établissement" />
+            <SectionHeader title="Statistiques détaillées" />
             <div className="space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="bg-white/5 rounded-lg p-4">
@@ -378,9 +377,148 @@ const AdminSchoolDashboardPage: React.FC = () => {
             />
           </SectionCard>
         </div>
+
+        {/* Section Activité récente - Cinquième rangée */}
+        <div className="col-span-12">
+          <SectionCard>
+            <SectionHeader
+              title="Activité récente"
+              actions={
+                <button className="text-[#b8d070] hover:text-[#a2c65e] text-sm font-medium">
+                  Voir historique
+                </button>
+              }
+            />
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+              {[
+                {
+                  action: "Nouvel utilisateur inscrit",
+                  user: "Marie Diallo",
+                  time: "Il y a 2 minutes",
+                  type: "user",
+                },
+                {
+                  action: "Cours créé",
+                  user: "Prof. Camara",
+                  time: "Il y a 15 minutes",
+                  type: "course",
+                },
+                {
+                  action: "Devoir soumis",
+                  user: "Ahmed Bah",
+                  time: "Il y a 1 heure",
+                  type: "assignment",
+                },
+                {
+                  action: "Nouvelle unité ajoutée",
+                  user: "Admin System",
+                  time: "Il y a 2 heures",
+                  type: "unit",
+                },
+                {
+                  action: "Utilisateur désactivé",
+                  user: "Sys Admin",
+                  time: "Il y a 3 heures",
+                  type: "user",
+                },
+                {
+                  action: "Rapport généré",
+                  user: "Admin System",
+                  time: "Il y a 4 heures",
+                  type: "report",
+                },
+              ].map((activity, index) => (
+                <div
+                  key={index}
+                  className="flex items-center gap-3 p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors"
+                >
+                  <div className="p-2 rounded-lg bg-[#1d8b93]/20 flex-shrink-0">
+                    <Activity className="w-4 h-4 text-[#b8d070]" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="text-white font-medium truncate">
+                      {activity.action}
+                    </div>
+                    <div className="text-white/60 text-sm truncate">
+                      par {activity.user}
+                    </div>
+                  </div>
+                  <div className="text-white/40 text-xs flex-shrink-0">
+                    {activity.time}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </SectionCard>
+        </div>
+
+        {/* Section Actions rapides - Sixième rangée */}
+        <div className="col-span-12">
+          <SectionCard>
+            <SectionHeader title="Actions rapides" />
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <motion.div
+                whileHover={{ scale: 1.02 }}
+                className="bg-white/5 rounded-lg p-4 cursor-pointer hover:bg-white/10 transition-all duration-300"
+              >
+                <div className="flex items-center gap-4">
+                  <div className="p-3 rounded-lg bg-blue-500/20 flex-shrink-0">
+                    <Eye className="w-5 h-5 text-blue-400" />
+                  </div>
+                  <div className="min-w-0">
+                    <h3 className="font-semibold text-white truncate">
+                      Gérer les utilisateurs
+                    </h3>
+                    <p className="text-sm text-white/60 truncate">
+                      Comptes et permissions
+                    </p>
+                  </div>
+                </div>
+              </motion.div>
+
+              <motion.div
+                whileHover={{ scale: 1.02 }}
+                className="bg-white/5 rounded-lg p-4 cursor-pointer hover:bg-white/10 transition-all duration-300"
+              >
+                <div className="flex items-center gap-4">
+                  <div className="p-3 rounded-lg bg-green-500/20 flex-shrink-0">
+                    <Shield className="w-5 h-5 text-green-400" />
+                  </div>
+                  <div className="min-w-0">
+                    <h3 className="font-semibold text-white truncate">
+                      Gérer les rôles
+                    </h3>
+                    <p className="text-sm text-white/60 truncate">
+                      Permissions et attributions
+                    </p>
+                  </div>
+                </div>
+              </motion.div>
+
+              <motion.div
+                whileHover={{ scale: 1.02 }}
+                className="bg-white/5 rounded-lg p-4 cursor-pointer hover:bg-white/10 transition-all duration-300"
+              >
+                <div className="flex items-center gap-4">
+                  <div className="p-3 rounded-lg bg-purple-500/20 flex-shrink-0">
+                    <Calendar className="w-5 h-5 text-purple-400" />
+                  </div>
+                  <div className="min-w-0">
+                    <h3 className="font-semibold text-white truncate">
+                      Générer rapports
+                    </h3>
+                    <p className="text-sm text-white/60 truncate">
+                      Statistiques et exports
+                    </p>
+                  </div>
+                </div>
+              </motion.div>
+            </div>
+          </SectionCard>
+        </div>
       </DashboardGrid>
     </div>
   );
 };
 
-export default AdminSchoolDashboardPage;
+export default AdminDashboardPage;
