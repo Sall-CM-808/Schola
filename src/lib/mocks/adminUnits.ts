@@ -26,7 +26,7 @@ export interface Unit {
 export const unitsTree: Unit[] = [
   {
     id: "unit-1",
-    name: "Université Schola",
+    name: "Groupe Scolaire Sylla Lamine",
     code: "SCHOLA",
     type: "university",
     level: 0,
