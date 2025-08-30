@@ -336,6 +336,265 @@ const AdminSidebar: React.FC<AdminSidebarProps> = ({
         </ul>
       </nav>
 
+      {/* Section Structure - Arbre dynamique des unités */}
+      <div className="mt-8">
+        <div className="px-4 mb-4">
+          <h3 className="text-xs font-semibold text-white/60 uppercase tracking-wider">
+            Structure
+          </h3>
+        </div>
+
+        <nav className="px-4">
+          <ul className="space-y-2">
+            {/* Établissement racine */}
+            <li>
+              <div className="relative">
+                <button
+                  onClick={() => toggleExpanded("structure")}
+                  className={`w-full flex items-center gap-3 px-3 py-3 rounded-xl transition-all duration-200 group relative ${
+                    expandedItems.has("structure")
+                      ? "bg-white/20 text-white"
+                      : "text-white/80 hover:text-white hover:bg-white/10"
+                  }`}
+                >
+                  <div className="w-5 h-5 rounded-lg bg-gradient-to-br from-[#b8d070] to-[#a2c65e] flex items-center justify-center">
+                    <Building2 className="w-3 h-3 text-[#1d8b93]" />
+                  </div>
+
+                  {!isCollapsed && (
+                    <motion.div
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.1 }}
+                      className="flex-1 flex items-center justify-between"
+                    >
+                      <span className="font-medium text-sm">
+                        Groupe Scolaire Sylla Lamine
+                      </span>
+                      <button
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          toggleExpanded("structure");
+                        }}
+                        className={`p-1 rounded transition-colors ${
+                          expandedItems.has("structure")
+                            ? "text-white hover:bg-white/10"
+                            : "text-current hover:bg-white/10"
+                        }`}
+                      >
+                        {expandedItems.has("structure") ? (
+                          <ChevronUp className="w-4 h-4" />
+                        ) : (
+                          <ChevronDown className="w-4 h-4" />
+                        )}
+                      </button>
+                    </motion.div>
+                  )}
+                </button>
+
+                {/* Sous-unités de l'établissement */}
+                <AnimatePresence>
+                  {expandedItems.has("structure") && !isCollapsed && (
+                    <motion.ul
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: "auto" }}
+                      exit={{ opacity: 0, height: 0 }}
+                      transition={{ duration: 0.2 }}
+                      className="ml-6 mt-2 space-y-1 border-l border-white/20 pl-4"
+                    >
+                      {/* Primaire */}
+                      <li>
+                        <div className="relative">
+                          <button
+                            onClick={() => toggleExpanded("primaire")}
+                            className={`w-full flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-200 text-sm ${
+                              expandedItems.has("primaire")
+                                ? "bg-white/20 text-white"
+                                : "text-white/70 hover:text-white hover:bg-white/10"
+                            }`}
+                          >
+                            <GraduationCap className="w-4 h-4" />
+                            <span>Primaire</span>
+                            <button
+                              onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                toggleExpanded("primaire");
+                              }}
+                              className="ml-auto p-1 rounded transition-colors hover:bg-white/10"
+                            >
+                              {expandedItems.has("primaire") ? (
+                                <ChevronUp className="w-3 h-3" />
+                              ) : (
+                                <ChevronDown className="w-3 h-3" />
+                              )}
+                            </button>
+                          </button>
+
+                          {/* Classes du primaire */}
+                          <AnimatePresence>
+                            {expandedItems.has("primaire") && (
+                              <motion.ul
+                                initial={{ opacity: 0, height: 0 }}
+                                animate={{ opacity: 1, height: "auto" }}
+                                exit={{ opacity: 0, height: 0 }}
+                                transition={{ duration: 0.2 }}
+                                className="ml-6 mt-1 space-y-1 border-l border-white/20 pl-4"
+                              >
+                                {[
+                                  { id: "1ere", nom: "1ère Année" },
+                                  { id: "2eme", nom: "2ème Année" },
+                                  { id: "3eme", nom: "3ème Année" },
+                                  { id: "4eme", nom: "4ème Année" },
+                                  { id: "5eme", nom: "5ème Année" },
+                                  { id: "6eme", nom: "6ème Année" },
+                                ].map((classe) => (
+                                  <li key={classe.id}>
+                                    <Link
+                                      href={`/admin/units/${classe.id}`}
+                                      className="flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-200 text-sm text-white/60 hover:text-white hover:bg-white/10"
+                                    >
+                                      <div className="w-2 h-2 rounded-full bg-[#b8d070]"></div>
+                                      <span>{classe.nom}</span>
+                                    </Link>
+                                  </li>
+                                ))}
+                              </motion.ul>
+                            )}
+                          </AnimatePresence>
+                        </div>
+                      </li>
+
+                      {/* Collège */}
+                      <li>
+                        <div className="relative">
+                          <button
+                            onClick={() => toggleExpanded("college")}
+                            className={`w-full flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-200 text-sm ${
+                              expandedItems.has("college")
+                                ? "bg-white/20 text-white"
+                                : "text-white/70 hover:text-white hover:bg-white/10"
+                            }`}
+                          >
+                            <GraduationCap className="w-4 h-4" />
+                            <span>Collège</span>
+                            <button
+                              onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                toggleExpanded("college");
+                              }}
+                              className="ml-auto p-1 rounded transition-colors hover:bg-white/10"
+                            >
+                              {expandedItems.has("college") ? (
+                                <ChevronUp className="w-3 h-3" />
+                              ) : (
+                                <ChevronDown className="w-3 h-3" />
+                              )}
+                            </button>
+                          </button>
+
+                          {/* Classes du collège */}
+                          <AnimatePresence>
+                            {expandedItems.has("college") && (
+                              <motion.ul
+                                initial={{ opacity: 0, height: 0 }}
+                                animate={{ opacity: 1, height: "auto" }}
+                                exit={{ opacity: 0, height: 0 }}
+                                transition={{ duration: 0.2 }}
+                                className="ml-6 mt-1 space-y-1 border-l border-white/20 pl-4"
+                              >
+                                {[
+                                  { id: "6eme", nom: "6ème" },
+                                  { id: "5eme", nom: "5ème" },
+                                  { id: "4eme", nom: "4ème" },
+                                  { id: "3eme", nom: "3ème" },
+                                ].map((classe) => (
+                                  <li key={classe.id}>
+                                    <Link
+                                      href={`/admin/units/${classe.id}`}
+                                      className="flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-200 text-sm text-white/60 hover:text-white hover:bg-white/10"
+                                    >
+                                      <div className="w-2 h-2 rounded-full bg-[#b8d070]"></div>
+                                      <span>{classe.nom}</span>
+                                    </Link>
+                                  </li>
+                                ))}
+                              </motion.ul>
+                            )}
+                          </AnimatePresence>
+                        </div>
+                      </li>
+
+                      {/* Lycée */}
+                      <li>
+                        <div className="relative">
+                          <button
+                            onClick={() => toggleExpanded("lycee")}
+                            className={`w-full flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-200 text-sm ${
+                              expandedItems.has("lycee")
+                                ? "bg-white/20 text-white"
+                                : "text-white/70 hover:text-white hover:bg-white/10"
+                            }`}
+                          >
+                            <GraduationCap className="w-4 h-4" />
+                            <span>Lycée</span>
+                            <button
+                              onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                toggleExpanded("lycee");
+                              }}
+                              className="ml-auto p-1 rounded transition-colors hover:bg-white/10"
+                            >
+                              {expandedItems.has("lycee") ? (
+                                <ChevronUp className="w-3 h-3" />
+                              ) : (
+                                <ChevronDown className="w-3 h-3" />
+                              )}
+                            </button>
+                          </button>
+
+                          {/* Classes du lycée */}
+                          <AnimatePresence>
+                            {expandedItems.has("lycee") && (
+                              <motion.ul
+                                initial={{ opacity: 0, height: 0 }}
+                                animate={{ opacity: 1, height: "auto" }}
+                                exit={{ opacity: 0, height: 0 }}
+                                transition={{ duration: 0.2 }}
+                                className="ml-6 mt-1 space-y-1 border-l border-white/20 pl-4"
+                              >
+                                {[
+                                  { id: "2nde", nom: "Seconde" },
+                                  { id: "1ere", nom: "Première" },
+                                  { id: "terminale", nom: "Terminale" },
+                                ].map((classe) => (
+                                  <li key={classe.id}>
+                                    <Link
+                                      href={`/admin/units/${classe.id}`}
+                                      className="flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-200 text-sm text-white/60 hover:text-white hover:bg-white/10"
+                                    >
+                                      <div className="w-2 h-2 rounded-full bg-[#b8d070]"></div>
+                                      <span>{classe.nom}</span>
+                                    </Link>
+                                  </li>
+                                ))}
+                              </motion.ul>
+                            )}
+                          </AnimatePresence>
+                        </div>
+                      </li>
+                    </motion.ul>
+                  )}
+                </AnimatePresence>
+              </div>
+            </li>
+          </ul>
+        </nav>
+      </div>
+
       {/* Footer */}
       <div className="p-4 border-t border-white/10">
         <div
