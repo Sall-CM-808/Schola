@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
+import { useUnitContext } from "@/contexts/UnitContext";
 import {
   LayoutDashboard,
   Users,
@@ -78,7 +79,7 @@ const sidebarItems: SidebarItem[] = [
         id: "lycee",
         label: "Lycée",
         href: "/admin/units/lycee",
-        icon: <GraduationCap className="w-4 h-4" />,
+        icon: <GraduationCap className="w-4 h-5" />,
       },
     ],
   },
@@ -127,6 +128,15 @@ const AdminSidebar: React.FC<AdminSidebarProps> = ({
 }) => {
   const pathname = usePathname();
   const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set());
+  const { setUnit, id: unitId, type_unite } = useUnitContext();
+
+  // Fonction pour générer les URLs contextuelles
+  const getContextualHref = (baseHref: string) => {
+    if (unitId && type_unite) {
+      return `${baseHref}?context=${type_unite}&id=${unitId}`;
+    }
+    return baseHref;
+  };
 
   const toggleExpanded = (itemId: string) => {
     const newExpanded = new Set(expandedItems);
@@ -194,7 +204,7 @@ const AdminSidebar: React.FC<AdminSidebarProps> = ({
                 {item.hasDropdown ? (
                   <div className="relative">
                     <Link
-                      href={item.href}
+                      href={getContextualHref(item.href)}
                       className={`flex items-center gap-3 px-3 py-3 rounded-xl transition-all duration-200 group relative ${
                         isActive || hasActiveSubItem
                           ? "bg-[#b8d070] text-[#1d8b93] shadow-lg"
@@ -371,13 +381,13 @@ const AdminSidebar: React.FC<AdminSidebarProps> = ({
                       <span className="font-medium text-sm">
                         Groupe Scolaire Sylla Lamine
                       </span>
-                      <button
+                      <div
                         onClick={(e) => {
                           e.preventDefault();
                           e.stopPropagation();
                           toggleExpanded("structure");
                         }}
-                        className={`p-1 rounded transition-colors ${
+                        className={`p-1 rounded transition-colors cursor-pointer ${
                           expandedItems.has("structure")
                             ? "text-white hover:bg-white/10"
                             : "text-current hover:bg-white/10"
@@ -388,7 +398,7 @@ const AdminSidebar: React.FC<AdminSidebarProps> = ({
                         ) : (
                           <ChevronDown className="w-4 h-4" />
                         )}
-                      </button>
+                      </div>
                     </motion.div>
                   )}
                 </button>
@@ -416,20 +426,20 @@ const AdminSidebar: React.FC<AdminSidebarProps> = ({
                           >
                             <GraduationCap className="w-4 h-4" />
                             <span>Primaire</span>
-                            <button
+                            <div
                               onClick={(e) => {
                                 e.preventDefault();
                                 e.stopPropagation();
                                 toggleExpanded("primaire");
                               }}
-                              className="ml-auto p-1 rounded transition-colors hover:bg-white/10"
+                              className="ml-auto p-1 rounded transition-colors hover:bg-white/10 cursor-pointer"
                             >
                               {expandedItems.has("primaire") ? (
                                 <ChevronUp className="w-3 h-3" />
                               ) : (
                                 <ChevronDown className="w-3 h-3" />
                               )}
-                            </button>
+                            </div>
                           </button>
 
                           {/* Classes du primaire */}
@@ -453,6 +463,18 @@ const AdminSidebar: React.FC<AdminSidebarProps> = ({
                                   <li key={classe.id}>
                                     <Link
                                       href={`/admin/units/${classe.id}`}
+                                      onClick={() =>
+                                        setUnit({
+                                          id: classe.id,
+                                          type_unite: "classe",
+                                          nom: classe.nom,
+                                          path: [
+                                            "Groupe Scolaire Sylla Lamine",
+                                            "Primaire",
+                                            classe.nom,
+                                          ],
+                                        })
+                                      }
                                       className="flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-200 text-sm text-white/60 hover:text-white hover:bg-white/10"
                                     >
                                       <div className="w-2 h-2 rounded-full bg-[#b8d070]"></div>
@@ -479,20 +501,20 @@ const AdminSidebar: React.FC<AdminSidebarProps> = ({
                           >
                             <GraduationCap className="w-4 h-4" />
                             <span>Collège</span>
-                            <button
+                            <div
                               onClick={(e) => {
                                 e.preventDefault();
                                 e.stopPropagation();
                                 toggleExpanded("college");
                               }}
-                              className="ml-auto p-1 rounded transition-colors hover:bg-white/10"
+                              className="ml-auto p-1 rounded transition-colors hover:bg-white/10 cursor-pointer"
                             >
                               {expandedItems.has("college") ? (
                                 <ChevronUp className="w-3 h-3" />
                               ) : (
                                 <ChevronDown className="w-3 h-3" />
                               )}
-                            </button>
+                            </div>
                           </button>
 
                           {/* Classes du collège */}
@@ -514,6 +536,18 @@ const AdminSidebar: React.FC<AdminSidebarProps> = ({
                                   <li key={classe.id}>
                                     <Link
                                       href={`/admin/units/${classe.id}`}
+                                      onClick={() =>
+                                        setUnit({
+                                          id: classe.id,
+                                          type_unite: "classe",
+                                          nom: classe.nom,
+                                          path: [
+                                            "Groupe Scolaire Sylla Lamine",
+                                            "Collège",
+                                            classe.nom,
+                                          ],
+                                        })
+                                      }
                                       className="flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-200 text-sm text-white/60 hover:text-white hover:bg-white/10"
                                     >
                                       <div className="w-2 h-2 rounded-full bg-[#b8d070]"></div>
@@ -540,20 +574,20 @@ const AdminSidebar: React.FC<AdminSidebarProps> = ({
                           >
                             <GraduationCap className="w-4 h-4" />
                             <span>Lycée</span>
-                            <button
+                            <div
                               onClick={(e) => {
                                 e.preventDefault();
                                 e.stopPropagation();
                                 toggleExpanded("lycee");
                               }}
-                              className="ml-auto p-1 rounded transition-colors hover:bg-white/10"
+                              className="ml-auto p-1 rounded transition-colors hover:bg-white/10 cursor-pointer"
                             >
                               {expandedItems.has("lycee") ? (
                                 <ChevronUp className="w-3 h-3" />
                               ) : (
                                 <ChevronDown className="w-3 h-3" />
                               )}
-                            </button>
+                            </div>
                           </button>
 
                           {/* Classes du lycée */}
@@ -574,6 +608,18 @@ const AdminSidebar: React.FC<AdminSidebarProps> = ({
                                   <li key={classe.id}>
                                     <Link
                                       href={`/admin/units/${classe.id}`}
+                                      onClick={() =>
+                                        setUnit({
+                                          id: classe.id,
+                                          type_unite: "classe",
+                                          nom: classe.nom,
+                                          path: [
+                                            "Groupe Scolaire Sylla Lamine",
+                                            "Lycée",
+                                            classe.nom,
+                                          ],
+                                        })
+                                      }
                                       className="flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-200 text-sm text-white/60 hover:text-white hover:bg-white/10"
                                     >
                                       <div className="w-2 h-2 rounded-full bg-[#b8d070]"></div>
