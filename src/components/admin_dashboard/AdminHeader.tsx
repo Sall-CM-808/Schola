@@ -82,7 +82,6 @@ export default function AdminHeader({
       admin: { label: "Administration", icon: Shield },
       dashboard: { label: "Tableau de bord" },
       users: { label: "Utilisateurs", icon: User },
-      units: { label: "Unités structurelles" },
       "roles-permissions": { label: "Rôles & Permissions" },
       elements: { label: "Éléments" },
       attributions: { label: "Attributions" },
