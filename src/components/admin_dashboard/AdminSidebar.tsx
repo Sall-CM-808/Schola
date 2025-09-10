@@ -22,6 +22,7 @@ import {
   ChevronRight,
   ChevronDown,
   ChevronUp,
+  Award
 } from "lucide-react";
 
 interface SidebarItem {
@@ -82,6 +83,18 @@ const sidebarItems: SidebarItem[] = [
         label: "Programmes",
         href: "/admin/structure/programs",
         icon: <BookOpen className="w-4 h-4" />,
+      },
+      {
+        id: "levels",
+        label: "Niveaux",
+        href: "/admin/structure/levels",
+        icon: <Award className="w-4 h-4" />,
+      },
+      {
+        id: "promotions",
+        label: "Promotions",
+        href: "/admin/structure/promotions",
+        icon: <Users className="w-4 h-4" />,
       },
     ],
   },
