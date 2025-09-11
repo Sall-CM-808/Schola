@@ -22,7 +22,8 @@ import {
   ChevronRight,
   ChevronDown,
   ChevronUp,
-  Award
+  Award,
+  School,
 } from "lucide-react";
 
 interface SidebarItem {
@@ -55,7 +56,7 @@ const sidebarItems: SidebarItem[] = [
   {
     id: "structure",
     label: "Structure",
-    href: "/admin/structure",
+    href: "#",
     icon: <Building2 className="w-5 h-5" />,
     badge: "12",
     hasDropdown: true,
@@ -95,6 +96,34 @@ const sidebarItems: SidebarItem[] = [
         label: "Promotions",
         href: "/admin/structure/promotions",
         icon: <Users className="w-4 h-4" />,
+      },
+    ],
+  },
+  {
+    id: "education",
+    label: "Éducation",
+    href: "#",
+    icon: <School className="w-5 h-5" />,
+    badge: "3",
+    hasDropdown: true,
+    subItems: [
+      {
+        id: "primary",
+        label: "Primaire",
+        href: "/admin/education/primary",
+        icon: <BookOpen className="w-4 h-4" />,
+      },
+      {
+        id: "middle",
+        label: "Collège",
+        href: "/admin/education/middle",
+        icon: <GraduationCap className="w-4 h-4" />,
+      },
+      {
+        id: "high",
+        label: "Lycée",
+        href: "/admin/education/high",
+        icon: <Award className="w-4 h-4" />,
       },
     ],
   },
