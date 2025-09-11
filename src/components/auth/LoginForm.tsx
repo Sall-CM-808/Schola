@@ -1,9 +1,12 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { Mail, Lock, Eye, EyeOff, ArrowRight } from "lucide-react";
+import { Mail, Lock, Eye, EyeOff, ArrowRight, User, LogIn } from "lucide-react";
+import { usersData } from "@/examples/permissionsData";
+import { usePermissions } from "@/hooks/usePermissions";
 
 const LoginForm: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -12,6 +15,34 @@ const LoginForm: React.FC = () => {
   });
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
+  const { isAuthenticated, signInMock, signOutMock } = usePermissions();
+  const [mounted, setMounted] = useState(false);
+
+  // Ne pas rediriger automatiquement: laisser l'utilisateur choisir
+
+  // Éviter l'hydratation invalide: attendre le montage client avant de générer des valeurs aléatoires
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const bubbles = useMemo(() => {
+    if (!mounted) return [] as Array<{ w: number; h: number; top: number; left: number; duration: number; dy: number; dx: number }>;
+    const arr = Array.from({ length: 10 }).map(() => {
+      const rnd = Math.random;
+      return {
+        w: rnd() * 20 + 10,
+        h: rnd() * 20 + 10,
+        top: rnd() * 100,
+        left: rnd() * 100,
+        duration: rnd() * 15 + 15,
+        dy: (rnd() - 0.5) * 50,
+        dx: (rnd() - 0.5) * 50,
+      };
+    });
+    return arr;
+  }, [mounted]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -24,41 +55,53 @@ const LoginForm: React.FC = () => {
     e.preventDefault();
     setIsLoading(true);
 
-    // Simulation de l'authentification
-    setTimeout(() => {
-      console.log("Login attempt:", formData);
+    // Auth mock: vérifie l'utilisateur dans usersData
+    const user = usersData.find(
+      (u) => u.email.toLowerCase() === formData.email.toLowerCase() && u.password === formData.password
+    );
+
+    if (!user) {
       setIsLoading(false);
-    }, 2000);
+      setError("Identifiants incorrects. Veuillez réessayer.");
+      return;
+    }
+
+    // Connexion mock et redirection
+    signInMock(user.id);
+    router.replace("/pageHierarchique");
+    setIsLoading(false);
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#1d8b93] via-[#0d5a61] to-[#1d8b93] flex items-center justify-center p-4">
-      {/* Bulles animées en arrière-plan */}
-      <div className="absolute inset-0 opacity-20">
-        {[...Array(10)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute rounded-full"
-            style={{
-              backgroundColor: "#b8d070",
-              width: `${Math.random() * 20 + 10}px`,
-              height: `${Math.random() * 20 + 10}px`,
-              top: `${Math.random() * 100}%`,
-              left: `${Math.random() * 100}%`,
-            }}
-            animate={{
-              y: [0, (Math.random() - 0.5) * 50],
-              x: [0, (Math.random() - 0.5) * 50],
-              opacity: [0.2, 0.8, 0.2],
-            }}
-            transition={{
-              duration: Math.random() * 15 + 15,
-              repeat: Infinity,
-              repeatType: "reverse",
-            }}
-          />
-        ))}
-      </div>
+      {/* Bulles animées en arrière-plan (générées uniquement côté client après montage) */}
+      {mounted && (
+        <div className="absolute inset-0 opacity-20">
+          {bubbles.map((b, i) => (
+            <motion.div
+              key={i}
+              className="absolute rounded-full"
+              style={{
+                backgroundColor: "#b8d070",
+                width: `${b.w}px`,
+                height: `${b.h}px`,
+                top: `${b.top}%`,
+                left: `${b.left}%`,
+              }}
+              animate={{
+                y: [0, b.dy],
+                x: [0, b.dx],
+                opacity: [0.2, 0.8, 0.2],
+              }}
+              transition={{
+                duration: b.duration,
+                repeat: Infinity,
+                repeatType: "reverse",
+              }}
+            />
+          ))}
+        </div>
+      )}
 
       <motion.div
         initial={{ opacity: 0, y: 20, scale: 0.9 }}
@@ -78,6 +121,31 @@ const LoginForm: React.FC = () => {
             <h1 className="text-3xl font-bold text-white mb-2">Connexion</h1>
             <p className="text-white/70">Accédez à votre compte Schola</p>
           </div>
+
+          {/* Déjà connecté */}
+          {isAuthenticated && (
+            <div className="mb-6 p-4 rounded-lg bg-white/10 border border-white/20">
+              <p className="text-white/90 mb-3">Vous êtes déjà connecté.</p>
+              <div className="flex gap-3">
+                <button
+                  onClick={() => router.replace("/pageHierarchique")}
+                  className="px-4 py-2 rounded-md bg-[#b8d070] text-[#1d8b93] font-medium hover:opacity-90 transition"
+                >
+                  Accéder à la hiérarchie
+                </button>
+                <button
+                  onClick={() => {
+                    signOutMock();
+                    // Rester sur /login après déconnexion
+                    router.refresh?.();
+                  }}
+                  className="px-4 py-2 rounded-md border border-white/30 text-white hover:bg-white/10 transition"
+                >
+                  Se déconnecter
+                </button>
+              </div>
+            </div>
+          )}
 
           {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-6">
@@ -130,6 +198,12 @@ const LoginForm: React.FC = () => {
               </div>
             </div>
 
+            {error && (
+              <div className="text-sm text-red-200 bg-red-500/20 border border-red-400/40 rounded-md px-3 py-2">
+                {error}
+              </div>
+            )}
+
             {/* Forgot Password */}
             <div className="text-right">
               <Link
@@ -164,6 +238,32 @@ const LoginForm: React.FC = () => {
             <div className="flex-1 border-t border-white/20"></div>
             <span className="px-4 text-white/50 text-sm">ou</span>
             <div className="flex-1 border-t border-white/20"></div>
+          </div>
+
+          {/* Connexion rapide - utilisateurs de démo */}
+          <div className="max-h-72 overflow-y-auto divide-y divide-white/10 border border-white/10 rounded-lg mb-6">
+            {usersData.map((user) => (
+              <button
+                key={user.id}
+                onClick={() => {
+                  signInMock(user.id);
+                  router.replace("/pageHierarchique");
+                }}
+                className="w-full flex items-center justify-between text-left px-4 py-3 hover:bg-white/10 transition-colors"
+              >
+                <div className="flex items-center space-x-3">
+                  <div className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center">
+                    <User size={18} className="text-white" />
+                  </div>
+                  <div>
+                    <div className="font-medium text-white">{user.name}</div>
+                    <div className="text-xs text-white/70">{user.email}</div>
+                    <div className="text-[11px] text-white/50">mdp: {user.password}</div>
+                  </div>
+                </div>
+                <LogIn size={18} className="text-white/60" />
+              </button>
+            ))}
           </div>
 
           {/* Sign up link */}
