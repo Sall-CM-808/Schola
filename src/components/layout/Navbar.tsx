@@ -235,8 +235,8 @@ const Navbar = () => {
     <nav
       className={`fixed top-0 w-full z-50 transition-all duration-300 ${
         isScrolled
-          ? "bg-gradient-to-r from-[#1d8b93]/95 via-[#1d8b93]/90 to-[#0d5a61]/95 backdrop-blur-xl shadow-xl shadow-[#1d8b93]/20 border-b border-white/10"
-          : "bg-white/5 backdrop-blur-md border-b border-white/10"
+          ? "bg-gradient-to-r from-[#1d8b93]/95 via-[#1d8b93]/90 to-[#12666d]/95 backdrop-blur-xl shadow-xl shadow-[#1d8b93]/20 border-b border-[rgba(255,255,255,0.14)]"
+          : "bg-[rgba(255,255,255,0.06)] backdrop-blur-md border-b border-[rgba(255,255,255,0.14)]"
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -264,14 +264,14 @@ const Navbar = () => {
             <NavLink href="#tarifs">Tarifs</NavLink>
             <NavLink href="#contact">Contact</NavLink>
 
-            <div className="flex items-center ml-6 pl-6 border-l border-white/20">
+            <div className="flex items-center ml-6 pl-6 border-l border-[rgba(255,255,255,0.14)]">
               {isAuthenticated ? (
                 <UserAvatar user={user} showDropdown={true} onLogout={logout} />
               ) : (
                 <div className="flex items-center space-x-3">
                   <Link
                     href="/login"
-                    className="group relative px-5 py-2.5 rounded-xl border-2 border-white/30 text-white text-sm font-medium hover:border-white hover:bg-white/10 transition-all duration-300 backdrop-blur-sm inline-block text-center"
+                    className="group relative px-5 py-2.5 rounded-xl border-2 border-[rgba(255,255,255,0.14)] text-white text-sm font-medium hover:border-white hover:bg-[rgba(255,255,255,0.10)] transition-all duration-300 backdrop-blur-sm inline-block text-center"
                   >
                     <span className="relative z-10">Connexion</span>
                     <div className="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 rounded-xl transition-opacity duration-300"></div>
@@ -329,9 +329,9 @@ const Navbar = () => {
         <div
           className={`md:hidden transition-all duration-300 ${
             isScrolled
-              ? "bg-gradient-to-b from-[#1d8b93]/95 to-[#0d5a61]/95"
-              : "bg-white/10"
-          } backdrop-blur-xl border-t border-white/10`}
+              ? "bg-gradient-to-b from-[#1d8b93]/95 to-[#12666d]/95"
+              : "bg-[rgba(255,255,255,0.06)]"
+          } backdrop-blur-xl border-t border-[rgba(255,255,255,0.14)]`}
         >
           <div className="px-4 pt-4 pb-6 space-y-3">
             <MobileNavLink href="#accueil" onClick={() => setIsMenuOpen(false)}>
@@ -353,7 +353,7 @@ const Navbar = () => {
               Contact
             </MobileNavLink>
 
-            <div className="pt-4 space-y-3 border-t border-white/20">
+            <div className="pt-4 space-y-3 border-t border-[rgba(255,255,255,0.14)]">
               {isAuthenticated ? (
                 <div className="space-y-4">
                   <div className="flex items-center justify-center py-2">
@@ -375,7 +375,7 @@ const Navbar = () => {
                   <Link
                     href="/login"
                     onClick={() => setIsMenuOpen(false)}
-                    className="block w-full px-4 py-3 text-center border-2 border-white/30 text-white text-sm font-medium rounded-xl hover:border-white hover:bg-white/10 transition-all duration-300"
+                    className="block w-full px-4 py-3 text-center border-2 border-[rgba(255,255,255,0.14)] text-white text-sm font-medium rounded-xl hover:border-white hover:bg-[rgba(255,255,255,0.10)] transition-all duration-300"
                   >
                     Connexion
                   </Link>

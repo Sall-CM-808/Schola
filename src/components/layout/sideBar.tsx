@@ -3,7 +3,21 @@
 import { useState, useEffect } from "react";
 import { useUnitContext } from "@/contexts/UnitContext";
 import { Unit, UnitTreeItemProps, AdminSidebarProps } from "@/types/unit";
-import { ChevronDown, ChevronRight, Home, Building2, Users, GraduationCap, BookOpen, School, Plus, X, Menu, ChevronLeft } from "lucide-react";
+import {
+  ChevronDown,
+  ChevronRight,
+  Building2,
+  Users,
+  GraduationCap,
+  BookOpen,
+  School,
+  Plus,
+  X,
+  Menu,
+  ChevronLeft,
+  Search,
+  User,
+} from "lucide-react";
 import { usePermissions } from "@/hooks/usePermissions";
 import clsx from "clsx";
 
@@ -20,110 +34,151 @@ const UnitTreeItem = ({
   expandedUnits,
 }: UnitTreeItemProps) => {
   const { canViewUnitSelf, canViewChildren } = usePermissions();
-  
+
   // Ne pas afficher l'unité si l'utilisateur n'a pas la permission de la voir
   if (!canViewUnitSelf(unit.id)) {
     return null;
   }
-  
+
   // Filtrer les enfants selon les permissions
-  // Si l'utilisateur peut voir les enfants d'une unité, on affiche les enfants même
-  // s'il n'a pas explicitement "unite.view_self" sur chaque enfant.
-  const visibleChildren = (unit.children || []).filter(child =>
-    canViewUnitSelf(child.id) || canViewChildren(unit.id)
+  const visibleChildren = (unit.children || []).filter(
+    (child) => canViewUnitSelf(child.id) || canViewChildren(unit.id)
   );
   const isExpanded = expandedUnits.has(unit.id);
   const isSelected = selectedUnitId === unit.id;
   const hasChildren = unit.children && unit.children.length > 0;
-  
+
   // Icônes par type d'unité éducative
   const getUnitIcon = () => {
     switch (unit.type) {
       case "université":
+        return <Building2 size={18} className="text-blue-400" />;
       case "école":
-        return <School size={16} className="text-blue-500" />;
+        return <School size={18} className="text-green-400" />;
       case "faculté":
+        return <GraduationCap size={18} className="text-purple-400" />;
       case "cycle":
-        return <BookOpen size={16} className="text-green-500" />;
+        return <BookOpen size={18} className="text-yellow-400" />;
       case "département":
+        return <BookOpen size={18} className="text-orange-400" />;
       case "niveau":
-        return <BookOpen size={16} className="text-yellow-500" />;
+        return <BookOpen size={18} className="text-pink-400" />;
       case "licence":
+        return <GraduationCap size={18} className="text-indigo-400" />;
       case "classe":
-        return <GraduationCap size={16} className="text-purple-500" />;
+        return <Users size={18} className="text-cyan-400" />;
       case "semestre":
-        return <BookOpen size={16} className="text-orange-500" />;
+        return <BookOpen size={18} className="text-emerald-400" />;
+      case "lycée":
+        return <School size={18} className="text-violet-400" />;
       default:
-        return <Users size={16} className="text-gray-400" />;
+        return <Users size={18} className="text-[rgba(255,255,255,0.70)]" />;
     }
   };
 
   return (
     <div className="w-full">
-      <div 
+      <div
         className={clsx(
-          "group flex items-center py-1 px-2 cursor-pointer transition-colors",
-          "hover:bg-[#0a4a50] hover:text-white",
-          isSelected && "bg-[#d9f0f2] text-[#0d5a61]"
+          "group flex items-center py-2 px-3 cursor-pointer transition-all duration-200",
+          "hover:bg-[rgba(255,255,255,0.08)] hover:text-white rounded-lg mx-1",
+          isSelected && "bg-[#b8d070] text-[#1d8b93] shadow-sm"
         )}
-        style={{ paddingLeft: `${(level * 12) + 8}px` }}
+        style={{ paddingLeft: `${level * 20 + 16}px` }}
       >
         {/* Icône d'expansion */}
-        <button 
-          className={clsx(
-            "w-4 h-4 flex items-center justify-center mr-1",
-            "hover:bg-transparent transition-colors",
-            hasChildren ? "visible" : "invisible"
-          )}
-          onClick={(e) => {
-            e.stopPropagation();
-            onToggleExpand(unit.id);
-          }}
-        >
-          {isExpanded ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
-        </button>
-        
+        {hasChildren && (
+          <button
+            className={clsx(
+              "w-5 h-5 flex items-center justify-center mr-2 rounded",
+              "hover:bg-[rgba(255,255,255,0.1)] transition-colors",
+              isSelected && "hover:bg-[rgba(29,139,147,0.2)]"
+            )}
+            onClick={(e) => {
+              e.stopPropagation();
+              onToggleExpand(unit.id);
+            }}
+          >
+            {isExpanded ? (
+              <ChevronDown
+                size={14}
+                className={
+                  isSelected
+                    ? "text-[#1d8b93]"
+                    : "text-[rgba(255,255,255,0.70)]"
+                }
+              />
+            ) : (
+              <ChevronRight
+                size={14}
+                className={
+                  isSelected
+                    ? "text-[#1d8b93]"
+                    : "text-[rgba(255,255,255,0.70)]"
+                }
+              />
+            )}
+          </button>
+        )}
+
+        {/* Espace pour les unités sans enfants */}
+        {!hasChildren && <div className="w-6 mr-3" />}
+
         {/* Contenu de l'unité */}
-        <div 
+        <div
           className="flex items-center flex-1 py-1"
           onClick={() => onSelect(unit)}
         >
-          <span className="mr-2 text-[#cccccc]">
-            {getUnitIcon()}
+          <span className="mr-4">{getUnitIcon()}</span>
+          <span
+            className={clsx(
+              "truncate text-sm font-medium",
+              isSelected ? "text-[#1d8b93]" : "text-white"
+            )}
+          >
+            {unit.name}
           </span>
-          <span className="truncate text-sm">{unit.name}</span>
         </div>
+
         {/* Badge compteur à droite */}
         {typeof unit.badge !== "undefined" && (
           <span
             className={clsx(
-              "ml-2 px-1.5 py-0.5 rounded-sm text-[10px]",
-              "bg-[#4d4d4d] text-[#cccccc]"
+              "ml-3 px-3 py-1 rounded-full text-xs font-semibold",
+              isSelected
+                ? "bg-[#1d8b93] text-white"
+                : "bg-[rgba(255,255,255,0.15)] text-[rgba(255,255,255,0.90)]"
             )}
           >
             {unit.badge}
           </span>
         )}
-        
+
         {/* Bouton d'ajout d'enfant */}
         <button
           className={clsx(
-            "w-5 h-5 flex items-center justify-center",
-            "opacity-0 group-hover:opacity-100 hover:bg-[#3c3c3c]",
-            "transition-all"
+            "w-6 h-6 flex items-center justify-center ml-3 rounded",
+            "opacity-0 group-hover:opacity-100 hover:bg-[rgba(255,255,255,0.1)]",
+            "transition-all duration-200",
+            isSelected && "hover:bg-[rgba(29,139,147,0.2)]"
           )}
           onClick={(e) => {
             e.stopPropagation();
             onAddChild(unit.id);
           }}
         >
-          <Plus size={14} />
+          <Plus
+            size={14}
+            className={
+              isSelected ? "text-[#1d8b93]" : "text-[rgba(255,255,255,0.70)]"
+            }
+          />
         </button>
       </div>
-      
-      {/* Afficher les enfants si l'unité est étendue et si on peut les voir */}
+
+      {/* Afficher les enfants si l'unité est étendue */}
       {isExpanded && canViewChildren(unit.id) && visibleChildren.length > 0 && (
-        <div className="ml-4">
+        <div className="ml-3">
           {visibleChildren.map((child) => (
             <UnitTreeItem
               key={child.id}
@@ -143,30 +198,26 @@ const UnitTreeItem = ({
 };
 
 /**
- * Composant SideBar principal (anciennement AdminSidebar)
+ * Composant SideBar principal professionnel
  */
 const SideBar = ({
   units,
   onUnitSelect,
   onUnitAdd,
   className,
-  title = "EXPLORER",
-  logo,
   collapsed = false,
   onToggleCollapse,
 }: AdminSidebarProps) => {
   const [expandedUnits, setExpandedUnits] = useState<Set<string>>(new Set());
   const [selectedUnitId, setSelectedUnitId] = useState<string | null>(null);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   const unitContext = useUnitContext();
   const { filterVisibleUnits } = usePermissions();
 
   // Synchroniser avec le contexte d'unité
   useEffect(() => {
-    // Si un contexte d'unité existe, synchroniser la sélection
-    // @ts-ignore - le contexte peut avoir une forme libre selon votre implémentation
     if (unitContext && unitContext.id) {
-      // @ts-ignore
       setSelectedUnitId(unitContext.id);
     }
   }, [unitContext]);
@@ -174,10 +225,7 @@ const SideBar = ({
   // Gérer la sélection d'une unité
   const handleUnitSelect = (unit: Unit) => {
     setSelectedUnitId(unit.id);
-    // Mettre à jour le contexte d'unité si disponible
-    // @ts-ignore
     if (unitContext && typeof unitContext.setUnit === "function") {
-      // @ts-ignore
       unitContext.setUnit({
         id: unit.id,
         type_unite: unit.type,
@@ -185,7 +233,6 @@ const SideBar = ({
         path: unit.path || [],
       });
     }
-    // Callback externe si fourni
     if (onUnitSelect) onUnitSelect(unit);
   };
 
@@ -204,87 +251,139 @@ const SideBar = ({
     if (onUnitAdd) onUnitAdd(parentId);
   };
 
-  // Gérer l'ajout d'une unité racine
-  const handleAddRoot = () => {
-    if (onUnitAdd) onUnitAdd(null);
-  };
-
   // Filtrer les unités visibles selon les permissions
-  const visibleRootUnits = filterVisibleUnits ? filterVisibleUnits(units) : units;
+  const visibleRootUnits = filterVisibleUnits
+    ? filterVisibleUnits(units)
+    : units;
+
+  // Filtrer les unités selon la recherche
+  const filteredUnits = visibleRootUnits.filter((unit) =>
+    unit.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   return (
     <>
       {/* Sidebar mobile toggle */}
       <button
-        className="fixed top-4 left-4 z-50 md:hidden bg-white dark:bg-gray-800 p-2 rounded-md shadow-md"
+        className="fixed top-4 left-4 z-50 md:hidden bg-[#1d8b93] p-2 rounded-lg shadow-lg border border-[rgba(255,255,255,0.14)]"
         onClick={() => setIsMobileOpen(!isMobileOpen)}
       >
-        {isMobileOpen ? <X size={20} /> : <Menu size={20} />}
+        {isMobileOpen ? (
+          <X size={20} className="text-white" />
+        ) : (
+          <Menu size={20} className="text-white" />
+        )}
       </button>
-      
+
+      {/* Overlay mobile */}
+      {isMobileOpen && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 z-30 md:hidden"
+          onClick={() => setIsMobileOpen(false)}
+        />
+      )}
+
       {/* Sidebar principal */}
       <aside
         className={clsx(
-          "fixed top-0 left-0 z-40 h-screen bg-[#0d5a61] text-white border-r border-[#0a4a50]",
-          "transition-all duration-300 ease-in-out",
+          "fixed top-0 left-0 z-40 h-screen bg-[#1d8b93] text-white border-r border-[rgba(255,255,255,0.14)]",
+          "transition-all duration-300 ease-in-out shadow-xl",
           "md:relative md:translate-x-0",
           isMobileOpen ? "translate-x-0" : "-translate-x-full",
-          collapsed ? "w-20" : "w-64",
+          collapsed ? "w-20" : "w-80",
           className
         )}
       >
         {/* En-tête */}
-        <div className="flex items-center justify-between h-10 px-4 border-b border-[#0a4a50]">
-          <div className="flex items-center">
-            <span className="text-sm font-medium text-white uppercase">{title}</span>
-          </div>
-          
+        <div className="flex items-center justify-between h-16 px-4 border-b border-[rgba(255,255,255,0.14)] bg-[rgba(255,255,255,0.05)]">
+          {!collapsed && (
+            <div className="flex items-center space-x-2">
+              <div className="w-8 h-8 bg-[#b8d070] rounded-lg flex items-center justify-center">
+                <School size={20} className="text-[#1d8b93]" />
+              </div>
+              <span className="text-lg font-bold text-white">Schola</span>
+            </div>
+          )}
+
           {/* Bouton de réduction */}
           {onToggleCollapse && (
             <button
               onClick={onToggleCollapse}
-              className="p-1 rounded-md hover:bg-[#0a4a50]"
+              className="p-2 rounded-lg hover:bg-[rgba(255,255,255,0.10)] transition-colors"
             >
-              {collapsed ? <ChevronRight size={20} /> : <ChevronLeft size={20} />}
+              {collapsed ? (
+                <ChevronRight size={20} className="text-white" />
+              ) : (
+                <ChevronLeft size={20} className="text-white" />
+              )}
             </button>
           )}
         </div>
-        
+
         {/* Corps du sidebar */}
-        <div className="p-4 overflow-y-auto h-[calc(100vh-4rem)]">
+        <div className="flex flex-col h-[calc(100vh-4rem)]">
           {/* Barre de recherche */}
-          <div className="relative mb-4">
-            <input
-              type="text"
-              placeholder="Rechercher une unité..."
-              className={clsx(
-                "w-full py-1.5 pl-8 pr-2 rounded-sm",
-                "bg-[#0a4a50] border border-[#094146]",
-                "text-sm text-white placeholder-gray-300 focus:outline-none focus:border-[#a1c95a]"
-              )}
-            />
-            <div className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-400">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="11" cy="11" r="8"></circle>
-                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-              </svg>
+          {!collapsed && (
+            <div className="p-4 border-b border-[rgba(255,255,255,0.14)]">
+              <div className="relative">
+                <Search
+                  size={16}
+                  className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[rgba(255,255,255,0.55)]"
+                />
+                <input
+                  type="text"
+                  placeholder="Rechercher une unité..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full py-2.5 pl-10 pr-4 rounded-lg bg-[rgba(255,255,255,0.06)] border border-[rgba(255,255,255,0.14)] text-sm text-white placeholder-[rgba(255,255,255,0.70)] focus:outline-none focus:border-[#b8d070] focus:ring-1 focus:ring-[#b8d070] transition-all"
+                />
+              </div>
+            </div>
+          )}
+
+          {/* Menu principal */}
+          <div className="flex-1">
+            <div className="p-4">
+              {/* Arborescence des unités */}
+              <div className="mb-6">
+                <h3 className="text-xs font-semibold text-[rgba(255,255,255,0.70)] uppercase tracking-wider mb-3">
+                  Unités Éducatives
+                </h3>
+                <div className="space-y-1">
+                  {filteredUnits.map((unit) => (
+                    <UnitTreeItem
+                      key={unit.id}
+                      unit={unit}
+                      level={0}
+                      onSelect={handleUnitSelect}
+                      onToggleExpand={handleToggleExpand}
+                      onAddChild={handleAddChild}
+                      selectedUnitId={selectedUnitId}
+                      expandedUnits={expandedUnits}
+                    />
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
-          
-          {/* Arborescence des unités */}
-          <div className="space-y-1">
-            {visibleRootUnits.map((unit) => (
-              <UnitTreeItem
-                key={unit.id}
-                unit={unit}
-                level={0}
-                onSelect={handleUnitSelect}
-                onToggleExpand={handleToggleExpand}
-                onAddChild={handleAddChild}
-                selectedUnitId={selectedUnitId}
-                expandedUnits={expandedUnits}
-              />
-            ))}
+
+          {/* Pied de page */}
+          <div className="border-t border-[rgba(255,255,255,0.14)] p-4 bg-[rgba(255,255,255,0.05)]">
+            <div className="flex items-center space-x-3">
+              <div className="w-8 h-8 bg-[rgba(255,255,255,0.1)] rounded-full flex items-center justify-center">
+                <User size={16} className="text-white" />
+              </div>
+              {!collapsed && (
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium text-white truncate">
+                    Admin User
+                  </p>
+                  <p className="text-xs text-[rgba(255,255,255,0.70)] truncate">
+                    admin@schola.edu
+                  </p>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </aside>

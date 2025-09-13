@@ -2,8 +2,22 @@
 
 import { useState, useEffect } from "react";
 import { Unit } from "@/types/unit";
-import { dashboardStatsData, dashboardActivitiesData, DashboardStats, DashboardActivity } from "@/examples/dashboardData";
-import { Users, BookOpen, GraduationCap, TrendingUp, Calendar, CheckCircle, Clock, AlertCircle } from "lucide-react";
+import {
+  dashboardStatsData,
+  dashboardActivitiesData,
+  DashboardStats,
+  DashboardActivity,
+} from "@/examples/dashboardData";
+import {
+  Users,
+  BookOpen,
+  GraduationCap,
+  TrendingUp,
+  Calendar,
+  CheckCircle,
+  Clock,
+  AlertCircle,
+} from "lucide-react";
 
 interface UnitDashboardProps {
   unit: Unit;
@@ -25,27 +39,36 @@ export default function UnitDashboard({ unit }: UnitDashboardProps) {
 
   const getActivityIcon = (type: string) => {
     switch (type) {
-      case "inscription": return <Users size={16} className="text-blue-500" />;
-      case "evaluation": return <GraduationCap size={16} className="text-purple-500" />;
-      case "reunion": return <Calendar size={16} className="text-green-500" />;
-      case "evenement": return <Calendar size={16} className="text-orange-500" />;
-      default: return <Calendar size={16} className="text-gray-500" />;
+      case "inscription":
+        return <Users size={16} className="text-blue-500" />;
+      case "evaluation":
+        return <GraduationCap size={16} className="text-purple-500" />;
+      case "reunion":
+        return <Calendar size={16} className="text-green-500" />;
+      case "evenement":
+        return <Calendar size={16} className="text-orange-500" />;
+      default:
+        return <Calendar size={16} className="text-gray-500" />;
     }
   };
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case "completed": return <CheckCircle size={16} className="text-green-500" />;
-      case "in_progress": return <Clock size={16} className="text-yellow-500" />;
-      case "planned": return <AlertCircle size={16} className="text-blue-500" />;
-      default: return <Clock size={16} className="text-gray-500" />;
+      case "completed":
+        return <CheckCircle size={16} className="text-green-500" />;
+      case "in_progress":
+        return <Clock size={16} className="text-yellow-500" />;
+      case "planned":
+        return <AlertCircle size={16} className="text-blue-500" />;
+      default:
+        return <Clock size={16} className="text-gray-500" />;
     }
   };
 
   const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('fr-FR', {
-      style: 'currency',
-      currency: 'XOF',
+    return new Intl.NumberFormat("fr-FR", {
+      style: "currency",
+      currency: "XOF",
       minimumFractionDigits: 0,
     }).format(amount);
   };
@@ -53,9 +76,13 @@ export default function UnitDashboard({ unit }: UnitDashboardProps) {
   return (
     <div className="p-6 space-y-6">
       {/* En-tête */}
-      <div className="bg-white rounded-lg shadow-sm border border-[#d9f0f2] p-6">
-        <h1 className="text-2xl font-bold text-[#0d5a61] mb-2">Dashboard - {unit.name}</h1>
-        <p className="text-gray-600">Vue d'ensemble des activités et statistiques</p>
+      <div className="bg-[rgba(255,255,255,0.06)] rounded-lg shadow-sm border border-[rgba(255,255,255,0.14)] p-6">
+        <h1 className="text-2xl font-bold text-white mb-2">
+          Dashboard - {unit.name}
+        </h1>
+        <p className="text-[rgba(255,255,255,0.70)]">
+          Vue d&apos;ensemble des activités et statistiques
+        </p>
       </div>
 
       {/* Statistiques principales */}
@@ -66,7 +93,9 @@ export default function UnitDashboard({ unit }: UnitDashboardProps) {
               <div className="flex justify-between items-center">
                 <div>
                   <p className="text-sm opacity-90">Étudiants/Élèves</p>
-                  <p className="text-2xl font-bold">{stats.totalStudents.toLocaleString()}</p>
+                  <p className="text-2xl font-bold">
+                    {stats.totalStudents.toLocaleString()}
+                  </p>
                 </div>
                 <Users size={24} className="opacity-80" />
               </div>
@@ -78,7 +107,9 @@ export default function UnitDashboard({ unit }: UnitDashboardProps) {
               <div className="flex justify-between items-center">
                 <div>
                   <p className="text-sm opacity-90">Enseignants</p>
-                  <p className="text-2xl font-bold">{stats.totalTeachers.toLocaleString()}</p>
+                  <p className="text-2xl font-bold">
+                    {stats.totalTeachers.toLocaleString()}
+                  </p>
                 </div>
                 <GraduationCap size={24} className="opacity-80" />
               </div>
@@ -115,73 +146,94 @@ export default function UnitDashboard({ unit }: UnitDashboardProps) {
       {stats && (stats.performance || stats.attendance || stats.budget) && (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {stats.performance && (
-            <div className="bg-white rounded-lg shadow-sm border border-[#d9f0f2] p-4">
-              <h3 className="text-sm font-medium text-[#1d8b93] mb-2">Performance</h3>
+            <div className="bg-[rgba(255,255,255,0.06)] rounded-lg shadow-sm border border-[rgba(255,255,255,0.14)] p-4">
+              <h3 className="text-sm font-medium text-white mb-2">
+                Performance
+              </h3>
               <div className="flex items-center">
                 <div className="flex-1">
                   <div className="w-full bg-gray-200 rounded-full h-2">
-                    <div 
-                      className="bg-green-500 h-2 rounded-full" 
+                    <div
+                      className="bg-green-500 h-2 rounded-full"
                       style={{ width: `${stats.performance}%` }}
                     ></div>
                   </div>
                 </div>
-                <span className="ml-2 text-sm font-medium">{stats.performance}%</span>
+                <span className="ml-2 text-sm font-medium text-white">
+                  {stats.performance}%
+                </span>
               </div>
             </div>
           )}
 
           {stats.attendance && (
-            <div className="bg-white rounded-lg shadow-sm border border-[#d9f0f2] p-4">
-              <h3 className="text-sm font-medium text-[#1d8b93] mb-2">Assiduité</h3>
+            <div className="bg-[rgba(255,255,255,0.06)] rounded-lg shadow-sm border border-[rgba(255,255,255,0.14)] p-4">
+              <h3 className="text-sm font-medium text-white mb-2">Assiduité</h3>
               <div className="flex items-center">
                 <div className="flex-1">
                   <div className="w-full bg-gray-200 rounded-full h-2">
-                    <div 
-                      className="bg-blue-500 h-2 rounded-full" 
+                    <div
+                      className="bg-blue-500 h-2 rounded-full"
                       style={{ width: `${stats.attendance}%` }}
                     ></div>
                   </div>
                 </div>
-                <span className="ml-2 text-sm font-medium">{stats.attendance}%</span>
+                <span className="ml-2 text-sm font-medium text-white">
+                  {stats.attendance}%
+                </span>
               </div>
             </div>
           )}
 
           {stats.budget && (
-            <div className="bg-white rounded-lg shadow-sm border border-[#d9f0f2] p-4">
-              <h3 className="text-sm font-medium text-[#1d8b93] mb-2">Budget</h3>
-              <p className="text-lg font-bold text-[#0d5a61]">{formatCurrency(stats.budget)}</p>
+            <div className="bg-[rgba(255,255,255,0.06)] rounded-lg shadow-sm border border-[rgba(255,255,255,0.14)] p-4">
+              <h3 className="text-sm font-medium text-white mb-2">Budget</h3>
+              <p className="text-lg font-bold text-white">
+                {formatCurrency(stats.budget)}
+              </p>
             </div>
           )}
         </div>
       )}
 
       {/* Activités récentes */}
-      <div className="bg-white rounded-lg shadow-sm border border-[#d9f0f2] p-6">
-        <h2 className="text-lg font-semibold text-[#0d5a61] mb-4">Activités Récentes</h2>
+      <div className="bg-[rgba(255,255,255,0.06)] rounded-lg shadow-sm border border-[rgba(255,255,255,0.14)] p-6">
+        <h2 className="text-lg font-semibold text-white mb-4">
+          Activités Récentes
+        </h2>
         {activities.length > 0 ? (
           <div className="space-y-3">
             {activities.map((activity) => (
-              <div key={activity.id} className="flex items-start space-x-3 p-3 bg-gray-50 rounded-lg">
+              <div
+                key={activity.id}
+                className="flex items-start space-x-3 p-3 bg-[rgba(255,255,255,0.05)] rounded-lg"
+              >
                 <div className="flex-shrink-0 mt-1">
                   {getActivityIcon(activity.type)}
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between">
-                    <h3 className="text-sm font-medium text-gray-900">{activity.title}</h3>
+                    <h3 className="text-sm font-medium text-white">
+                      {activity.title}
+                    </h3>
                     <div className="flex items-center space-x-2">
                       {getStatusIcon(activity.status)}
-                      <span className="text-xs text-gray-500">{activity.date}</span>
+                      <span className="text-xs text-[rgba(255,255,255,0.70)]">
+                        {activity.date}
+                      </span>
                     </div>
                   </div>
-                  <p className="text-sm text-gray-600 mt-1">{activity.description}</p>
+                  <p className="text-sm text-[rgba(255,255,255,0.70)] mt-1">
+                    {activity.description}
+                  </p>
                 </div>
               </div>
             ))}
           </div>
         ) : (
-          <p className="text-gray-500 text-center py-8">Aucune activité récente</p>
+          <p className="text-[rgba(255,255,255,0.70)] text-center py-8">
+            Aucune activité récente
+          </p>
         )}
       </div>
     </div>
