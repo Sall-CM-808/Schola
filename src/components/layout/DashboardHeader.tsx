@@ -9,7 +9,6 @@ import {
   Settings,
   User,
   LogOut,
-  ChevronRight,
   Home,
   School,
   Shield,
@@ -54,12 +53,13 @@ export default function FlexibleHeader({
   onRefresh,
   onOpenCommandPalette,
   user = { 
-    name: "Utilisateur", 
-    role: "Utilisateur", 
+    name: "Mamadou Diallo", 
+    role: "Administrateur", 
     online: true,
-    email: "user@schola.gn",
-    department: "Département",
-    lastLogin: "Aujourd'hui"
+    email: "mamadou.diallo@schola.gn",
+    department: "Direction",
+    lastLogin: "Aujourd'hui",
+    avatarUrl: "/images/admin.jpg"
   },
   rightActions,
 }: FlexibleHeaderProps) {
@@ -130,7 +130,7 @@ export default function FlexibleHeader({
       <div className="absolute inset-0 bg-[#1d8b93]/80 backdrop-blur-xl border-b border-[#4fa8b2]/20" />
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-[#b8d070]/40 via-[#b8d070]/70 to-[#b8d070]/40" />
 
-      <div className="relative h-full flex items-center px-3 sm:px-5 gap-3">
+      <div className="relative h-full w-full flex items-center px-3 sm:px-5 gap-3">
         
         {/* Bouton retour + toggle sidebar */}
         <div className="flex items-center gap-2">
@@ -179,26 +179,30 @@ export default function FlexibleHeader({
         </div>
 
         {/* Barre de recherche */}
-        <div className="hidden md:flex flex-1 max-w-xl mx-4">
-          <button
-            onClick={() => onOpenCommandPalette?.()}
-            className="group relative w-full h-10 pl-10 pr-4 rounded-xl 
-                     bg-[#f0f9fa]/10 border border-[#87ccd3]/20 text-left text-[#d9f0f2] 
-                     hover:bg-[#f0f9fa]/20 hover:border-[#87ccd3]/40 transition-all duration-300"
-            aria-label="Ouvrir la recherche"
-          >
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#87ccd3] group-hover:text-[#b8e2e6]" />
-            <span className="text-sm">Rechercher...</span>
-            <kbd className="absolute right-3 top-1/2 -translate-y-1/2 px-1.5 py-0.5 text-xs bg-[#87ccd3]/20 text-[#87ccd3] rounded border border-[#87ccd3]/30">
-              ⌘K
-            </kbd>
-          </button>
+        <div className="hidden md:flex flex-1 justify-center px-4">
+          <div className="relative w-full max-w-xl">
+            <Search className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#87ccd3]" />
+            <input
+              type="text"
+              placeholder="Rechercher..."
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  onOpenCommandPalette?.();
+                }
+              }}
+              className="w-full h-10 pl-10 pr-4 rounded-xl bg-[#f0f9fa]/10 border border-[#87ccd3]/20 text-base text-[#f0f9fa]
+                       placeholder-[#b8e2e6] hover:bg-[#f0f9fa]/20 hover:border-[#87ccd3]/40
+                       focus:outline-none focus:ring-2 focus:ring-[#87ccd3]/40 focus:border-[#87ccd3]/50
+                       transition-all duration-300"
+              aria-label="Rechercher"
+            />
+          </div>
         </div>
 
-        <div className="flex-1 lg:flex-none" />
+        
 
         {/* Actions droite */}
-        <div className="flex items-center gap-2">
+        <div className="ml-auto flex items-center gap-2">
           {rightActions}
 
           {/* Theme toggle */}
@@ -230,7 +234,7 @@ export default function FlexibleHeader({
           )}
 
           {/* Notifications */}
-          <div className="relative">
+          <div className="relative inline-block">
             <button
               onClick={() => setShowNotifications(!showNotifications)}
               className="group relative flex items-center justify-center w-10 h-10 rounded-xl 
@@ -248,23 +252,23 @@ export default function FlexibleHeader({
             {/* Dropdown notifications */}
             {showNotifications && (
               <div
-                className="absolute right-0 top-full mt-2 w-80 backdrop-blur-xl 
-                         border border-[#87ccd3]/20 rounded-xl shadow-2xl overflow-hidden z-50 
-                         bg-[#174548]/95"
+                className="absolute right-0 top-[calc(100%+8px)] w-80 overflow-visible z-[60] rounded-2xl shadow-2xl 
+                           backdrop-blur-xl border border-[#4fa8b2]/30 bg-[#1d8b93]/85"
                 data-modal="notifications"
               >
-                <div className="p-4 border-b border-[#87ccd3]/20 flex items-center justify-between">
+                <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-[#b8d070]/10" />
+                <div className="relative p-4 border-b border-[#4fa8b2]/30 flex items-center justify-between">
                   <h3 className="font-semibold text-white">Notifications</h3>
                   <button
                     onClick={() => setShowNotifications(false)}
-                    className="p-1 hover:bg-[#87ccd3]/20 rounded-full transition-colors"
+                    className="p-1 hover:bg-white/10 rounded-full transition-colors"
                   >
                     <X className="w-4 h-4 text-[#b8e2e6]" />
                   </button>
                 </div>
-                <div className="max-h-80 overflow-y-auto">
+                <div className="relative max-h-80 overflow-y-auto">
                   {notifications.map((notification) => (
-                    <div key={notification.id} className="p-4 hover:bg-[#186569]/50 transition-colors border-b border-[#87ccd3]/10 last:border-b-0">
+                    <div key={notification.id} className="p-4 hover:bg-white/10 transition-colors border-b border-white/10 last:border-b-0">
                       <div className="flex items-start gap-3">
                         <div className={`w-2 h-2 rounded-full mt-2 flex-shrink-0 ${
                           notification.type === "warning" ? "bg-[#b8d070]" :
@@ -272,7 +276,7 @@ export default function FlexibleHeader({
                         }`} />
                         <div className="flex-1">
                           <p className="text-sm text-white mb-1">{notification.message}</p>
-                          <p className="text-xs text-[#b8e2e6]">{notification.time}</p>
+                          <p className="text-xs text-[#d9f0f2] opacity-80">{notification.time}</p>
                         </div>
                       </div>
                     </div>
@@ -286,7 +290,7 @@ export default function FlexibleHeader({
           <div className="w-px h-6 bg-[#87ccd3]/30 mx-1" />
 
           {/* Profil utilisateur */}
-          <div className="relative">
+          <div className="relative inline-block">
             <button
               onClick={() => setShowUserMenu(!showUserMenu)}
               className="group flex items-center gap-3 pl-3 pr-4 h-12 rounded-2xl 
@@ -326,13 +330,13 @@ export default function FlexibleHeader({
             {/* Dropdown user menu */}
             {showUserMenu && (
               <div
-                className="absolute right-0 top-full mt-2 w-72 backdrop-blur-xl 
-                         border border-[#87ccd3]/20 rounded-xl shadow-2xl overflow-hidden z-50 
-                         bg-[#174548]/95"
+                className="absolute right-0 top-[calc(100%+8px)] w-72 overflow-visible z-[60] rounded-2xl shadow-2xl 
+                           backdrop-blur-xl border border-[#4fa8b2]/30 bg-[#1d8b93]/85"
                 data-modal="user-menu"
               >
+                <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-[#b8d070]/10" />
                 {/* Profile header */}
-                <div className="p-4 border-b border-[#87ccd3]/20">
+                <div className="relative p-4 border-b border-[#4fa8b2]/30">
                   <div className="flex items-center gap-3">
                     <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#186569] to-[#175356] 
                                   flex items-center justify-center overflow-hidden border-2 border-[#b8d070]/30">
@@ -351,21 +355,21 @@ export default function FlexibleHeader({
                 </div>
 
                 {/* Menu items */}
-                <div className="p-2">
-                  <button className="w-full flex items-center gap-3 px-3 py-2 text-left hover:bg-[#186569]/50 rounded-lg transition-colors">
+                <div className="relative p-2">
+                  <button className="w-full flex items-center gap-3 px-3 py-2 text-left hover:bg-white/10 rounded-lg transition-colors">
                     <User className="h-4 w-4 text-[#b8e2e6]" />
                     <span className="text-sm text-white">Mon profil</span>
                   </button>
-                  <button className="w-full flex items-center gap-3 px-3 py-2 text-left hover:bg-[#186569]/50 rounded-lg transition-colors">
+                  <button className="w-full flex items-center gap-3 px-3 py-2 text-left hover:bg-white/10 rounded-lg transition-colors">
                     <Settings className="h-4 w-4 text-[#b8e2e6]" />
                     <span className="text-sm text-white">Paramètres</span>
                   </button>
-                  <button className="w-full flex items-center gap-3 px-3 py-2 text-left hover:bg-[#186569]/50 rounded-lg transition-colors">
+                  <button className="w-full flex items-center gap-3 px-3 py-2 text-left hover:bg-white/10 rounded-lg transition-colors">
                     <HelpCircle className="h-4 w-4 text-[#b8e2e6]" />
                     <span className="text-sm text-white">Aide</span>
                   </button>
                   
-                  <div className="my-2 h-px bg-[#87ccd3]/20" />
+                  <div className="my-2 h-px bg-white/10" />
                   
                   <button className="w-full flex items-center gap-3 px-3 py-2 text-left hover:bg-red-500/10 rounded-lg transition-colors">
                     <LogOut className="h-4 w-4 text-red-400" />

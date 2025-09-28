@@ -52,31 +52,31 @@ const UnitTreeItem = ({
   const isSelected = selectedUnitId === unit.id;
   const hasChildren = unit.children && unit.children.length > 0;
 
-  // Icônes: harmonisées avec la palette (blanc par défaut)
+  // Icônes: laisser la couleur hériter du parent (currentColor)
   const getUnitIcon = () => {
     switch (unit.type) {
       case "université":
-        return <Building2 size={18} className="text-white" />;
+        return <Building2 size={18} />;
       case "école":
-        return <School size={18} className="text-white" />;
+        return <School size={18} />;
       case "faculté":
-        return <GraduationCap size={18} className="text-white" />;
+        return <GraduationCap size={18} />;
       case "cycle":
-        return <BookOpen size={18} className="text-white" />;
+        return <BookOpen size={18} />;
       case "département":
-        return <BookOpen size={18} className="text-white" />;
+        return <BookOpen size={18} />;
       case "niveau":
-        return <BookOpen size={18} className="text-white" />;
+        return <BookOpen size={18} />;
       case "licence":
-        return <GraduationCap size={18} className="text-white" />;
+        return <GraduationCap size={18} />;
       case "classe":
-        return <Users size={18} className="text-white" />;
+        return <Users size={18} />;
       case "semestre":
-        return <BookOpen size={18} className="text-white" />;
+        return <BookOpen size={18} />;
       case "lycée":
-        return <School size={18} className="text-white" />;
+        return <School size={18} />;
       default:
-        return <Users size={18} className="text-white/70" />;
+        return <Users size={18} />;
     }
   };
 
@@ -84,11 +84,13 @@ const UnitTreeItem = ({
     <div className="w-full">
       <div
         className={clsx(
-          "group grid items-center py-2 px-3 cursor-pointer transition-colors duration-200",
+          "group grid items-center py-2 px-3 cursor-pointer transition-all duration-200",
           collapsed
             ? "grid-cols-[24px] justify-items-center"
             : "grid-cols-[20px_24px_1fr_24px] gap-2",
-          "hover:bg-[rgba(255,255,255,0.08)] hover:text-white rounded-lg mx-1",
+          // Hover/Active unifiés si non sélectionné
+          !isSelected && "hover:bg-[#f0f9fa]/15 active:bg-[#f0f9fa]/15 hover:text-white active:text-white",
+          "rounded-lg mx-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b8d070]/40",
           isSelected && "bg-[#b8d070] text-[#1d8b93] shadow-sm"
         )}
         style={{ paddingLeft: collapsed ? undefined : `${level * 20 + 16}px` }}
@@ -99,9 +101,11 @@ const UnitTreeItem = ({
           hasChildren ? (
             <button
               className={clsx(
-                "w-5 h-5 flex items-center justify-center rounded",
-                "hover:bg-[rgba(255,255,255,0.1)] transition-colors",
-                isSelected && "hover:bg-[rgba(29,139,147,0.2)]"
+                "w-5 h-5 flex items-center justify-center rounded transition-colors",
+                "hover:bg-[#f0f9fa]/15 active:bg-[#f0f9fa]/20",
+                isSelected && "hover:bg-[#1d8b93]/20 active:bg-[#1d8b93]/25"
+              ,
+              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b8d070]/40"
               )}
               onClick={(e) => {
                 e.stopPropagation();
@@ -134,7 +138,13 @@ const UnitTreeItem = ({
         )}
 
         {/* Colonne icône */}
-        <span className={clsx("w-6 h-6 flex items-center justify-center", collapsed && "my-0.5")}
+        <span
+          className={clsx(
+            "w-6 h-6 flex items-center justify-center",
+            // Couleur par défaut blanche, teinte brand au survol
+            isSelected ? "text-[#1d8b93]" : "text-white group-hover:text-[#b8d070]",
+            collapsed && "my-0.5 transition-transform duration-150 motion-reduce:transition-none group-hover:scale-110 active:scale-110"
+          )}
           onClick={() => collapsed && onSelect(unit)}
           title={collapsed ? unit.name : undefined}
         >
@@ -159,9 +169,10 @@ const UnitTreeItem = ({
             <button
               className={clsx(
                 "w-6 h-6 flex items-center justify-center rounded justify-self-end",
-                "opacity-0 group-hover:opacity-100 hover:bg-[rgba(255,255,255,0.1)]",
+                "opacity-0 group-hover:opacity-100 hover:bg-[#f0f9fa]/15 active:bg-[#f0f9fa]/20",
                 "transition-colors duration-200",
-                isSelected && "hover:bg-[rgba(29,139,147,0.2)]"
+                isSelected && "hover:bg-[#1d8b93]/20 active:bg-[#1d8b93]/25",
+                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b8d070]/40"
               )}
               onClick={(e) => {
                 e.stopPropagation();
