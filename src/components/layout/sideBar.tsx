@@ -25,6 +25,8 @@ import clsx from "clsx";
  * Composant pour afficher un élément d'unité dans l'arborescence
 {{ ... }}
  */
+type UnitTreeItemLocalProps = UnitTreeItemProps & { collapsed?: boolean };
+
 const UnitTreeItem = ({
   unit,
   level,
@@ -33,7 +35,8 @@ const UnitTreeItem = ({
   onAddChild,
   selectedUnitId,
   expandedUnits,
-}: UnitTreeItemProps) => {
+  collapsed,
+}: UnitTreeItemLocalProps) => {
   const { canViewUnitSelf, canViewChildren } = usePermissions();
 
   // Ne pas afficher l'unité si l'utilisateur n'a pas la permission de la voir
@@ -82,92 +85,102 @@ const UnitTreeItem = ({
       <div
         className={clsx(
           "group grid items-center py-2 px-3 cursor-pointer transition-colors duration-200",
-          // Colonnes fixes sans badge: expandeur 20px | icône 24px | texte auto | add 24px
-          "grid-cols-[20px_24px_1fr_24px] gap-2",
+          collapsed
+            ? "grid-cols-[24px] justify-items-center"
+            : "grid-cols-[20px_24px_1fr_24px] gap-2",
           "hover:bg-[rgba(255,255,255,0.08)] hover:text-white rounded-lg mx-1",
           isSelected && "bg-[#b8d070] text-[#1d8b93] shadow-sm"
         )}
-        style={{ paddingLeft: `${level * 20 + 16}px` }}
+        style={{ paddingLeft: collapsed ? undefined : `${level * 20 + 16}px` }}
         data-unit-row
+        onClick={() => !collapsed && onSelect(unit)}
       >
-        {/* Colonne 1: Icône d'expansion ou espace */}
-        {hasChildren ? (
-          <button
-            className={clsx(
-              "w-5 h-5 flex items-center justify-center rounded",
-              "hover:bg-[rgba(255,255,255,0.1)] transition-colors",
-              isSelected && "hover:bg-[rgba(29,139,147,0.2)]"
-            )}
-            onClick={(e) => {
-              e.stopPropagation();
-              onToggleExpand(unit.id);
-            }}
-          >
-            {isExpanded ? (
-              <ChevronDown
-                size={14}
-                className={
-                  isSelected
-                    ? "text-[#1d8b93]"
-                    : "text-[rgba(255,255,255,0.70)]"
-                }
-              />
-            ) : (
-              <ChevronRight
-                size={14}
-                className={
-                  isSelected
-                    ? "text-[#1d8b93]"
-                    : "text-[rgba(255,255,255,0.70)]"
-                }
-              />
-            )}
-          </button>
-        ) : (
-          <div className="w-5 h-5" />
+        {!collapsed && (
+          hasChildren ? (
+            <button
+              className={clsx(
+                "w-5 h-5 flex items-center justify-center rounded",
+                "hover:bg-[rgba(255,255,255,0.1)] transition-colors",
+                isSelected && "hover:bg-[rgba(29,139,147,0.2)]"
+              )}
+              onClick={(e) => {
+                e.stopPropagation();
+                onToggleExpand(unit.id);
+              }}
+            >
+              {isExpanded ? (
+                <ChevronDown
+                  size={14}
+                  className={
+                    isSelected
+                      ? "text-[#1d8b93]"
+                      : "text-[rgba(255,255,255,0.70)]"
+                  }
+                />
+              ) : (
+                <ChevronRight
+                  size={14}
+                  className={
+                    isSelected
+                      ? "text-[#1d8b93]"
+                      : "text-[rgba(255,255,255,0.70)]"
+                  }
+                />
+              )}
+            </button>
+          ) : (
+            <div className="w-5 h-5" />
+          )
         )}
 
-        {/* Colonne 2: Icône de type */}
-        <span className="w-6 h-6 flex items-center justify-center">
+        {/* Colonne icône */}
+        <span className={clsx("w-6 h-6 flex items-center justify-center", collapsed && "my-0.5")}
+          onClick={() => collapsed && onSelect(unit)}
+          title={collapsed ? unit.name : undefined}
+        >
           {getUnitIcon()}
         </span>
 
-        {/* Colonne 3: Texte (reste fixe en position, tronqué si besoin) */}
-        <span
-          onClick={() => onSelect(unit)}
-          className={clsx(
-            "whitespace-nowrap text-sm font-medium",
-            isSelected ? "text-[#1d8b93]" : "text-white"
-          )}
-          data-unit-text
-        >
-          {unit.name}
-        </span>
+        {!collapsed && (
+          <>
+            {/* Texte */}
+            <span
+              onClick={() => onSelect(unit)}
+              className={clsx(
+                "whitespace-nowrap text-sm font-medium",
+                isSelected ? "text-[#1d8b93]" : "text-white"
+              )}
+              data-unit-text
+            >
+              {unit.name}
+            </span>
 
-        {/* Colonne 4: Bouton d'ajout (position fixe, aligné à droite) */}
-        <button
-          className={clsx(
-            "w-6 h-6 flex items-center justify-center rounded justify-self-end",
-            "opacity-0 group-hover:opacity-100 hover:bg-[rgba(255,255,255,0.1)]",
-            "transition-colors duration-200",
-            isSelected && "hover:bg-[rgba(29,139,147,0.2)]"
-          )}
-          onClick={(e) => {
-            e.stopPropagation();
-            onAddChild(unit.id);
-          }}
-        >
-          <Plus
-            size={14}
-            className={
-              isSelected ? "text-[#1d8b93]" : "text-[rgba(255,255,255,0.70)]"
-            }
-          />
-        </button>
+            {/* Bouton add */}
+            <button
+              className={clsx(
+                "w-6 h-6 flex items-center justify-center rounded justify-self-end",
+                "opacity-0 group-hover:opacity-100 hover:bg-[rgba(255,255,255,0.1)]",
+                "transition-colors duration-200",
+                isSelected && "hover:bg-[rgba(29,139,147,0.2)]"
+              )}
+              onClick={(e) => {
+                e.stopPropagation();
+                onAddChild(unit.id);
+              }}
+            >
+              <Plus
+                size={14}
+                className={
+                  isSelected ? "text-[#1d8b93]" : "text-[rgba(255,255,255,0.70)]"
+                }
+              />
+            </button>
+          </>
+        )}
       </div>
 
-      {/* Afficher les enfants si l'unité est étendue */}
-      {isExpanded && canViewChildren(unit.id) && visibleChildren.length > 0 && (
+      {/* Enfants */}
+      {isExpanded && !collapsed && canViewChildren(unit.id) && visibleChildren.length > 0 && (
         <div className="ml-3">
           {visibleChildren.map((child) => (
             <UnitTreeItem
@@ -179,6 +192,7 @@ const UnitTreeItem = ({
               onAddChild={onAddChild}
               selectedUnitId={selectedUnitId}
               expandedUnits={expandedUnits}
+              collapsed={collapsed}
             />
           ))}
         </div>
@@ -534,11 +548,13 @@ const SideBar = ({
           <div className="flex-1 overflow-auto">
             <div className="p-4">
               {/* Arborescence des unités */}
-              <div className="mb-6">
-                <h3 className="text-xs font-semibold text-[rgba(255,255,255,0.70)] uppercase tracking-wider mb-3">
-                  Unités Éducatives
-                </h3>
-                <div className="space-y-1">
+              <div className={clsx("mb-6", collapsed && "mb-3")}> 
+                {!collapsed && (
+                  <h3 className="text-xs font-semibold text-[rgba(255,255,255,0.70)] uppercase tracking-wider mb-3">
+                    Unités Éducatives
+                  </h3>
+                )}
+                <div className={clsx("space-y-1", collapsed && "space-y-2")}> 
                   {filteredUnits.map((unit) => (
                     <UnitTreeItem
                       key={unit.id}
@@ -549,6 +565,7 @@ const SideBar = ({
                       onAddChild={handleAddChild}
                       selectedUnitId={selectedUnitId}
                       expandedUnits={expandedUnits}
+                      collapsed={collapsed}
                     />
                   ))}
                 </div>
