@@ -1,9 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import type { JSX } from "react";
 import { useRouter } from "next/router";
 import { UnitProvider } from "@/contexts/UnitContext";
 import SideBar from "@/components/layout/sideBar";
+import DashboardHeader from "@/components/layout/DashboardHeader";
 import { Unit } from "@/types/unit";
 import {
   ChevronRight,
@@ -260,9 +262,11 @@ export default function PageHierarchique() {
       </button>
     );
 
-    // Pour le dashboard, pas besoin de ShowIfPermission
+    // Pour le dashboard, pas besoin de ShowIfPermission (ajout d'une key pour éviter l'avertissement React)
     if (tab.key === "dashboard") {
-      return canViewUnitSelf(selectedUnit.id) ? TabButton : null;
+      return canViewUnitSelf(selectedUnit.id) ? (
+        <>{TabButton}</>
+      ) : null;
     }
 
     // Pour les autres onglets, utiliser ShowIfPermission
@@ -281,7 +285,7 @@ export default function PageHierarchique() {
   const renderPageContent = () => {
     if (!selectedUnit) return null;
 
-    const contentMap = {
+    const contentMap: Record<UnitPageType, JSX.Element> = {
       dashboard: <UnitDashboard unit={selectedUnit} />,
       children: (
         <UnitChildren unit={selectedUnit} onSelectChild={handleChildSelect} />
@@ -317,6 +321,8 @@ export default function PageHierarchique() {
   return (
     <UnitProvider>
       <div className="min-h-screen bg-[#1d8b93] flex">
+        {/* Header spécifique à la page hiérarchique */}
+        <DashboardHeader title={selectedUnit?.name || "Schola"} subtitle={selectedUnit ? `${selectedUnit.type} • ${(selectedUnit.path||[]).join(" / ")}` : "Plateforme éducative"} />
         {/* Sidebar */}
         <div className="fixed inset-y-0 left-0 z-50">
           <SideBar
@@ -331,23 +337,11 @@ export default function PageHierarchique() {
         {/* Main content area */}
         <div
           className={"flex-1 flex flex-col min-h-screen transition-all duration-300"}
-          style={{ paddingLeft: "var(--sidebar-width, 0px)" }}
+          style={{ paddingLeft: "var(--sidebar-width, 0px)", paddingTop: "64px" }}
         >
           {selectedUnit ? (
             <>
-              {/* Header - Sticky */}
-              <div className="h-16 bg-[#1d8b93]/95 backdrop-blur-md border-b border-white/10 flex-shrink-0 flex items-center px-6 sticky top-0 z-30">
-                <div>
-                  <h1 className="text-xl font-bold text-white">
-                    {selectedUnit.name}
-                  </h1>
-                  <p className="text-sm text-[rgba(255,255,255,0.70)]">
-                    {selectedUnit.type} • {selectedUnit.path?.join(" / ")}
-                  </p>
-                </div>
-              </div>
-
-              {/* Navigation Tabs - Sticky below header */}
+              {/* Navigation Tabs - Sticky sous le header local */}
               <div className="h-20 bg-gradient-to-r from-[#1d8b93] via-[#1d8b93]/98 to-[#1d8b93] backdrop-blur-sm border-b border-white/10 flex-shrink-0 sticky top-16 z-20">
                 <div className="h-full px-6 py-4 flex items-center">
                   <div className="flex space-x-2 overflow-x-auto scrollbar-hide">
