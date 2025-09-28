@@ -136,7 +136,7 @@ export default function UnitChildren({
             Aucune unité enfant
           </h3>
           <p className="text-[rgba(255,255,255,0.70)]">
-            Cette unité ne contient pas d'unités enfants directes.
+            Cette unité ne contient pas d&apos;unités enfants directes.
           </p>
         </div>
       )}

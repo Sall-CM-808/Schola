@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { useUnitContext } from "@/contexts/UnitContext";
 import { Unit, UnitTreeItemProps, AdminSidebarProps } from "@/types/unit";
 import {
@@ -16,13 +16,14 @@ import {
   Menu,
   ChevronLeft,
   Search,
-  User,
+  GripVertical,
 } from "lucide-react";
 import { usePermissions } from "@/hooks/usePermissions";
 import clsx from "clsx";
 
 /**
  * Composant pour afficher un élément d'unité dans l'arborescence
+{{ ... }}
  */
 const UnitTreeItem = ({
   unit,
@@ -48,31 +49,31 @@ const UnitTreeItem = ({
   const isSelected = selectedUnitId === unit.id;
   const hasChildren = unit.children && unit.children.length > 0;
 
-  // Icônes par type d'unité éducative
+  // Icônes: harmonisées avec la palette (blanc par défaut)
   const getUnitIcon = () => {
     switch (unit.type) {
       case "université":
-        return <Building2 size={18} className="text-blue-400" />;
+        return <Building2 size={18} className="text-white" />;
       case "école":
-        return <School size={18} className="text-green-400" />;
+        return <School size={18} className="text-white" />;
       case "faculté":
-        return <GraduationCap size={18} className="text-purple-400" />;
+        return <GraduationCap size={18} className="text-white" />;
       case "cycle":
-        return <BookOpen size={18} className="text-yellow-400" />;
+        return <BookOpen size={18} className="text-white" />;
       case "département":
-        return <BookOpen size={18} className="text-orange-400" />;
+        return <BookOpen size={18} className="text-white" />;
       case "niveau":
-        return <BookOpen size={18} className="text-pink-400" />;
+        return <BookOpen size={18} className="text-white" />;
       case "licence":
-        return <GraduationCap size={18} className="text-indigo-400" />;
+        return <GraduationCap size={18} className="text-white" />;
       case "classe":
-        return <Users size={18} className="text-cyan-400" />;
+        return <Users size={18} className="text-white" />;
       case "semestre":
-        return <BookOpen size={18} className="text-emerald-400" />;
+        return <BookOpen size={18} className="text-white" />;
       case "lycée":
-        return <School size={18} className="text-violet-400" />;
+        return <School size={18} className="text-white" />;
       default:
-        return <Users size={18} className="text-[rgba(255,255,255,0.70)]" />;
+        return <Users size={18} className="text-white/70" />;
     }
   };
 
@@ -80,17 +81,20 @@ const UnitTreeItem = ({
     <div className="w-full">
       <div
         className={clsx(
-          "group flex items-center py-2 px-3 cursor-pointer transition-all duration-200",
+          "group grid items-center py-2 px-3 cursor-pointer transition-colors duration-200",
+          // Colonnes fixes sans badge: expandeur 20px | icône 24px | texte auto | add 24px
+          "grid-cols-[20px_24px_1fr_24px] gap-2",
           "hover:bg-[rgba(255,255,255,0.08)] hover:text-white rounded-lg mx-1",
           isSelected && "bg-[#b8d070] text-[#1d8b93] shadow-sm"
         )}
         style={{ paddingLeft: `${level * 20 + 16}px` }}
+        data-unit-row
       >
-        {/* Icône d'expansion */}
-        {hasChildren && (
+        {/* Colonne 1: Icône d'expansion ou espace */}
+        {hasChildren ? (
           <button
             className={clsx(
-              "w-5 h-5 flex items-center justify-center mr-2 rounded",
+              "w-5 h-5 flex items-center justify-center rounded",
               "hover:bg-[rgba(255,255,255,0.1)] transition-colors",
               isSelected && "hover:bg-[rgba(29,139,147,0.2)]"
             )}
@@ -119,47 +123,33 @@ const UnitTreeItem = ({
               />
             )}
           </button>
+        ) : (
+          <div className="w-5 h-5" />
         )}
 
-        {/* Espace pour les unités sans enfants */}
-        {!hasChildren && <div className="w-6 mr-3" />}
+        {/* Colonne 2: Icône de type */}
+        <span className="w-6 h-6 flex items-center justify-center">
+          {getUnitIcon()}
+        </span>
 
-        {/* Contenu de l'unité */}
-        <div
-          className="flex items-center flex-1 py-1"
+        {/* Colonne 3: Texte (reste fixe en position, tronqué si besoin) */}
+        <span
           onClick={() => onSelect(unit)}
+          className={clsx(
+            "whitespace-nowrap text-sm font-medium",
+            isSelected ? "text-[#1d8b93]" : "text-white"
+          )}
+          data-unit-text
         >
-          <span className="mr-4">{getUnitIcon()}</span>
-          <span
-            className={clsx(
-              "truncate text-sm font-medium",
-              isSelected ? "text-[#1d8b93]" : "text-white"
-            )}
-          >
-            {unit.name}
-          </span>
-        </div>
+          {unit.name}
+        </span>
 
-        {/* Badge compteur à droite */}
-        {typeof unit.badge !== "undefined" && (
-          <span
-            className={clsx(
-              "ml-3 px-3 py-1 rounded-full text-xs font-semibold",
-              isSelected
-                ? "bg-[#1d8b93] text-white"
-                : "bg-[rgba(255,255,255,0.15)] text-[rgba(255,255,255,0.90)]"
-            )}
-          >
-            {unit.badge}
-          </span>
-        )}
-
-        {/* Bouton d'ajout d'enfant */}
+        {/* Colonne 4: Bouton d'ajout (position fixe, aligné à droite) */}
         <button
           className={clsx(
-            "w-6 h-6 flex items-center justify-center ml-3 rounded",
+            "w-6 h-6 flex items-center justify-center rounded justify-self-end",
             "opacity-0 group-hover:opacity-100 hover:bg-[rgba(255,255,255,0.1)]",
-            "transition-all duration-200",
+            "transition-colors duration-200",
             isSelected && "hover:bg-[rgba(29,139,147,0.2)]"
           )}
           onClick={(e) => {
@@ -198,7 +188,7 @@ const UnitTreeItem = ({
 };
 
 /**
- * Composant SideBar principal professionnel
+ * Composant SideBar principal professionnel avec redimensionnement
  */
 const SideBar = ({
   units,
@@ -212,8 +202,20 @@ const SideBar = ({
   const [selectedUnitId, setSelectedUnitId] = useState<string | null>(null);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [sidebarWidth, setSidebarWidth] = useState(320); // Largeur par défaut
+  const [isResizing, setIsResizing] = useState(false);
+  const [minWidth, setMinWidth] = useState(200);
+
+  const sidebarRef = useRef<HTMLDivElement>(null);
+  const rafRef = useRef<number | null>(null);
   const unitContext = useUnitContext();
   const { filterVisibleUnits } = usePermissions();
+
+  // Constantes de redimensionnement
+  const MIN_WIDTH = 180;
+  const MAX_WIDTH = 600;
+  const COLLAPSED_WIDTH = 80;
+  const snapPoints = useMemo(() => [280, 220, 180], []);
 
   // Synchroniser avec le contexte d'unité
   useEffect(() => {
@@ -251,6 +253,99 @@ const SideBar = ({
     if (onUnitAdd) onUnitAdd(parentId);
   };
 
+  // Gérer le redimensionnement
+  const handleMouseDown = useCallback((e: React.MouseEvent) => {
+    e.preventDefault();
+    setIsResizing(true);
+  }, []);
+
+  const handleMouseMove = useCallback(
+    (e: MouseEvent) => {
+      if (!isResizing) return;
+
+      const newWidth = e.clientX;
+      const constrainedWidth = Math.min(
+        Math.max(newWidth, MIN_WIDTH),
+        MAX_WIDTH
+      );
+
+      // Throttle updates to once per animation frame to avoid layout thrash
+      if (rafRef.current == null) {
+        rafRef.current = requestAnimationFrame(() => {
+          setSidebarWidth((prev) => (prev !== constrainedWidth ? constrainedWidth : prev));
+          // Mettre à jour la variable CSS dans la même frame pour synchroniser le contenu
+          const isDesktop = typeof window !== "undefined" && window.innerWidth >= 768;
+          const widthPx = isDesktop ? constrainedWidth : isMobileOpen ? constrainedWidth : 0;
+          document.documentElement.style.setProperty("--sidebar-width", `${widthPx}px`);
+          rafRef.current = null;
+        });
+      }
+    },
+    [isResizing, isMobileOpen]
+  );
+
+  const handleMouseUp = useCallback(() => {
+    setIsResizing(false);
+    // Si l'utilisateur a tenté d'aller en dessous de la largeur minimale de contenu,
+    // on propose une transition nette vers l'état "collapsed" pour permettre une réduction franche
+    if (!collapsed && onToggleCollapse) {
+      const threshold = Math.max(minWidth - 24, MIN_WIDTH);
+      if (sidebarWidth <= threshold) {
+        onToggleCollapse();
+        if (rafRef.current != null) {
+          cancelAnimationFrame(rafRef.current);
+          rafRef.current = null;
+        }
+        return;
+      }
+    }
+    // Snap aux points prédéfinis pour une sensation contrôlée
+    if (!collapsed && snapPoints.length) {
+      let nearest = snapPoints[0];
+      let bestDiff = Math.abs(sidebarWidth - nearest);
+      for (const p of snapPoints) {
+        const d = Math.abs(sidebarWidth - p);
+        if (d < bestDiff) {
+          bestDiff = d;
+          nearest = p;
+        }
+      }
+      // Snap si on est proche (tolérance 16px)
+      if (bestDiff <= 16 && sidebarWidth !== nearest) {
+        setSidebarWidth(nearest);
+        const isDesktop = typeof window !== "undefined" && window.innerWidth >= 768;
+        const widthPx = isDesktop ? nearest : isMobileOpen ? nearest : 0;
+        document.documentElement.style.setProperty("--sidebar-width", `${widthPx}px`);
+      }
+    }
+    if (rafRef.current != null) {
+      cancelAnimationFrame(rafRef.current);
+      rafRef.current = null;
+    }
+  }, [collapsed, onToggleCollapse, sidebarWidth, minWidth, isMobileOpen, snapPoints]);
+
+  // Event listeners pour le redimensionnement
+  useEffect(() => {
+    if (isResizing) {
+      document.addEventListener("mousemove", handleMouseMove);
+      document.addEventListener("mouseup", handleMouseUp);
+      document.body.style.cursor = "col-resize";
+      document.body.style.userSelect = "none";
+    } else {
+      document.removeEventListener("mousemove", handleMouseMove);
+      document.removeEventListener("mouseup", handleMouseUp);
+      document.body.style.cursor = "";
+      document.body.style.userSelect = "";
+    }
+
+    return () => {
+      document.removeEventListener("mousemove", handleMouseMove);
+      document.removeEventListener("mouseup", handleMouseUp);
+      document.body.style.cursor = "";
+      document.body.style.userSelect = "";
+    };
+  }, [isResizing, handleMouseMove, handleMouseUp]);
+
   // Filtrer les unités visibles selon les permissions
   const visibleRootUnits = filterVisibleUnits
     ? filterVisibleUnits(units)
@@ -260,6 +355,78 @@ const SideBar = ({
   const filteredUnits = visibleRootUnits.filter((unit) =>
     unit.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  // Calculer la largeur effective
+  const effectiveWidth = collapsed ? COLLAPSED_WIDTH : sidebarWidth;
+
+  // Publier la largeur effective via une variable CSS globale pour décaler le contenu
+  useEffect(() => {
+    const updateCssVar = () => {
+      // Déterminer si on est en mode desktop (md: >= 768px)
+      const isDesktop = typeof window !== "undefined" && window.innerWidth >= 768;
+      // Sur mobile, si le menu n'est pas ouvert, ne pas réserver d'espace
+      const widthPx = isDesktop ? effectiveWidth : isMobileOpen ? effectiveWidth : 0;
+      document.documentElement.style.setProperty("--sidebar-width", `${widthPx}px`);
+    };
+
+    // Mise à jour immédiate pour réduire la latence perçue
+    updateCssVar();
+
+    // Mettre à jour aussi quand la fenêtre change de taille (pour basculer mobile/desktop)
+    const handleResize = () => updateCssVar();
+    if (typeof window !== "undefined") {
+      window.addEventListener("resize", handleResize);
+    }
+    return () => {
+      if (typeof window !== "undefined") {
+        window.removeEventListener("resize", handleResize);
+      }
+      // Nettoyage de la variable à la désinstallation du composant
+      document.documentElement.style.removeProperty("--sidebar-width");
+    };
+  }, [effectiveWidth, isMobileOpen]);
+
+  // Mesurer le contenu pour déterminer une largeur minimale qui évite toute troncature
+  useEffect(() => {
+    if (!sidebarRef.current) return;
+    if (collapsed) {
+      setMinWidth(COLLAPSED_WIDTH);
+      return;
+    }
+
+    const el = sidebarRef.current;
+    let required = MIN_WIDTH;
+
+    // Mesurer la barre de recherche si visible
+    const search = el.querySelector<HTMLInputElement>("input[type='text']");
+    if (search) {
+      // largeur intrinsèque + marges latérales du container
+      required = Math.max(required, Math.ceil(search.scrollWidth) + 48);
+    }
+
+    // Mesurer chaque ligne unité
+    const rows = el.querySelectorAll<HTMLElement>("[data-unit-row]");
+    rows.forEach((row) => {
+      const style = window.getComputedStyle(row);
+      const paddingLeft = parseFloat(style.paddingLeft || "16");
+      const text = row.querySelector<HTMLElement>("[data-unit-text]");
+      const badge = row.querySelector<HTMLElement>("[data-unit-badge]");
+
+      const textWidth = text ? Math.ceil(text.scrollWidth) : 0;
+      const badgeWidth = badge ? Math.ceil(badge.scrollWidth) : 0;
+
+      // expandeur 20 + icône 24 + gaps (≈ 8*3) = 44
+      const chrome = 20 + 24 + 24; // 68 total chrome including typical gaps
+      const rightPad = 40; // sécurité côté droit
+      const needed = paddingLeft + chrome + textWidth + badgeWidth + rightPad;
+      if (needed > required) required = needed;
+    });
+
+    // bornes
+    required = Math.min(Math.max(required, MIN_WIDTH), MAX_WIDTH);
+    const rounded = Math.round(required);
+    setMinWidth(rounded);
+  }, [filteredUnits, searchQuery, collapsed]);
 
   return (
     <>
@@ -285,15 +452,37 @@ const SideBar = ({
 
       {/* Sidebar principal */}
       <aside
+        ref={sidebarRef}
         className={clsx(
           "fixed top-0 left-0 z-40 h-screen bg-[#1d8b93] text-white border-r border-[rgba(255,255,255,0.14)]",
-          "transition-all duration-300 ease-in-out shadow-xl",
+          isResizing ? "transition-none" : "transition-all duration-300 ease-in-out",
+          isResizing ? "" : "shadow-xl",
           "md:relative md:translate-x-0",
           isMobileOpen ? "translate-x-0" : "-translate-x-full",
-          collapsed ? "w-20" : "w-80",
+          "relative overflow-hidden",
           className
         )}
+        style={{
+          width: `${effectiveWidth}px`,
+          // Autoriser une réduction jusqu'à MIN_WIDTH via le drag;
+          // quand on passe sous minWidth, on snap en mode collapsed dans handleMouseUp
+          minWidth: `${collapsed ? COLLAPSED_WIDTH : MIN_WIDTH}px`,
+          maxWidth: `${MAX_WIDTH}px`,
+          willChange: "width",
+        }}
       >
+        {/* Décor de fond cohérent avec la palette: gradients légers */}
+        <div
+          aria-hidden
+          className="absolute inset-0 pointer-events-none -z-10"
+          style={{
+            background: `
+              radial-gradient(900px 600px at 12% 10%, rgba(184,208,112,0.12) 0%, transparent 60%),
+              radial-gradient(800px 700px at 88% 20%, rgba(255,255,255,0.08) 0%, transparent 65%),
+              linear-gradient(160deg, #239ca5, #166f76)
+            `,
+          }}
+        />
         {/* En-tête */}
         <div className="flex items-center justify-between h-16 px-4 border-b border-[rgba(255,255,255,0.14)] bg-[rgba(255,255,255,0.05)]">
           {!collapsed && (
@@ -342,7 +531,7 @@ const SideBar = ({
           )}
 
           {/* Menu principal */}
-          <div className="flex-1">
+          <div className="flex-1 overflow-auto">
             <div className="p-4">
               {/* Arborescence des unités */}
               <div className="mb-6">
@@ -365,27 +554,20 @@ const SideBar = ({
                 </div>
               </div>
             </div>
-          </div>
+        </div>
+      </div>
 
-          {/* Pied de page */}
-          <div className="border-t border-[rgba(255,255,255,0.14)] p-4 bg-[rgba(255,255,255,0.05)]">
-            <div className="flex items-center space-x-3">
-              <div className="w-8 h-8 bg-[rgba(255,255,255,0.1)] rounded-full flex items-center justify-center">
-                <User size={16} className="text-white" />
-              </div>
-              {!collapsed && (
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-white truncate">
-                    Admin User
-                  </p>
-                  <p className="text-xs text-[rgba(255,255,255,0.70)] truncate">
-                    admin@schola.edu
-                  </p>
-                </div>
-              )}
+      {/* Handle de redimensionnement - seulement sur desktop et quand non collapsed */}
+        {!collapsed && (
+          <div
+            className="absolute top-0 right-0 w-1 h-full bg-transparent hover:bg-[rgba(255,255,255,0.2)] cursor-col-resize group transition-colors duration-200 z-50"
+            onMouseDown={handleMouseDown}
+          >
+            <div className="absolute top-1/2 right-0 transform -translate-y-1/2 translate-x-1/2 w-2 h-8 bg-[rgba(184,208,112,0.5)] rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center">
+              <GripVertical size={12} className="text-[#1d8b93]" />
             </div>
           </div>
-        </div>
+        )}
       </aside>
     </>
   );

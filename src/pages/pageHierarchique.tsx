@@ -330,14 +330,13 @@ export default function PageHierarchique() {
 
         {/* Main content area */}
         <div
-          className={`flex-1 flex flex-col min-h-screen transition-all duration-300 ${
-            collapsed ? "ml-20" : "ml-80"
-          }`}
+          className={"flex-1 flex flex-col min-h-screen transition-all duration-300"}
+          style={{ paddingLeft: "var(--sidebar-width, 0px)" }}
         >
           {selectedUnit ? (
             <>
-              {/* Header - Fixed at top */}
-              <div className="h-16 bg-[#1d8b93]/95 backdrop-blur-md border-b border-white/10 flex-shrink-0 flex items-center px-6">
+              {/* Header - Sticky */}
+              <div className="h-16 bg-[#1d8b93]/95 backdrop-blur-md border-b border-white/10 flex-shrink-0 flex items-center px-6 sticky top-0 z-30">
                 <div>
                   <h1 className="text-xl font-bold text-white">
                     {selectedUnit.name}
@@ -348,8 +347,8 @@ export default function PageHierarchique() {
                 </div>
               </div>
 
-              {/* Navigation Tabs - Fixed below header */}
-              <div className="h-20 bg-gradient-to-r from-[#1d8b93] via-[#1d8b93]/98 to-[#1d8b93] backdrop-blur-sm border-b border-white/10 flex-shrink-0">
+              {/* Navigation Tabs - Sticky below header */}
+              <div className="h-20 bg-gradient-to-r from-[#1d8b93] via-[#1d8b93]/98 to-[#1d8b93] backdrop-blur-sm border-b border-white/10 flex-shrink-0 sticky top-16 z-20">
                 <div className="h-full px-6 py-4 flex items-center">
                   <div className="flex space-x-2 overflow-x-auto scrollbar-hide">
                     <div className="flex space-x-2 min-w-max">
