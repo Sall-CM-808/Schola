@@ -200,6 +200,49 @@ export const educationStructure: Unit[] = [
       },
     ],
   },
+  // Nouvelle école: Institution Sainte-Marie avec 3 cycles directs
+  {
+    id: "institution-sainte-marie",
+    name: "Institution Sainte-Marie",
+    type: "école",
+    path: ["institution-sainte-marie"],
+    badge: 0,
+    children: [
+      {
+        id: "institution-sainte-marie-cycle-primaire",
+        name: "Cycle Primaire",
+        type: "cycle",
+        path: [
+          "institution-sainte-marie",
+          "institution-sainte-marie-cycle-primaire",
+        ],
+        badge: 0,
+        children: [],
+      },
+      {
+        id: "institution-sainte-marie-cycle-college",
+        name: "Cycle Collège",
+        type: "cycle",
+        path: [
+          "institution-sainte-marie",
+          "institution-sainte-marie-cycle-college",
+        ],
+        badge: 0,
+        children: [],
+      },
+      {
+        id: "institution-sainte-marie-cycle-lycee",
+        name: "Cycle Lycée",
+        type: "cycle",
+        path: [
+          "institution-sainte-marie",
+          "institution-sainte-marie-cycle-lycee",
+        ],
+        badge: 0,
+        children: [],
+      },
+    ],
+  },
 ];
 
 // Fonction pour simuler un délai de chargement
