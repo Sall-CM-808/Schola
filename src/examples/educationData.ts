@@ -1,7 +1,7 @@
 import { Unit } from "@/types/unit";
 
-// Données d'exemple pour la structure éducative
-export const educationStructure: Unit[] = [
+// Données d'exemple pour la structure éducative (dataset complet)
+const baseEducationStructure: Unit[] = [
   {
     id: "univ-1",
     name: "Université Cheikh Anta Diop",
@@ -244,6 +244,11 @@ export const educationStructure: Unit[] = [
     ],
   },
 ];
+
+// Export restreint: ne garder que Institution Sainte-Marie pour la sidebar/expérimentations
+export const educationStructure: Unit[] = baseEducationStructure.filter(
+  (u) => u.id === "institution-sainte-marie"
+);
 
 // Fonction pour simuler un délai de chargement
 export const simulateLoading = (delay: number = 300): Promise<void> => {

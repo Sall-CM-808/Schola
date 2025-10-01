@@ -151,6 +151,18 @@ export default function PageHierarchique() {
     }
   }, [isAuthenticated, router, mounted]);
 
+  // Sélection par défaut: Institution Sainte-Marie ou première unité
+  useEffect(() => {
+    if (!mounted) return;
+    if (selectedUnit) return;
+    const preferred = educationStructure.find(u => u.id === "institution-sainte-marie");
+    const first = educationStructure[0];
+    const target = preferred ?? first ?? null;
+    if (target) {
+      handleUnitSelect(target);
+    }
+  }, [mounted, selectedUnit]);
+
   const handleUnitSelect = (unit: Unit) => {
     setSelectedUnit(unit);
     setCurrentPage("dashboard");
@@ -322,7 +334,7 @@ export default function PageHierarchique() {
     <UnitProvider>
       <div className="min-h-screen bg-[#1d8b93] flex">
         {/* Header spécifique à la page hiérarchique */}
-        <DashboardHeader title={selectedUnit?.name || "Schola"} subtitle={selectedUnit ? `${selectedUnit.type} • ${(selectedUnit.path||[]).join(" / ")}` : "Plateforme éducative"} />
+        <DashboardHeader title={selectedUnit?.name || "Schola"} />
         {/* Sidebar */}
         <div className="fixed inset-y-0 left-0 z-50">
           <SideBar
