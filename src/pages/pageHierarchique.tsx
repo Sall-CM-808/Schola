@@ -173,9 +173,13 @@ export default function PageHierarchique() {
     setCurrentPage("dashboard");
   };
 
-  // Fonction pour déterminer si une unité est une feuille (sans enfants)
+  // Fonction pour déterminer si une unité est une feuille (détails complets)
+  // Règle métier: seules les classes/niveaux (et licences) sont des feuilles.
+  // Les cycles sont des conteneurs même si leurs enfants ne sont pas encore saisis.
   const isLeafUnit = (unit: Unit) => {
-    return !unit.children || unit.children.length === 0;
+    const t = (unit.type || "").toLowerCase();
+    const leafTypes = ["classe", "niveau", "licence"]; // étendable
+    return leafTypes.includes(t);
   };
 
   const handleUnitAdd = (parentId: string | null) => {
