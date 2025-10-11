@@ -24,7 +24,7 @@ export default function SainteMariePage() {
           <section className="max-w-6xl mx-auto">
             <h2 className="text-white text-xl font-semibold mb-4">Aperçu hiérarchique</h2>
             <p className="text-[#b8e2e6] text-sm">
-              Cette page présente la hiérarchie: l'école et ses trois cycles (Primaire, Collège, Lycée).
+              Cette page présente la hiérarchie: l&apos;école et ses trois cycles (Primaire, Collège, Lycée).
               Sélectionne une unité dans la barre latérale pour continuer.
             </p>
           </section>
