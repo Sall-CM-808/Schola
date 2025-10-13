@@ -1,10 +1,11 @@
 "use client";
-
 import React from "react";
 import { motion } from "framer-motion";
+import { useClientSideAnimations } from "@/hooks/useClientSideAnimations";
 import { CheckCircle } from "lucide-react";
 
-const PricingSection = () => {
+const PricingSection: React.FC = () => {
+  const isClient = useClientSideAnimations();
   const pricingTiers = [
     {
       name: "Starter",
@@ -53,31 +54,33 @@ const PricingSection = () => {
       style={{ backgroundColor: "#1d8b93" }}
     >
       {/* Bulles animées en arrière-plan */}
-      <div className="absolute inset-0 opacity-20">
-        {[...Array(15)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute rounded-full"
-            style={{
-              backgroundColor: "#b8d070",
-              width: `${Math.random() * 20 + 10}px`,
-              height: `${Math.random() * 20 + 10}px`,
-              top: `${Math.random() * 100}%`,
-              left: `${Math.random() * 100}%`,
-            }}
-            animate={{
-              y: [0, (Math.random() - 0.5) * 50],
-              x: [0, (Math.random() - 0.5) * 50],
-              opacity: [0.2, 0.8, 0.2],
-            }}
-            transition={{
-              duration: Math.random() * 15 + 15,
-              repeat: Infinity,
-              repeatType: "reverse",
-            }}
-          />
-        ))}
-      </div>
+      {isClient && (
+        <div className="absolute inset-0 opacity-20">
+          {[...Array(15)].map((_, i) => (
+            <motion.div
+              key={i}
+              className="absolute rounded-full"
+              style={{
+                backgroundColor: "#b8d070",
+                width: `${Math.random() * 20 + 10}px`,
+                height: `${Math.random() * 20 + 10}px`,
+                top: `${Math.random() * 100}%`,
+                left: `${Math.random() * 100}%`,
+              }}
+              animate={{
+                y: [0, (Math.random() - 0.5) * 50],
+                x: [0, (Math.random() - 0.5) * 50],
+                opacity: [0.2, 0.8, 0.2],
+              }}
+              transition={{
+                duration: Math.random() * 15 + 15,
+                repeat: Infinity,
+                repeatType: "reverse",
+              }}
+            />
+          ))}
+        </div>
+      )}
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <motion.div

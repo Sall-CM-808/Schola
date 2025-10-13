@@ -3,9 +3,11 @@
 import React from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { useClientSideAnimations } from "@/hooks/useClientSideAnimations";
 import { Mail, Phone, Facebook, Twitter, Linkedin } from "lucide-react";
 
 const Footer: React.FC = () => {
+  const isClient = useClientSideAnimations();
   return (
     <footer
       className="relative text-white pt-16 pb-8 overflow-hidden"
@@ -14,34 +16,36 @@ const Footer: React.FC = () => {
       }}
     >
       {/* Bulles animées en arrière-plan */}
-      <div className="absolute inset-0 opacity-15">
-        {[...Array(15)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute rounded-full"
-            style={{
-              backgroundColor: "#b8d070",
-              width: `${Math.random() * 20 + 10}px`,
-              height: `${Math.random() * 20 + 10}px`,
-              top: `${Math.random() * 100}%`,
-              left: `${Math.random() * 100}%`,
-            }}
-            animate={{
-              y: [0, (Math.random() - 0.5) * 50],
-              x: [0, (Math.random() - 0.5) * 50],
-              opacity: [0.15, 0.6, 0.15],
-            }}
-            transition={{
-              duration: Math.random() * 15 + 15,
-              repeat: Infinity,
-              repeatType: "reverse",
-            }}
-          />
-        ))}
-      </div>
+      {isClient && (
+        <div className="absolute inset-0 opacity-20">
+          {[...Array(15)].map((_, i) => (
+            <motion.div
+              key={i}
+              className="absolute rounded-full"
+              style={{
+                backgroundColor: "#b8d070",
+                width: `${Math.random() * 20 + 10}px`,
+                height: `${Math.random() * 20 + 10}px`,
+                top: `${Math.random() * 100}%`,
+                left: `${Math.random() * 100}%`,
+              }}
+              animate={{
+                y: [0, (Math.random() - 0.5) * 50],
+                x: [0, (Math.random() - 0.5) * 50],
+                opacity: [0.2, 0.8, 0.2],
+              }}
+              transition={{
+                duration: Math.random() * 15 + 15,
+                repeat: Infinity,
+                repeatType: "reverse",
+              }}
+            />
+          ))}
+        </div>
+      )}
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -56,7 +60,7 @@ const Footer: React.FC = () => {
               <span className="text-2xl font-bold text-[#b8d070]">Schola</span>
             </Link>
             <p className="text-gray-200 mb-4">
-              Plateforme leader dédiée à l'optimisation de la gestion des
+              Plateforme leader dédiée à l&apos;optimisation de la gestion des
               établissements scolaires.
             </p>
             <div className="flex space-x-4">
@@ -105,7 +109,7 @@ const Footer: React.FC = () => {
                   href="#accueil"
                   className="text-gray-200 hover:text-[#b8d070] transition-colors duration-300"
                 >
-                  Page d'Accueil
+                  Page d&apos;Accueil
                 </Link>
               </li>
               <li>
@@ -211,7 +215,7 @@ const Footer: React.FC = () => {
         >
           <p>© {new Date().getFullYear()} Schola. Tous droits réservés.</p>
           <p className="mt-2 md:mt-0">
-            Développé avec passion pour l'excellence éducative.
+            Développé avec passion pour l&apos;excellence éducative.
           </p>
         </motion.div>
       </div>
