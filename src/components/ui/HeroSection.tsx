@@ -2,6 +2,8 @@
 
 import React, { useEffect, useRef } from "react";
 import Link from "next/link";
+import Image from "next/image";
+import imageHero from "../assets/imageHero.png";
 
 const SchoolIcon = () => (
   <svg
@@ -59,6 +61,7 @@ const UsersIcon = () => (
 
 const HeroSection: React.FC = () => {
   const titleRef = useRef<HTMLHeadingElement>(null);
+  const sloganRef = useRef<HTMLParagraphElement>(null);
   const subtitleRef = useRef<HTMLParagraphElement>(null);
   const ctaRef = useRef<HTMLDivElement>(null);
   const imageRef = useRef<HTMLDivElement>(null);
@@ -74,7 +77,7 @@ const HeroSection: React.FC = () => {
       });
     }, observerOptions);
 
-    const elements = [titleRef, subtitleRef, ctaRef, imageRef].map(
+    const elements = [titleRef, sloganRef, subtitleRef, ctaRef, imageRef].map(
       (ref) => ref.current
     );
     elements.forEach((el) => el && observer.observe(el));
@@ -94,26 +97,30 @@ const HeroSection: React.FC = () => {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 h-full flex items-center">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8 items-center w-full">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 items-center w-full">
           <div className="text-center lg:text-left flex flex-col justify-center">
             <h1
               ref={titleRef}
               className="text-3xl md:text-4xl lg:text-[2.8rem] xl:text-[3.2rem] font-bold leading-tight opacity-0 translate-y-8 transition-all duration-700 ease-out"
             >
-              <span className="block text-white">Révolutionnez</span>
+              <span className="block text-white">Réinventez</span>
               <span className="block mt-1 md:mt-2 text-[#b8d070] drop-shadow-sm">
-                la gestion scolaire
+                l&apos;excellence éducative
               </span>
             </h1>
 
             <p
-              ref={subtitleRef}
-              className="mt-8 md:mt-10 text-lg md:text-xl text-gray-100 max-w-xl mx-auto lg:mx-0 opacity-0 translate-y-8 transition-all duration-700 delay-200 ease-out"
+              ref={sloganRef}
+              className="mt-4 md:mt-6 text-base md:text-lg font-semibold text-white/90 italic opacity-0 translate-y-8 transition-all duration-700 delay-100 ease-out"
             >
-              Optimisez la gestion scolaire avec une plateforme intuitive :
-              centralisez vos données, fluidifiez les échanges entre
-              enseignants, élèves et parents, et gagnez un temps précieux au
-              quotidien.
+              &quot;Propulsez votre école dans l&apos;ère digitale&quot;
+            </p>
+
+            <p
+              ref={subtitleRef}
+              className="mt-6 md:mt-8 text-base md:text-lg text-gray-100 max-w-xl mx-auto lg:mx-0 leading-relaxed opacity-0 translate-y-8 transition-all duration-700 delay-200 ease-out"
+            >
+              Offrez à votre école les outils des établissements d&apos;élite. <span className="font-semibold text-[#b8d070]">Fiinor</span> fusionne technologie de pointe et simplicité d&apos;usage pour créer une expérience éducative fluide, transparente et inspirante.
             </p>
 
             <div
@@ -122,29 +129,32 @@ const HeroSection: React.FC = () => {
             >
               <Link
                 href="/start"
-                className="px-4 py-2 md:px-5 md:py-2.5 rounded-lg md:rounded-xl bg-gradient-to-r from-[#b8d070] to-[#a2c65e] text-[#1d8b93] font-bold text-center transition-all duration-300 hover:-translate-y-0.5 text-sm md:text-base"
+                className="px-6 py-3 md:px-7 md:py-3.5 rounded-lg md:rounded-xl bg-gradient-to-r from-[#b8d070] to-[#a2c65e] text-[#1d8b93] font-bold text-center transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-[#b8d070]/30 text-sm md:text-base"
               >
-                Gérer votre école
+                Démarrer gratuitement
               </Link>
               <Link
                 href="/fonctionnalites"
-                className="px-4 py-2 md:px-5 md:py-2.5 rounded-lg md:rounded-xl bg-white/10 backdrop-blur-sm border-2 border-white/30 text-white font-bold text-center transition-all duration-300 hover:-translate-y-0.5 text-sm md:text-base"
+                className="px-6 py-3 md:px-7 md:py-3.5 rounded-lg md:rounded-xl bg-white/10 backdrop-blur-sm border-2 border-white/30 text-white font-bold text-center transition-all duration-300 hover:-translate-y-0.5 hover:bg-white/20 text-sm md:text-base"
               >
-                Explorer
+                Découvrir Fiinor
               </Link>
             </div>
           </div>
 
-          <div className="relative flex items-center justify-center mt-8 lg:mt-0">
+          <div className="relative flex items-end justify-center mt-12 lg:mt-8 lg:pb-8">
             <div
               ref={imageRef}
               className="relative opacity-0 translate-x-8 transition-all duration-1000 delay-300 ease-out"
             >
-              <div className="rounded-2xl md:rounded-3xl overflow-hidden shadow-xl md:shadow-2xl shadow-[#0d5a61]/40 transition-all duration-500 hover:scale-[1.02] w-full max-w-xl h-auto">
-                <img
+              <div className="rounded-2xl md:rounded-3xl overflow-hidden shadow-xl md:shadow-2xl shadow-[#0d5a61]/40 transition-all duration-500 hover:scale-[1.02] w-full max-w-2xl h-auto">
+                <Image
                   src="/images/imageHero.png"
-                  alt="Étudiante de Schola utilisant la plateforme"
-                  className="w-full h-[380px] sm:h-[420px] md:h-[500px] object-cover"
+                  alt="Étudiante utilisant Fiinor"
+                  width={800}
+                  height={600}
+                  priority
+                  className="w-full h-[420px] sm:h-[480px] md:h-[560px] lg:h-[600px] object-cover"
                   style={{
                     imageRendering: "crisp-edges",
                     filter: "contrast(1.05) brightness(1.05)",
@@ -157,16 +167,16 @@ const HeroSection: React.FC = () => {
             </div>
 
             <div className="hidden sm:flex absolute right-0 top-0 h-full flex-col justify-center gap-4 md:gap-6 pr-2 md:pr-4">
-              <div className="flex items-center gap-2 p-3 bg-white/10 backdrop-blur-sm rounded-lg border border-white/20 shadow-sm">
+              <div className="flex items-center gap-2 p-3 bg-white/10 backdrop-blur-sm rounded-lg border border-white/20 shadow-sm transition-all duration-300 hover:bg-white/15 hover:scale-105">
                 <SchoolIcon />
                 <div>
                   <div className="text-base md:text-xl font-bold text-[#b8d070]">
-                    500
+                    500+
                   </div>
                   <div className="text-xs md:text-sm text-white">Écoles</div>
                 </div>
               </div>
-              <div className="flex items-center gap-2 p-3 bg-white/10 backdrop-blur-sm rounded-lg border border-white/20 shadow-sm">
+              <div className="flex items-center gap-2 p-3 bg-white/10 backdrop-blur-sm rounded-lg border border-white/20 shadow-sm transition-all duration-300 hover:bg-white/15 hover:scale-105">
                 <SatisfactionIcon />
                 <div>
                   <div className="text-base md:text-xl font-bold text-[#b8d070]">
@@ -177,11 +187,11 @@ const HeroSection: React.FC = () => {
                   </div>
                 </div>
               </div>
-              <div className="flex items-center gap-2 p-3 bg-white/10 backdrop-blur-sm rounded-lg border border-white/20 shadow-sm">
+              <div className="flex items-center gap-2 p-3 bg-white/10 backdrop-blur-sm rounded-lg border border-white/20 shadow-sm transition-all duration-300 hover:bg-white/15 hover:scale-105">
                 <UsersIcon />
                 <div>
                   <div className="text-base md:text-xl font-bold text-[#b8d070]">
-                    10k
+                    10k+
                   </div>
                   <div className="text-xs md:text-sm text-white">
                     Utilisateurs
