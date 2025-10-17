@@ -27,15 +27,15 @@ export const unitsTree: Unit[] = [
   {
     id: "unit-1",
     name: "Groupe Scolaire Sylla Lamine",
-    code: "SCHOLA",
+    code: "FIINOR",
     type: "university",
     level: 0,
     active: true,
     createdAt: "2020-01-01T00:00:00Z",
-    description: "Université principale Schola",
+    description: "Université principale Fiinor",
     head: "Dr. Marie Directrice",
     location: "Campus Principal",
-    email: "direction@schola.edu",
+    email: "direction@fiinor.edu",
     phone: "+33 1 23 45 67 89",
     children: [
       {
@@ -50,7 +50,7 @@ export const unitsTree: Unit[] = [
         description: "Faculté regroupant les disciplines scientifiques",
         head: "Prof. Jean Sciences",
         location: "Bâtiment A",
-        email: "sciences@schola.edu",
+        email: "sciences@fiinor.edu",
         phone: "+33 1 23 45 67 90",
         children: [
           {
@@ -65,7 +65,7 @@ export const unitsTree: Unit[] = [
             description: "Département de mathématiques pures et appliquées",
             head: "Dr. Sophie Matheux",
             location: "Bâtiment A - Aile Est",
-            email: "math@schola.edu",
+            email: "math@fiinor.edu",
             phone: "+33 1 23 45 67 91",
             children: [
               {
@@ -80,7 +80,7 @@ export const unitsTree: Unit[] = [
                 description: "Recherche en algèbre moderne",
                 head: "Dr. Pierre Algèbre",
                 location: "A-301",
-                email: "algebre@schola.edu",
+                email: "algebre@fiinor.edu",
                 phone: "+33 1 23 45 67 92",
               },
               {
@@ -95,7 +95,7 @@ export const unitsTree: Unit[] = [
                 description: "Recherche en analyse fonctionnelle",
                 head: "Dr. Julie Analyse",
                 location: "A-302",
-                email: "analyse@schola.edu",
+                email: "analyse@fiinor.edu",
                 phone: "+33 1 23 45 67 93",
               },
             ],
@@ -112,7 +112,7 @@ export const unitsTree: Unit[] = [
             description: "Département de physique théorique et expérimentale",
             head: "Prof. Antoine Physique",
             location: "Bâtiment A - Aile Ouest",
-            email: "physique@schola.edu",
+            email: "physique@fiinor.edu",
             phone: "+33 1 23 45 67 94",
             children: [
               {
@@ -127,7 +127,7 @@ export const unitsTree: Unit[] = [
                 description: "Recherche en mécanique quantique",
                 head: "Dr. Léa Quantique",
                 location: "A-401",
-                email: "quantique@schola.edu",
+                email: "quantique@fiinor.edu",
                 phone: "+33 1 23 45 67 95",
               },
             ],
@@ -144,7 +144,7 @@ export const unitsTree: Unit[] = [
             description: "Département d'informatique et sciences du numérique",
             head: "Dr. Nicolas Code",
             location: "Bâtiment B",
-            email: "info@schola.edu",
+            email: "info@fiinor.edu",
             phone: "+33 1 23 45 67 96",
             children: [
               {
@@ -159,7 +159,7 @@ export const unitsTree: Unit[] = [
                 description: "Intelligence artificielle et machine learning",
                 head: "Dr. Emma Intelligence",
                 location: "B-201",
-                email: "ia@schola.edu",
+                email: "ia@fiinor.edu",
                 phone: "+33 1 23 45 67 97",
               },
               {
@@ -174,7 +174,7 @@ export const unitsTree: Unit[] = [
                 description: "Centre de calcul haute performance",
                 head: "Dr. Thomas Calcul",
                 location: "B-001",
-                email: "calcul@schola.edu",
+                email: "calcul@fiinor.edu",
                 phone: "+33 1 23 45 67 98",
               },
             ],
@@ -193,7 +193,7 @@ export const unitsTree: Unit[] = [
         description: "Faculté des lettres et sciences humaines",
         head: "Prof. Camille Lettres",
         location: "Bâtiment C",
-        email: "lettres@schola.edu",
+        email: "lettres@fiinor.edu",
         phone: "+33 1 23 45 68 00",
         children: [
           {
@@ -208,7 +208,7 @@ export const unitsTree: Unit[] = [
             description: "Littérature française et comparée",
             head: "Dr. Julien Littéraire",
             location: "Bâtiment C - 2e étage",
-            email: "litterature@schola.edu",
+            email: "litterature@fiinor.edu",
             phone: "+33 1 23 45 68 01",
           },
           {
@@ -223,7 +223,7 @@ export const unitsTree: Unit[] = [
             description: "Histoire moderne et contemporaine",
             head: "Prof. Laura Histoire",
             location: "Bâtiment C - 3e étage",
-            email: "histoire@schola.edu",
+            email: "histoire@fiinor.edu",
             phone: "+33 1 23 45 68 02",
           },
         ],
@@ -240,7 +240,7 @@ export const unitsTree: Unit[] = [
         description: "Services administratifs et support",
         head: "Mme. Sarah Admin",
         location: "Bâtiment Administration",
-        email: "admin@schola.edu",
+        email: "admin@fiinor.edu",
         phone: "+33 1 23 45 68 10",
         children: [
           {
@@ -255,7 +255,7 @@ export const unitsTree: Unit[] = [
             description: "Support informatique et infrastructure",
             head: "M. Maxime IT",
             location: "Admin - Sous-sol",
-            email: "it@schola.edu",
+            email: "it@fiinor.edu",
             phone: "+33 1 23 45 68 11",
           },
           {
@@ -270,7 +270,7 @@ export const unitsTree: Unit[] = [
             description: "Gestion de la scolarité et des inscriptions",
             head: "Mme. Océane Scolarité",
             location: "Admin - 1er étage",
-            email: "scolarite@schola.edu",
+            email: "scolarite@fiinor.edu",
             phone: "+33 1 23 45 68 12",
           },
           {
@@ -285,7 +285,7 @@ export const unitsTree: Unit[] = [
             description: "Gestion financière (en restructuration)",
             head: "M. Quentin Finances",
             location: "Admin - 2e étage",
-            email: "finances@schola.edu",
+            email: "finances@fiinor.edu",
             phone: "+33 1 23 45 68 13",
           },
         ],

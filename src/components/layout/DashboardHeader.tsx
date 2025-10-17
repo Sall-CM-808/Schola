@@ -44,7 +44,7 @@ interface FlexibleHeaderProps {
 }
 
 export default function FlexibleHeader({
-  title = "Schola",
+  title = "Fiinor",
   onBack,
   onToggleSidebar,
   sidebarCollapsed = false,

@@ -20,7 +20,7 @@ const TestimonialsSection: React.FC = () => {
     {
       name: "Aminata Sow",
       role: "Directrice d'école",
-      text: "Schola a transformé notre gestion. Interface intuitive et communication améliorée.",
+      text: "Fiinor a transformé notre gestion. Interface intuitive et communication améliorée.",
       image: "https://randomuser.me/api/portraits/women/72.jpg?nat=ng",
     },
     {
@@ -162,7 +162,7 @@ const TestimonialsSection: React.FC = () => {
               textShadow: '0 2px 10px rgba(0, 0, 0, 0.3)'
             }}
           >
-            Découvrez comment Schola transforme concrètement la vie des établissements scolaires à travers l&apos;Afrique 
+            Découvrez comment Fiinor transforme concrètement la vie des établissements scolaires à travers l&apos;Afrique 
           </motion.p>
         </motion.div>
 

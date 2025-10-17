@@ -1,4 +1,4 @@
-// Palette de couleurs Schola - Design Tokens
+// Palette de couleurs Fiinor - Design Tokens
 export const colors = {
   // Primary (teal)
   primary: {

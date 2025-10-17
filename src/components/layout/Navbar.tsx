@@ -244,11 +244,11 @@ const Navbar = () => {
           {/* LOGO + NOM */}
           <Link href="/" className="flex items-center group">
             <div className="w-10 h-10 mr-3 rounded-xl flex items-center justify-center bg-gradient-to-br from-[#b8d070] to-[#a2c65e] shadow-lg group-hover:scale-105 transition-transform duration-300">
-              <span className="text-[#1d8b93] font-bold text-lg">S</span>
+              <span className="text-[#1d8b93] font-bold text-lg">F</span>
             </div>
             <div className="flex flex-col">
               <span className="text-xl font-bold text-white group-hover:text-[#b8d070] transition-colors duration-300">
-                Schola
+                Fiinor
               </span>
               <span className="text-xs text-white/60 font-medium">
                 Education Platform

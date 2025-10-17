@@ -171,7 +171,7 @@ const generateAttributions = (count: number): Attribution[] => {
     // Global
     {
       type: "Global" as const,
-      name: "Plateforme Schola",
+      name: "Plateforme Fiinor",
       id: "global-platform",
     },
     {

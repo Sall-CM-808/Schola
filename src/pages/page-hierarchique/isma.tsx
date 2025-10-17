@@ -334,7 +334,7 @@ export default function PageHierarchique() {
     <UnitProvider>
       <div className="min-h-screen bg-[#1d8b93] flex">
         {/* Header spécifique à la page hiérarchique */}
-        <DashboardHeader title={selectedUnit?.name || "Schola"} />
+        <DashboardHeader title={selectedUnit?.name || "Fiinor"} />
         {/* Sidebar */}
         <div className="fixed inset-y-0 left-0 z-50">
           <SideBar

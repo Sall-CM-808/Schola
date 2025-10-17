@@ -661,9 +661,9 @@ const SignupForm: React.FC = () => {
           <div className="text-center mb-8">
             <Link href="/" className="inline-flex items-center mb-6">
               <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-gradient-to-br from-[#b8d070] to-[#a2c65e] shadow-lg">
-                <span className="text-[#1d8b93] font-bold text-xl">S</span>
+                <span className="text-[#1d8b93] font-bold text-xl">F</span>
               </div>
-              <span className="ml-3 text-2xl font-bold text-white">Schola</span>
+              <span className="ml-3 text-2xl font-bold text-white">Fiinor</span>
             </Link>
             <h1 className="text-3xl font-bold text-white mb-2">{stepInfo[currentStep as keyof typeof stepInfo].title}</h1>
             <p className="text-white/70">{stepInfo[currentStep as keyof typeof stepInfo].description}</p>

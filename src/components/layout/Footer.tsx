@@ -55,9 +55,9 @@ const Footer: React.FC = () => {
           >
             <Link href="/" className="flex items-center mb-4">
               <div className="w-10 h-10 mr-3 rounded-xl flex items-center justify-center bg-gradient-to-br from-[#b8d070] to-[#a2c65e] shadow-lg">
-                <span className="text-[#1d8b93] font-bold text-lg">S</span>
+                <span className="text-[#1d8b93] font-bold text-lg">F</span>
               </div>
-              <span className="text-2xl font-bold text-[#b8d070]">Schola</span>
+              <span className="text-2xl font-bold text-[#b8d070]">Fiinor</span>
             </Link>
             <p className="text-gray-200 mb-4">
               Plateforme leader dédiée à l&apos;optimisation de la gestion des
@@ -213,7 +213,7 @@ const Footer: React.FC = () => {
           viewport={{ once: true }}
           className="pt-8 mt-8 border-t border-[#0d5a61] text-gray-200 text-sm text-center md:flex md:justify-between md:text-left"
         >
-          <p>© {new Date().getFullYear()} Schola. Tous droits réservés.</p>
+          <p>© {new Date().getFullYear()} Fiinor. Tous droits réservés.</p>
           <p className="mt-2 md:mt-0">
             Développé avec passion pour l&apos;excellence éducative.
           </p>

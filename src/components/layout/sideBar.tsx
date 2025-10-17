@@ -513,9 +513,9 @@ const SideBar = ({
           {!collapsed && (
             <div className="flex items-center space-x-2">
               <div className="w-8 h-8 bg-[#b8d070] rounded-lg flex items-center justify-center">
-                <School size={20} className="text-[#1d8b93]" />
+                <span className="text-[#1d8b93] font-bold text-sm">F</span>
               </div>
-              <span className="text-lg font-bold text-white">Schola</span>
+              <span className="text-lg font-bold text-white">Fiinor</span>
             </div>
           )}
 

@@ -8,7 +8,7 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        // Palette Schola - Design Tokens
+        // Palette Fiinor - Design Tokens
         primary: {
           300: "#6cbec1",
           400: "#3fa7ab",
