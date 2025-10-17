@@ -280,7 +280,7 @@ const FeaturesSection: React.FC = () => {
           >
             <span className="relative inline-block">
               Fonctionnalités{" "}
-              <span className="text-[#b8d070] bg-gradient-to-r from-[#b8d070] to-[#a2c65e] bg-clip-text text-transparent">
+              <span className="text-[#b8d070] bg-gradient-to-r from-[#b8d070] to-[#a2c65e] bg-clip-text">
                 Essentielles
               </span>
               <motion.span
