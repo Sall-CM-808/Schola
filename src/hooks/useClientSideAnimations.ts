@@ -1,9 +1,7 @@
-import { useState, useEffect } from 'react';
+"use client";
 
-/**
- * Hook pour éviter les erreurs d'hydratation avec Math.random()
- * Retourne true uniquement côté client après le premier rendu
- */
+import { useEffect, useState } from 'react';
+
 export const useClientSideAnimations = () => {
   const [isClient, setIsClient] = useState(false);
 

@@ -1,9 +1,10 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import imageHero from "../assets/imageHero.png";
+import DemoModal from "./DemoModal";
 
 const SchoolIcon = () => (
   <svg
@@ -59,12 +60,13 @@ const UsersIcon = () => (
   </svg>
 );
 
-const HeroSection: React.FC = () => {
-  const titleRef = useRef<HTMLHeadingElement>(null);
+const HeroSection = () => {
+  const [isDemoModalOpen, setIsDemoModalOpen] = useState(false);
   const sloganRef = useRef<HTMLParagraphElement>(null);
   const subtitleRef = useRef<HTMLParagraphElement>(null);
   const ctaRef = useRef<HTMLDivElement>(null);
   const imageRef = useRef<HTMLDivElement>(null);
+  const titleRef = useRef<HTMLHeadingElement>(null);
 
   useEffect(() => {
     const observerOptions = { threshold: 0.1, rootMargin: "0px" };
@@ -133,12 +135,12 @@ const HeroSection: React.FC = () => {
               >
                 Démarrer gratuitement
               </Link>
-              <Link
-                href="/fonctionnalites"
+              <button
+                onClick={() => setIsDemoModalOpen(true)}
                 className="px-6 py-3 md:px-7 md:py-3.5 rounded-lg md:rounded-xl bg-white/10 backdrop-blur-sm border-2 border-white/30 text-white font-bold text-center transition-all duration-300 hover:-translate-y-0.5 hover:bg-white/20 text-sm md:text-base"
               >
-                Découvrir Fiinor
-              </Link>
+                Découvrir la démo
+              </button>
             </div>
           </div>
 
@@ -202,6 +204,12 @@ const HeroSection: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* Modal de démonstration */}
+      <DemoModal 
+        isOpen={isDemoModalOpen} 
+        onClose={() => setIsDemoModalOpen(false)} 
+      />
     </section>
   );
 };
