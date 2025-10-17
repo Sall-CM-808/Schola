@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import React, { useState, useEffect, useCallback, useRef } from "react";
+import { motion, AnimatePresence, useInView } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import Image from "next/image";
 
@@ -15,6 +15,9 @@ interface TestimonialProps {
 const TestimonialsSection: React.FC = () => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [direction, setDirection] = useState(0);
+  const titleRef = useRef(null);
+  const subtitleRef = useRef(null);
+  const isInView = useInView(titleRef, { once: true, margin: "-100px" });
 
   const testimonials: TestimonialProps[] = [
     {
@@ -131,38 +134,42 @@ const TestimonialsSection: React.FC = () => {
       />
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        {/* En-tête avec soulignement animé */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          viewport={{ once: true }}
-          className="text-center mb-16"
-        >
-          <h2 className="text-3xl md:text-5xl font-bold mb-3">
-            <span className="text-white">Témoignages </span>
+        {/* En-tête avec style premium */}
+        <motion.div className="mb-16 text-center">
+          <motion.h2
+            ref={titleRef}
+            initial={{ opacity: 0, y: 30 }}
+            animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
+            transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+            className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 drop-shadow-2xl"
+            style={{
+              textShadow: '0 4px 20px rgba(184, 208, 112, 0.3), 0 8px 40px rgba(184, 208, 112, 0.1)'
+            }}
+          >
             <span className="relative inline-block">
-              <span className="text-[#b8d070]">Authentiques</span>
+              Témoignages{" "}
+              <span className="text-[#b8d070] bg-gradient-to-r from-[#b8d070] to-[#a2c65e] bg-clip-text">
+                Authentiques
+              </span>
               <motion.span
-                className="absolute -bottom-1 left-0 h-1 bg-[#b8d070]"
-                initial={{ width: 0 }}
-                whileInView={{ width: "100%" }}
-                transition={{ duration: 0.8, delay: 0.3 }}
-                viewport={{ once: true }}
+                className="absolute bottom-0 left-0 h-1 bg-gradient-to-r from-[#b8d070] to-[#a2c65e]"
+                initial={{ width: "0%" }}
+                animate={isInView ? { width: "100%" } : { width: "0%" }}
+                transition={{ duration: 1.2, delay: 0.5 }}
               />
             </span>
-          </h2>
+          </motion.h2>
           <motion.p
+            ref={subtitleRef}
             initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
             transition={{ duration: 0.7, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
-            viewport={{ once: true }}
             className="text-lg md:text-xl text-gray-200 max-w-3xl mx-auto leading-relaxed font-light tracking-wide drop-shadow-lg"
             style={{
               textShadow: '0 2px 10px rgba(0, 0, 0, 0.3)'
             }}
           >
-            Découvrez comment Fiinor transforme concrètement la vie des établissements scolaires à travers l&apos;Afrique 
+            Découvrez comment Fiinor transforme concrètement la vie des établissements scolaires à travers l&apos;Afrique.
           </motion.p>
         </motion.div>
 

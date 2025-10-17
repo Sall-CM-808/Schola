@@ -1,9 +1,10 @@
 "use client";
 
-import React from "react";
-import { motion } from "framer-motion";
+import React, { useRef } from "react";
+import { motion, useInView } from "framer-motion";
 import { useClientSideAnimations } from "@/hooks/useClientSideAnimations";
 import { Briefcase, Code, Headphones, Palette } from "lucide-react";
+import Image from "next/image";
 
 interface TeamMemberProps {
   name: string;
@@ -42,7 +43,7 @@ const TeamMember: React.FC<TeamMemberProps> = ({
         whileHover={{ scale: 1.1 }}
         className="w-24 h-24 rounded-full overflow-hidden border-4 border-[#b8d070] shadow-lg mx-auto mb-6"
       >
-        <img src={image} alt={name} className="w-full h-full object-cover" />
+        <Image src={image} alt={name} width={96} height={96} className="w-full h-full object-cover" />
       </motion.div>
 
       <div className="flex items-center justify-center mb-2">
@@ -57,6 +58,9 @@ const TeamMember: React.FC<TeamMemberProps> = ({
 
 const TeamSection: React.FC = () => {
   const isClient = useClientSideAnimations();
+  const titleRef = useRef(null);
+  const subtitleRef = useRef(null);
+  const isInView = useInView(titleRef, { once: true, margin: "-100px" });
   const teamMembers = [
     {
       name: "Aïssa Ndiaye",
@@ -132,23 +136,42 @@ const TeamSection: React.FC = () => {
       )}
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-          className="text-center mb-12"
-        >
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+        <motion.div className="mb-16 text-center">
+          <motion.h2
+            ref={titleRef}
+            initial={{ opacity: 0, y: 30 }}
+            animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
+            transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+            className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 drop-shadow-2xl"
+            style={{
+              textShadow: '0 4px 20px rgba(184, 208, 112, 0.3), 0 8px 40px rgba(184, 208, 112, 0.1)'
+            }}
+          >
             <span className="relative inline-block">
-              Notre Équipe d'Experts
-              <span className="absolute bottom-0 left-0 w-0 h-1 bg-gradient-to-r from-[#b8d070] to-[#a2c65e] transition-all duration-1000 animate-underline"></span>
+              Notre Équipe{" "}
+              <span className="text-[#b8d070] bg-gradient-to-r from-[#b8d070] to-[#a2c65e] bg-clip-text">
+                d&apos;Experts
+              </span>
+              <motion.span
+                className="absolute bottom-0 left-0 h-1 bg-gradient-to-r from-[#b8d070] to-[#a2c65e]"
+                initial={{ width: "0%" }}
+                animate={isInView ? { width: "100%" } : { width: "0%" }}
+                transition={{ duration: 1.2, delay: 0.5 }}
+              />
             </span>
-          </h2>
-          <p className="text-lg text-gray-200 max-w-2xl mx-auto">
-            Une équipe de professionnels dévoués à l'excellence en gestion
-            éducative.
-          </p>
+          </motion.h2>
+          <motion.p
+            ref={subtitleRef}
+            initial={{ opacity: 0, y: 30 }}
+            animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
+            transition={{ duration: 0.7, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
+            className="text-lg md:text-xl text-gray-200 max-w-3xl mx-auto leading-relaxed font-light tracking-wide drop-shadow-lg"
+            style={{
+              textShadow: '0 2px 10px rgba(0, 0, 0, 0.3)'
+            }}
+          >
+            Une équipe de professionnels passionnés, dévoués à l&apos;excellence et à l&apos;innovation dans la gestion éducative moderne.
+          </motion.p>
         </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
