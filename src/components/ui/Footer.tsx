@@ -1,199 +1,222 @@
 "use client";
 
 import React from "react";
-import { motion } from "framer-motion";
-import { Heart, ArrowUp } from "lucide-react";
 import Link from "next/link";
+import { motion } from "framer-motion";
+import { useClientSideAnimations } from "@/hooks/useClientSideAnimations";
+import { Mail, Phone, Facebook, Twitter, Linkedin } from "lucide-react";
 
 const Footer: React.FC = () => {
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
-  const currentYear = new Date().getFullYear();
-
+  const isClient = useClientSideAnimations();
   return (
-    <footer className="relative bg-gradient-to-t from-[#0d5a61] to-[#1d8b93] text-white">
-      {/* Bouton retour en haut */}
-      <motion.button
-        onClick={scrollToTop}
-        className="absolute -top-6 left-1/2 transform -translate-x-1/2 w-12 h-12 bg-gradient-to-r from-[#b8d070] to-[#a2c65e] rounded-full flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-300"
-        whileHover={{ scale: 1.1, y: -2 }}
-        whileTap={{ scale: 0.95 }}
-      >
-        <ArrowUp className="w-6 h-6 text-[#1d8b93]" />
-      </motion.button>
+    <footer
+      className="relative text-white pt-16 pb-8 overflow-hidden"
+      style={{
+        background: "linear-gradient(135deg, #0d5a61 0%, #2a9fa8 100%)", // Dégradé premium
+      }}
+    >
+      {/* Bulles animées en arrière-plan */}
+      {isClient && (
+        <div className="absolute inset-0 opacity-20">
+          {[...Array(15)].map((_, i) => (
+            <motion.div
+              key={i}
+              className="absolute rounded-full"
+              style={{
+                backgroundColor: "#b8d070",
+                width: `${Math.random() * 20 + 10}px`,
+                height: `${Math.random() * 20 + 10}px`,
+                top: `${Math.random() * 100}%`,
+                left: `${Math.random() * 100}%`,
+              }}
+              animate={{
+                y: [0, (Math.random() - 0.5) * 50],
+                x: [0, (Math.random() - 0.5) * 50],
+                opacity: [0.2, 0.8, 0.2],
+              }}
+              transition={{
+                duration: Math.random() * 15 + 15,
+                repeat: Infinity,
+                repeatType: "reverse",
+              }}
+            />
+          ))}
+        </div>
+      )}
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-8">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
-          {/* Logo et description */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
+            transition={{ duration: 0.8 }}
             viewport={{ once: true }}
-            className="col-span-1 md:col-span-2"
+            className="col-span-1"
           >
-            <div className="flex items-center space-x-3 mb-4">
-              <div className="w-10 h-10 bg-gradient-to-r from-[#b8d070] to-[#a2c65e] rounded-lg flex items-center justify-center">
-                <span className="text-[#1d8b93] font-bold text-xl">F</span>
+            <Link href="/" className="flex items-center mb-4">
+              <div className="w-10 h-10 mr-3 rounded-xl flex items-center justify-center bg-gradient-to-br from-[#b8d070] to-[#a2c65e] shadow-lg">
+                <span className="text-[#1d8b93] font-bold text-lg">F</span>
               </div>
-              <span className="text-2xl font-bold">
-                <span className="text-white">Fii</span>
-                <span className="text-[#b8d070]">nor</span>
-              </span>
-            </div>
-            <p className="text-gray-300 leading-relaxed mb-6 max-w-md">
-              La plateforme éducative qui transforme la gestion scolaire en Afrique. 
-              Moderne, intuitive et adaptée aux besoins locaux.
+              <span className="text-2xl font-bold text-[#b8d070]">Fiinor</span>
+            </Link>
+            <p className="text-gray-200 mb-4">
+              Plateforme leader dédiée à l&apos;optimisation de la gestion des
+              établissements scolaires.
             </p>
             <div className="flex space-x-4">
-              {/* Réseaux sociaux */}
-              {[
-                { name: 'LinkedIn', href: '#' },
-                { name: 'Twitter', href: '#' },
-                { name: 'Facebook', href: '#' }
-              ].map((social) => (
-                <motion.a
-                  key={social.name}
-                  href={social.href}
-                  className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-[#b8d070] hover:text-[#1d8b93] transition-all duration-300"
-                  whileHover={{ scale: 1.1, y: -2 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <span className="text-sm font-semibold">
-                    {social.name.charAt(0)}
-                  </span>
-                </motion.a>
-              ))}
+              <motion.a
+                whileHover={{ scale: 1.1, color: "#b8d070" }}
+                href="https://facebook.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gray-400 transition-colors duration-300"
+              >
+                <Facebook size={20} />
+              </motion.a>
+              <motion.a
+                whileHover={{ scale: 1.1, color: "#b8d070" }}
+                href="https://twitter.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gray-400 transition-colors duration-300"
+              >
+                <Twitter size={20} />
+              </motion.a>
+              <motion.a
+                whileHover={{ scale: 1.1, color: "#b8d070" }}
+                href="https://linkedin.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gray-400 transition-colors duration-300"
+              >
+                <Linkedin size={20} />
+              </motion.a>
             </div>
           </motion.div>
 
-          {/* Liens rapides */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
             viewport={{ once: true }}
           >
-            <h4 className="text-lg font-semibold text-white mb-4">Navigation</h4>
-            <ul className="space-y-3">
-              {[
-                { name: 'Accueil', href: '#accueil' },
-                { name: 'Fonctionnalités', href: '#fonctionnalites' },
-                { name: 'Tarifs', href: '#tarifs' },
-                { name: 'Équipe', href: '#equipe' },
-                { name: 'Contact', href: '#contact' }
-              ].map((link) => (
-                <li key={link.name}>
-                  <Link
-                    href={link.href}
-                    className="text-gray-300 hover:text-[#b8d070] transition-colors duration-200 flex items-center group"
-                  >
-                    <span className="w-0 group-hover:w-2 h-0.5 bg-[#b8d070] transition-all duration-200 mr-0 group-hover:mr-2"></span>
-                    {link.name}
-                  </Link>
-                </li>
-              ))}
+            <h3 className="text-lg font-semibold mb-4 text-[#b8d070]">
+              Navigation
+            </h3>
+            <ul className="space-y-2">
+              <li>
+                <Link
+                  href="#accueil"
+                  className="text-gray-200 hover:text-[#b8d070] transition-colors duration-300"
+                >
+                  Page d&apos;Accueil
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="#fonctionnalites"
+                  className="text-gray-200 hover:text-[#b8d070] transition-colors duration-300"
+                >
+                  Fonctionnalités
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="#equipe"
+                  className="text-gray-200 hover:text-[#b8d070] transition-colors duration-300"
+                >
+                  Notre Équipe
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="#tarifs"
+                  className="text-gray-200 hover:text-[#b8d070] transition-colors duration-300"
+                >
+                  Tarifs
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="#contact"
+                  className="text-gray-200 hover:text-[#b8d070] transition-colors duration-300"
+                >
+                  Contact
+                </Link>
+              </li>
             </ul>
           </motion.div>
 
-          {/* Support */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
             viewport={{ once: true }}
           >
-            <h4 className="text-lg font-semibold text-white mb-4">Support</h4>
-            <ul className="space-y-3">
-              {[
-                { name: 'Centre d\'aide', href: '#' },
-                { name: 'Documentation', href: '#' },
-                { name: 'Tutoriels', href: '#' },
-                { name: 'FAQ', href: '#' },
-                { name: 'Statut système', href: '#' }
-              ].map((link) => (
-                <li key={link.name}>
-                  <Link
-                    href={link.href}
-                    className="text-gray-300 hover:text-[#b8d070] transition-colors duration-200 flex items-center group"
-                  >
-                    <span className="w-0 group-hover:w-2 h-0.5 bg-[#b8d070] transition-all duration-200 mr-0 group-hover:mr-2"></span>
-                    {link.name}
-                  </Link>
-                </li>
-              ))}
+            <h3 className="text-lg font-semibold mb-4 text-[#b8d070]">
+              Informations Juridiques
+            </h3>
+            <ul className="space-y-2">
+              <li>
+                <Link
+                  href="/terms"
+                  className="text-gray-200 hover:text-[#b8d070] transition-colors duration-300"
+                >
+                  Conditions Générales
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/privacy"
+                  className="text-gray-200 hover:text-[#b8d070] transition-colors duration-300"
+                >
+                  Politique de Confidentialité
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/cookies"
+                  className="text-gray-200 hover:text-[#b8d070] transition-colors duration-300"
+                >
+                  Gestion des Cookies
+                </Link>
+              </li>
+            </ul>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.6 }}
+            viewport={{ once: true }}
+          >
+            <h3 className="text-lg font-semibold mb-4 text-[#b8d070]">
+              Support
+            </h3>
+            <ul className="space-y-2 text-gray-200">
+              <li className="flex items-start">
+                <Mail size={20} className="mr-2 text-gray-400" />
+                <span>contact@fiinor.com</span>
+              </li>
+              <li className="flex items-start">
+                <Phone size={20} className="mr-2 text-gray-400" />
+                <span>+224 62 123 45 67</span>
+              </li>
             </ul>
           </motion.div>
         </div>
 
-        {/* Séparateur */}
         <motion.div
-          initial={{ scaleX: 0 }}
-          whileInView={{ scaleX: 1 }}
-          transition={{ duration: 1, delay: 0.3 }}
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.8 }}
           viewport={{ once: true }}
-          className="h-px bg-gradient-to-r from-transparent via-white/20 to-transparent mb-8"
-        />
-
-        {/* Copyright et mentions légales */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          transition={{ duration: 0.6, delay: 0.4 }}
-          viewport={{ once: true }}
-          className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0"
+          className="pt-8 mt-8 border-t border-[#0d5a61] text-gray-200 text-sm text-center md:flex md:justify-between md:text-left"
         >
-          <div className="flex items-center space-x-2 text-gray-300">
-            <span>© {currentYear} Fiinor. Fait avec</span>
-            <motion.div
-              animate={{ 
-                scale: [1, 1.2, 1],
-                rotate: [0, 5, -5, 0]
-              }}
-              transition={{ 
-                duration: 2, 
-                repeat: Infinity,
-                ease: "easeInOut"
-              }}
-            >
-              <Heart className="w-4 h-4 text-red-400 fill-current" />
-            </motion.div>
-            <span>en Afrique</span>
-          </div>
-          
-          <div className="flex space-x-6 text-sm">
-            {[
-              { name: 'Politique de confidentialité', href: '#' },
-              { name: 'Conditions d\'utilisation', href: '#' },
-              { name: 'Mentions légales', href: '#' }
-            ].map((link) => (
-              <Link
-                key={link.name}
-                href={link.href}
-                className="text-gray-400 hover:text-[#b8d070] transition-colors duration-200"
-              >
-                {link.name}
-              </Link>
-            ))}
-          </div>
-        </motion.div>
-
-        {/* Badge "Made in Africa" */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.6, delay: 0.5 }}
-          viewport={{ once: true }}
-          className="mt-8 flex justify-center"
-        >
-          <div className="inline-flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-[#b8d070]/20 to-[#a2c65e]/20 rounded-full border border-[#b8d070]/30">
-            <span className="text-2xl">🌍</span>
-            <span className="text-[#b8d070] font-semibold text-sm">
-              Proudly Made in Africa
-            </span>
-          </div>
+          <p>© {new Date().getFullYear()} Fiinor. Tous droits réservés.</p>
+          <p className="mt-2 md:mt-0">
+            Développé avec passion pour l&apos;excellence éducative.
+          </p>
         </motion.div>
       </div>
     </footer>

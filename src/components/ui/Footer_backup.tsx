@@ -196,11 +196,11 @@ const Footer: React.FC = () => {
             <ul className="space-y-2 text-gray-200">
               <li className="flex items-start">
                 <Mail size={20} className="mr-2 text-gray-400" />
-                <span>support@schola.com</span>
+                <span>contact@fiinor.com</span>
               </li>
               <li className="flex items-start">
                 <Phone size={20} className="mr-2 text-gray-400" />
-                <span>+33 1 23 45 67 89</span>
+                <span>+224 62 123 45 67</span>
               </li>
             </ul>
           </motion.div>
